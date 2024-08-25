@@ -137,3 +137,33 @@ Notice that the print only displays basic information of the feature class such 
 ### **1.5.2 Working with glimpse()**
 
 Beside the basic feature information, we also would like to learn more about the associated attribute information in the data frame. This is the time you will find *glimpse()* of **dplyr**. very handy as shown in the code chunk below.
+
+```{r}
+glimpse(mpsz)
+```
+
+*glimpse()* report reveals the data type of each fields. For example `FMEL-UPD_D` field is in **date** data type and `X_ADDR`, `Y_ADDR`, `SHAPE_L` and `SHAPE_AREA` fields are all in **double-precision values**.
+
+### **1.5.3 Working with *head()***
+
+Sometimes we would like to reveal complete information of a feature object, this is the job of [*head()*](https://www.rdocumentation.org/packages/utils/versions/3.6.2/topics/head) of Base R
+
+```{r}
+head(mpsz, 5)
+```
+
+> Note: One of the useful argument of *head()* is it allows user to select the numbers of record to display (i.e. the n argument).
+
+## **1.6 Plotting the Geospatial Data**
+
+In geospatial data science, by looking at the feature information is not enough. We are also interested to visualise the geospatial features. This is the time will find *plot()* of R Graphic comes in very handy as shown in the code chunk below.
+
+```{r}
+plot(mpsz)
+```
+
+The default plot of an sf object is a multi-plot of all attributes, up to a reasonable maximum as shown above. We can, however, choose to plot only the geometry by using the code chunk below.
+
+```{r}
+plot(st_geometry(mpsz))
+```
