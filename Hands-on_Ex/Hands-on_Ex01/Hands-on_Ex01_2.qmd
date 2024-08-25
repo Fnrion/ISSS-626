@@ -193,3 +193,146 @@ tm_shape(mpsz_pop2020) +
   tm_credits("Source: Planning Sub-zone boundary from Urban Redevelopment Authorithy (URA)\n and Population data from Department of Statistics DOS", 
              position = c("left", "bottom"))
 ```
+
+In the following sub-section, we will share with you tmap functions that used to plot these elements.
+
+#### 2.4.2.1 Drawing a base map
+
+The basic building block of **tmap** is *tm_shape()* followed by one or more layer elemments such as *tm_fill()* and *tm_polygons()*.
+
+In the code chunk below, *tm_shape()* is used to define the input data (i.e *mpsz_pop2020*) and *tm_polygons()* is used to draw the planning subzone polygons
+
+```{r}
+tm_shape(mpsz_pop2020) +
+  tm_polygons()
+```
+
+#### 2.4.2.2 Drawing a choropleth map using *tm_polygons()*
+
+To draw a choropleth map showing the geographical distribution of a selected variable by planning subzone, we just need to assign the target variable such as *Dependency* to *tm_polygons()*.
+
+```{r}
+tm_shape(mpsz_pop2020) +
+  tm_polygons("DEPENDENCY")
+```
+
+Things to learn from *tm_polygons()*:
+
+-   The default interval binning used to draw the choropleth map is called “pretty”. A detailed discussion of the data classification methods supported by **tmap** will be provided in sub-section 4.3.
+
+-   The default colour scheme used is `YlOrRd` of ColorBrewer. You will learn more about the color scheme in sub-section 4.4.
+
+-   By default, Missing value will be shaded in grey.
+
+#### 2.4.2.3 Drawing a choropleth map using *tm_fill()* and \*tm_border()\*\*
+
+Actually, *tm_polygons()* is a wraper of *tm_fill()* and *tm_border()*. *tm_fill()* shades the polygons by using the default colour scheme and *tm_borders()* adds the borders of the shapefile onto the choropleth map.
+
+The code chunk below draws a choropleth map by using *tm_fill()* alone.
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY")
+```
+
+Notice that the planning subzones are shared according to the respective dependecy values
+
+To add the boundary of the planning subzones, tm_borders will be used as shown in the code chunk below.
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY") +
+  tm_borders(lwd = 0.1,  alpha = 1)
+```
+
+Notice that light-gray border lines have been added on the choropleth map.
+
+The *alpha* argument is used to define transparency number between 0 (totally transparent) and 1 (not transparent). By default, the alpha value of the col is used (normally 1).
+
+Beside *alpha* argument, there are three other arguments for *tm_borders()*, they are:
+
+-   *col* = border colour,
+
+-   *lwd* = border line width. The default is 1, and
+
+-   *lty* = border line type. The default is “solid”.
+
+### **2.4.3 Data classification methods of tmap**
+
+Most choropleth maps employ some methods of data classification. The point of classification is to take a large number of observations and group them into data ranges or classes.
+
+**tmap** provides a total ten data classification methods, namely: *fixed*, *sd*, *equal*, *pretty* (default), *quantile*, *kmeans*, *hclust*, *bclust*, *fisher*, and *jenks*.
+
+To define a data classification method, the *style* argument of *tm_fill()* or *tm_polygons()* will be used.
+
+#### 2.4.3.1 Plotting choropleth maps with built-in classification methods
+
+The code chunk below shows a quantile data classification that used 5 classes.
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 5,
+          style = "quantile") +
+  tm_borders(alpha = 0.5)
+```
+
+n the code chunk below, *equal* data classification method is used.
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 5,
+          style = "equal") +
+  tm_borders(alpha = 0.5)
+```
+
+Notice that the distribution of quantile data classification method are more evenly distributed then equal data classification method.
+
+> **Warning: Maps Lie!**
+
+> DIY: Using what we had learned, prepare choropleth maps by using different classification methods supported by tmap and compare their differences.
+
+> DIY: Preparing choropleth maps by using similar classification method but with different numbers of classes (i.e. 2, 6, 10, 20). Compare the output maps, what observation can you draw?
+
+**sd**
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 2,
+          style = "sd") +
+  tm_borders(alpha = 0.5)
+```
+
+**jenks**
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 6,
+          style = "jenks") +
+  tm_borders(alpha = 0.5)
+```
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 10,
+          style = "fisher") +
+  tm_borders(alpha = 0.5)
+```
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 20,
+          style = "bclust") +
+  tm_borders(alpha = 0.5)
+```
+
+#### 2.4.3.2 Plotting choropleth map with custome break
+
+For all the built-in styles, the category breaks are computed internally. In order to override these defaults, the breakpoints can be set explicitly by means of the *breaks* argument to the *tm_fill()*. It is important to note that, in **tmap** the breaks include a minimum and maximum. As a result, in order to end up with n categories, n+1 elements must be specified in the *breaks* option (the values must be in increasing order).
+
+Before we get started, it is always a good practice to get some descriptive statistics on the variable before setting the break points. Code chunk below will be used to compute and display the descriptive statistics of **DEPENDENCY** field.
