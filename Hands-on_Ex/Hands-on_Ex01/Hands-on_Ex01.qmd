@@ -99,3 +99,41 @@ mpsz = st_read(dsn = 'data/geospatial', layer = 'MP14_SUBZONE_WEB_PL')
 ```
 
 The message above reveals that the geospatial objects are multipolygon features. There are a total of 323 multipolygon features and 15 fields in `mpsz` simple feature data frame. `mpsz` is in **svy21** projected coordinates systems. The bounding box provides the x extend and y extend of the data.
+
+### **1.4.2 Importing polyline feature data in shapefile form**
+
+The code chunk below uses *st_read()* function of **sf** package to import `CyclingPath` shapefile into R as line feature data frame.
+
+```{r}
+cyclingpath = st_read(dsn = 'data/geospatial', layer = 'CyclingPathGazette')
+```
+
+The message above reveals that there are a total of 2558 features and 2 fields in `cyclingpath` linestring feature data frame and it is in **svy21**projected coordinates system too.
+
+### **1.4.3 Importing GIS data in kml format**
+
+The `PreSchoolsLocation` is in kml format. The code chunk below will be used to import the kml into R. Notice that in the code chunk below, the complete path and the kml file extension were provided.
+
+```{r}
+preschool = st_read("data/geospatial/PreSchoolsLocation.kml")
+```
+
+The message above reveals that `preschool` is a point feature data frame. There are a total of 2290 features and 2 fields. Different from the previous two simple feature data frame, preschool is in **wgs84** coordinates system.
+
+## **1.5 Checking the Content of A Simple Feature Data Frame**
+
+In this sub-section, we will learn different ways to retrieve information related to the content of a simple feature data frame.
+
+### **1.5.1 Working with *st_geometry()***
+
+The column in the sf data.frame that contains the geometries is a list, of class `sfc`. We can retrieve the geometry list-column in this case by mpsz\$geom or mpsz\[\[1\]\], but the more general way uses *st_geometry()* as shown in the code chunk below.
+
+```{r}
+st_geometry(mpsz)
+```
+
+Notice that the print only displays basic information of the feature class such as type of geometry, the geographic extent of the features and the coordinate system of the data.
+
+### **1.5.2 Working with glimpse()**
+
+Beside the basic feature information, we also would like to learn more about the associated attribute information in the data frame. This is the time you will find *glimpse()* of **dplyr**. very handy as shown in the code chunk below.
