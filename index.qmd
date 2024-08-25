@@ -1,11 +1,30 @@
 ---
-title: "ISSS-626 ZOUJIAXUN"
+title: "ISSS-626 Geospatial Analytics & Applc"
+listing:
+
+  - id: Hands-on_Exercise
+    contents: 
+      - "Hands-on_Ex/*/*.qmd"
+    sort:
+      - "title"
+    type: grid
+    fields: [image, date, title, author]
+    
+  - id: In-class_Exercise
+    contents: 
+      - "In-class_Ex/*/*.qmd"
+    sort:
+      - "title"
+    type: grid
+    fields: [image, date, title, author]
+
+  - id: Take-home_Exercise
+    contents: 
+      - "Take-home_Ex/*/*.qmd"
+    sort:
+      - "title"
+    type: grid
+    fields: [image, date, title, author]
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
-
-```{r}
-1 + 1
-```
+Welcome to **ISSS626 Geospatial Analytics & Applchomepage**. In this website, you will find my coursework prepared for this course.
