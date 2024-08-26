@@ -1,5 +1,17 @@
 ---
 title: "1  Geospatial Data Science with R"
+author: "Zou Jiaxun"
+date: "Aug 24, 2024"
+data-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+format:
+  html:
+    code-fold: true
+    code-summary: "Click to view code"
 ---
 
 Geospatial Data Science is a process of importing, wrangling, integrating, and processing geographically referenced data sets. In this hands-on exercise, we will learn how to perform geospatial data science tasks in R by using **sf** package.
