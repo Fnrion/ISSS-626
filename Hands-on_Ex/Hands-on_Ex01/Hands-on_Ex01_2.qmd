@@ -1,5 +1,17 @@
 ---
-title: "2  Thematic Mapping and GeoVisualisation with R"
+title: "2 Thematic Mapping and GeoVisualisation with R"
+author: "Zou Jiaxun"
+date: "Aug 26, 2024"
+data-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+format:
+  html:
+    code-fold: true
+    code-summary: "Click to view code"
 ---
 
 ## **2.1 Overview**
