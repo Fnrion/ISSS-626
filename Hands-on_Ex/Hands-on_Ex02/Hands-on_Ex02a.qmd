@@ -484,8 +484,6 @@ The result is the same, we just convert it so that it is suitable for mapping pu
 # spplot(gridded_kde_childcareSG_bw)
 ```
 
-
-
 #### 4.7.3.1 Converting gridded output into raster
 
 Next, we will convert the gridded kernal density objects into RasterLayer object by using *raster()*of **raster** package.
