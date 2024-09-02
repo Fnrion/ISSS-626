@@ -23,8 +23,6 @@ tmap_options(check.and.fix = TRUE)
 mpsz14_shp <- st_read(dsn = 'data/geospatial', layer = 'MP14_SUBZONE_WEB_PL')
 ```
 
-
-
 ```{r}
 st_write(mpsz14_shp,
          "data/geospatial/MP14_SUBZONE_WEB_PL.kml",
@@ -64,6 +62,7 @@ mutate(`ECONOMY ACTIVE` = rowSums(.[7:13]) # Aged 25 - 59
          `ECONOMY ACTIVE`, `AGED`,
          `TOTAL`, `DEPENDENCY`)
 ```
+
 ```{r}
 popdata2023 <- popdata2023 %>%
   mutate_at(.vars = vars(PA, SZ),

@@ -110,10 +110,10 @@ plot(st_geometry(mpsz_sf))
 ```
 
 ```{r}
-tm_shape(mpsz_sf) +
+tm_shape(sg_sf) +
   tm_polygons(col = "grey") +
-  tm_shape(sg_sf) +
-  tm_borders(col = "grey") +
+  tm_shape(mpsz_sf) +
+  tm_polygons(col = "grey") +
   tm_shape(childcare_sf) +
   tm_dots(size = 0.005)
 ```
