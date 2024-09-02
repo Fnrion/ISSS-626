@@ -13,3 +13,95 @@ format:
     code-fold: true
     code-summary: "Click to view code"
 ---
+
+```{r}
+pacman::p_load(sf, raster, spatstat, tmap, tidyverse)
+```
+
+## Issue 1: Hands-on_2 standard answer 1
+
+
+```{r}
+install.packages("maptools", repos = "https://packagemanager.posit.co/cran/2023-10-13")
+```
+
+## Issue 2: Creating coastal outline
+
+in sf. package, there are two functions allow us to combine multiple simple features.
+
+## Woking with st_union()
+
+The code chunk below, st_union() is used to derive the coastal outline sf tibble data.frame.
+
+```{r}
+mpsz_sf <- st_read(dsn = "data", layer = "MP14_SUBZONE_WEB_PL")
+```
+
+```{r}
+sg_sf <- mpsz_sf %>%
+  st_union
+plot(sg_sf)
+```
+
+## Introduce to the spastat package
+
+```{r}
+## sf use as.ppp
+## polygon as.p. ???
+## owin ?
+```
+
+## Kernel Density Estimation
+
+
+:::{panel}
+
+## 1
+```{r}
+childcare_sf <- st_read("data/child-care-services-geojson.geojson") %>%
+  st_transform(crs = 3414)
+```
+
+```{r}
+childcare_ppp <- as.ppp(childcare_sf)
+```
+
+```{r}
+sg_owin <- as.owin(sg_sf)
+```
+
+```{r}
+childcareSG_ppp = childcare_ppp[sg_owin]
+```
+
+```{r}
+kde_childcareSG_bw <- density(childcareSG_ppp,
+                              sigma=bw.diggle,
+                              edge=TRUE,
+                            kernel="gaussian") 
+```
+
+```{r}
+## maptool method
+## par(bg = '#E4D5C9')
+
+## gridded_kde_childcareSG_ad <- maptools::as.SpatialGridDataFrame.im(kde_childcareSG_adaptive)
+## spplot(gridded_kde_childcareSG_ad)
+```
+
+## 2
+```{r}
+
+childcareSG_ppp.km <- rescale.ppp(childcareSG_ppp, 1000, "km")
+
+kde_childcareSG_adaptive <- adaptive.density(childcareSG_ppp.km, method="kernel")
+
+gridded_kde_childcareSG_ad <- as(
+  kde_childcareSG_adaptive,
+  "SpatialGridDataFrame"
+)
+spplot(gridded_kde_childcareSG_ad)
+```
+:::
+
+##

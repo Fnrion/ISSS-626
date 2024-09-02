@@ -221,7 +221,7 @@
     "href": "index.html",
     "title": "ISSS-626 Geospatial Analytics & Applc",
     "section": "",
-    "text": "Welcome to ISSS626 Geospatial Analytics & Applchomepage. In this website, you will find my coursework prepared for this course.\n\n\n\n\n\n\n\n\n\n\n\n\n1 Geospatial Data Science with R\n\n\n\nZou Jiaxun\n\n\nAug 24, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n2 Thematic Mapping and GeoVisualisation with R\n\n\n\nZou Jiaxun\n\n\nAug 24, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n4 1st Order Spatial Point Patterns Analysis Methods\n\n\n\nZou Jiaxun\n\n\nAug 29, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n5 2nd Order Spatial Point Patterns Analysis Methods\n\n\n\nZou Jiaxun\n\n\nSep 1, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items\n\n\n\n\n\n\n\n\n\nIn-class_Ex01\n\n\n\nZou Jiaxun\n\n\nAug 26, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nIn-class_Ex02\n\n\n\nZou Jiaxun\n\n\nSep 2, 2024\n\n\n\n\n\n\n\n\nNo matching items\n\n\n\n\n\n\n\n\n\nTake-home_Ex01\n\n\n\nZou Jiaxun\n\n\nSep 2, 2024\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Welcome to ISSS626 Geospatial Analytics & Applchomepage. In this website, you will find my coursework prepared for this course.\n\n\n\n\n\n\n\n\n\n\n\n\n1 Geospatial Data Science with R\n\n\n\nZou Jiaxun\n\n\nAug 24, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n2 Thematic Mapping and GeoVisualisation with R\n\n\n\nZou Jiaxun\n\n\nAug 24, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n4 1st Order Spatial Point Patterns Analysis Methods\n\n\n\nZou Jiaxun\n\n\nAug 29, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n5 2nd Order Spatial Point Patterns Analysis Methods\n\n\n\nZou Jiaxun\n\n\nSep 1, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on_Ex03\n\n\n\nZou Jiaxun\n\n\nSep 2, 2024\n\n\n\n\n\n\n\n\nNo matching items\n\n\n\n\n\n\n\n\n\nIn-class_Ex01\n\n\n\nZou Jiaxun\n\n\nAug 26, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nIn-class_Ex02\n\n\n\nZou Jiaxun\n\n\nSep 2, 2024\n\n\n\n\n\n\n\n\nNo matching items\n\n\n\n\n\n\n\n\n\nTake-home_Ex01\n\n\n\nZou Jiaxun\n\n\nSep 2, 2024\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex01/In-class_Ex01.html",
@@ -229,5 +229,61 @@
     "title": "In-class_Ex01",
     "section": "",
     "text": "Click to view code\npacman::p_load(tidyverse, sf, tmap, ggstatsplot)\ntmap_options(check.and.fix = TRUE)\n\n\n\n\nClick to view code\nmpsz14_shp &lt;- st_read(dsn = 'data/geospatial', layer = 'MP14_SUBZONE_WEB_PL')\n\n\nReading layer `MP14_SUBZONE_WEB_PL' from data source \n  `/Applications/SMU/S3/ISSS-626/ISSS-626 ZOUJIAXUN/In-class_Ex/In-class_Ex01/data/geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 323 features and 15 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33\nProjected CRS: SVY21\n\n\n\n\nClick to view code\nst_write(mpsz14_shp,\n         \"data/geospatial/MP14_SUBZONE_WEB_PL.kml\",\n         delete_dsn = TRUE)\n\n\nDeleting source `data/geospatial/MP14_SUBZONE_WEB_PL.kml' using driver `KML'\nWriting layer `MP14_SUBZONE_WEB_PL' to data source \n  `data/geospatial/MP14_SUBZONE_WEB_PL.kml' using driver `KML'\nWriting 323 features with 15 fields and geometry type Multi Polygon.\n\n\nClick to view code\nmpsz14_kml &lt;- st_read(\"data/geospatial/MP14_SUBZONE_WEB_PL.kml\")\n\n\nReading layer `MP14_SUBZONE_WEB_PL' from data source \n  `/Applications/SMU/S3/ISSS-626/ISSS-626 ZOUJIAXUN/In-class_Ex/In-class_Ex01/data/geospatial/MP14_SUBZONE_WEB_PL.kml' \n  using driver `KML'\nSimple feature collection with 323 features and 2 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 103.6057 ymin: 1.158699 xmax: 104.0885 ymax: 1.470775\nGeodetic CRS:  WGS 84\n\n\n\n\nClick to view code\nmpsz19_shp &lt;- st_read(dsn = \"data/MPSZ-2019\",\n                      layer = \"MPSZ-2019\")\n\n\nReading layer `MPSZ-2019' from data source \n  `/Applications/SMU/S3/ISSS-626/ISSS-626 ZOUJIAXUN/In-class_Ex/In-class_Ex01/data/MPSZ-2019' \n  using driver `ESRI Shapefile'\nSimple feature collection with 332 features and 6 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 103.6057 ymin: 1.158699 xmax: 104.0885 ymax: 1.470775\nGeodetic CRS:  WGS 84\n\n\n\n\nClick to view code\nmpsz19kml &lt;- st_read(\"data/geospatial/MasterPlan2019SubzoneBoundaryNoSeaKML.kml\")\n\n\nReading layer `URA_MP19_SUBZONE_NO_SEA_PL' from data source \n  `/Applications/SMU/S3/ISSS-626/ISSS-626 ZOUJIAXUN/In-class_Ex/In-class_Ex01/data/geospatial/MasterPlan2019SubzoneBoundaryNoSeaKML.kml' \n  using driver `KML'\nSimple feature collection with 332 features and 2 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY, XYZ\nBounding box:  xmin: 103.6057 ymin: 1.158699 xmax: 104.0885 ymax: 1.470775\nz_range:       zmin: 0 zmax: 0\nGeodetic CRS:  WGS 84\n\n\n\n\nClick to view code\npopdata2023 &lt;- read_csv(\"data/aspatial/respopagesextod2023.csv\")\n\n\n\n\nClick to view code\npopdata2023 &lt;- popdata2023 %&gt;%\n  group_by(PA, SZ, AG) %&gt;%\n  summarise(`POP` = sum(`Pop`)) %&gt;%\n  ungroup()%&gt;%\n  pivot_wider(names_from=AG, \n              values_from=POP) %&gt;%\n  mutate(YOUNG = rowSums(.[3:6])\n         +rowSums(.[14])) %&gt;%\nmutate(`ECONOMY ACTIVE` = rowSums(.[7:13]) # Aged 25 - 59\n         + rowSums(.[15])) %&gt;% # Aged 60 - 64\n  mutate(`AGED` = rowSums(.[16:21])) %&gt;%\n  mutate(`TOTAL` = rowSums(.[3:21])) %&gt;%\n  mutate(`DEPENDENCY` = (`YOUNG` + `AGED`) \n          / `ECONOMY ACTIVE`) %&gt;%\n  select(`PA`, `SZ`, `YOUNG`,\n         `ECONOMY ACTIVE`, `AGED`,\n         `TOTAL`, `DEPENDENCY`)\n\n\n\n\nClick to view code\npopdata2023 &lt;- popdata2023 %&gt;%\n  mutate_at(.vars = vars(PA, SZ),\n            .funs = list(toupper)) %&gt;%\n  filter(`ECONOMY ACTIVE` &gt; 0)\n\n\n\n\nClick to view code\nmpsz_pop2023 &lt;- left_join(mpsz19_shp, popdata2023,\n                          by = c(\"SUBZONE_N\" = \"SZ\"))\n\n\n\n\nClick to view code\nwrite_rds(mpsz_pop2023, \"data/rds/mpszpop2023.rds\")\n\n\n\n\nClick to view code\ntm_shape(mpsz_pop2023) +\n  tm_polygons()\n\n\n\n\n\n\n\n\n\nClick to view code\nqtm(mpsz_pop2023, \n    fill = \"DEPENDENCY\")"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html",
+    "title": "In-class_Ex02",
+    "section": "",
+    "text": "Click to view code\npacman::p_load(sf, raster, spatstat, tmap, tidyverse)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#issue-1-hands-on_2-standard-answer-1",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#issue-1-hands-on_2-standard-answer-1",
+    "title": "In-class_Ex02",
+    "section": "Issue 1: Hands-on_2 standard answer 1",
+    "text": "Issue 1: Hands-on_2 standard answer 1\n\n\nClick to view code\ninstall.packages(\"maptools\", repos = \"https://packagemanager.posit.co/cran/2023-10-13\")\n\n\n\nThe downloaded binary packages are in\n    /var/folders/k6/m28nhmy16gq06mch2hprzgfw0000gn/T//RtmpMQf3OD/downloaded_packages"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#issue-2-creating-coastal-outline",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#issue-2-creating-coastal-outline",
+    "title": "In-class_Ex02",
+    "section": "Issue 2: Creating coastal outline",
+    "text": "Issue 2: Creating coastal outline\nin sf. package, there are two functions allow us to combine multiple simple features."
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#woking-with-st_union",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#woking-with-st_union",
+    "title": "In-class_Ex02",
+    "section": "Woking with st_union()",
+    "text": "Woking with st_union()\nThe code chunk below, st_union() is used to derive the coastal outline sf tibble data.frame.\n\n\nClick to view code\nmpsz_sf &lt;- st_read(dsn = \"data\", layer = \"MP14_SUBZONE_WEB_PL\")\n\n\nReading layer `MP14_SUBZONE_WEB_PL' from data source \n  `/Applications/SMU/S3/ISSS-626/ISSS-626 ZOUJIAXUN/In-class_Ex/In-class_Ex02/data' \n  using driver `ESRI Shapefile'\nSimple feature collection with 323 features and 15 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33\nProjected CRS: SVY21\n\n\n\n\nClick to view code\nsg_sf &lt;- mpsz_sf %&gt;%\n  st_union\nplot(sg_sf)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#introduce-to-the-spastat-package",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#introduce-to-the-spastat-package",
+    "title": "In-class_Ex02",
+    "section": "Introduce to the spastat package",
+    "text": "Introduce to the spastat package\n\n\nClick to view code\n## sf use as.ppp\n## polygon as.p. ???\n## owin ?"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#kernel-density-estimation",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#kernel-density-estimation",
+    "title": "In-class_Ex02",
+    "section": "Kernel Density Estimation",
+    "text": "Kernel Density Estimation"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#section",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#section",
+    "title": "In-class_Ex02",
+    "section": "1",
+    "text": "1\n\n\nClick to view code\nchildcare_sf &lt;- st_read(\"data/child-care-services-geojson.geojson\") %&gt;%\n  st_transform(crs = 3414)\n\n\nReading layer `child-care-services-geojson' from data source \n  `/Applications/SMU/S3/ISSS-626/ISSS-626 ZOUJIAXUN/In-class_Ex/In-class_Ex02/data/child-care-services-geojson.geojson' \n  using driver `GeoJSON'\nSimple feature collection with 1545 features and 2 fields\nGeometry type: POINT\nDimension:     XYZ\nBounding box:  xmin: 103.6824 ymin: 1.248403 xmax: 103.9897 ymax: 1.462134\nz_range:       zmin: 0 zmax: 0\nGeodetic CRS:  WGS 84\n\n\n\n\nClick to view code\nchildcare_ppp &lt;- as.ppp(childcare_sf)\n\n\n\n\nClick to view code\nsg_owin &lt;- as.owin(sg_sf)\n\n\n\n\nClick to view code\nchildcareSG_ppp = childcare_ppp[sg_owin]\n\n\n\n\nClick to view code\nkde_childcareSG_bw &lt;- density(childcareSG_ppp,\n                              sigma=bw.diggle,\n                              edge=TRUE,\n                            kernel=\"gaussian\") \n\n\n\n\nClick to view code\n## maptool method\n## par(bg = '#E4D5C9')\n\n## gridded_kde_childcareSG_ad &lt;- maptools::as.SpatialGridDataFrame.im(kde_childcareSG_adaptive)\n## spplot(gridded_kde_childcareSG_ad)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#section-1",
+    "href": "In-class_Ex/In-class_Ex02/In-class_Ex02.html#section-1",
+    "title": "In-class_Ex02",
+    "section": "2",
+    "text": "2\n\n\nClick to view code\nchildcareSG_ppp.km &lt;- rescale.ppp(childcareSG_ppp, 1000, \"km\")\n\nkde_childcareSG_adaptive &lt;- adaptive.density(childcareSG_ppp.km, method=\"kernel\")\n\ngridded_kde_childcareSG_ad &lt;- as(\n  kde_childcareSG_adaptive,\n  \"SpatialGridDataFrame\"\n)\nspplot(gridded_kde_childcareSG_ad)"
   }
 ]
