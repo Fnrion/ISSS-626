@@ -1,0 +1,15 @@
+---
+title: "Take-home_Ex01"
+author: "Zou Jiaxun"
+date: "Sep 2, 2024"
+data-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+format:
+  html:
+    code-fold: true
+    code-summary: "Click to view code"
+---
