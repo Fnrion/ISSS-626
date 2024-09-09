@@ -1,0 +1,17 @@
+{
+  "hash": "b18a5de39b98adb16f5bcb04088b77a5",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"In-class_Ex03\"\nauthor: \"Zou Jiaxun\"\ndate: \"Sep 9, 2024\"\ndata-modified: \"last-modified\"\nexecute: \n  eval: true\n  echo: true\n  warning: false\n  freeze: true\nformat:\n  html:\n    code-fold: true\n    code-summary: \"Click to view code\"\n---\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(sf, spNetwork, tmap, tidyverse)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nnetwork <- st_read(dsn=\"data/geospatial\", \n                   layer=\"Punggol_St\")\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\nReading layer `Punggol_St' from data source \n  `/Applications/SMU/S3/ISSS-626/ISSS-626 ZOUJIAXUN/In-class_Ex/In-class_Ex03/data/geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 2642 features and 2 fields\nGeometry type: LINESTRING\nDimension:     XY\nBounding box:  xmin: 34038.56 ymin: 40941.11 xmax: 38882.85 ymax: 44801.27\nProjected CRS: SVY21 / Singapore TM\n```\n\n\n:::\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nchildcare <- st_read(dsn=\"data/geospatial\",\n                     layer=\"Punggol_CC\")\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\nReading layer `Punggol_CC' from data source \n  `/Applications/SMU/S3/ISSS-626/ISSS-626 ZOUJIAXUN/In-class_Ex/In-class_Ex03/data/geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 61 features and 1 field\nGeometry type: POINT\nDimension:     XYZ\nBounding box:  xmin: 34423.98 ymin: 41503.6 xmax: 37619.47 ymax: 44685.77\nz_range:       zmin: 0 zmax: 0\nProjected CRS: SVY21 / Singapore TM\n```\n\n\n:::\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nplot(network)\nplot(childcare,add=T,col='red',pch = 19)\n```\n\n::: {.cell-output-display}\n![](In-class_Ex03_files/figure-html/unnamed-chunk-4-1.png){width=672}\n:::\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nplot(st_geometry(network))\nplot(childcare,add=T,col='red',pch = 19)\n```\n\n::: {.cell-output-display}\n![](In-class_Ex03_files/figure-html/unnamed-chunk-5-1.png){width=672}\n:::\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\ntmap_mode('plot')\ntm_shape(childcare) +\n  tm_dots(col = 'blue') +\n  tm_shape(network) +\n  tm_lines() \n```\n\n::: {.cell-output-display}\n![](In-class_Ex03_files/figure-html/unnamed-chunk-6-1.png){width=672}\n:::\n\n```{.r .cell-code}\ntmap_mode('plot')\n```\n:::\n",
+    "supporting": [
+      "In-class_Ex03_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

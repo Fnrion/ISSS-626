@@ -13,3 +13,5 @@ format:
     code-fold: true
     code-summary: "Click to view code"
 ---
+
+[Here](https://isss626-ay2024-25aug.netlify.app/take-home_ex01) are the requirement of take-home_Ex01
