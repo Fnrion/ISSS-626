@@ -1,0 +1,15 @@
+{
+  "hash": "f468e6d47b9b160a860113505b27cf60",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Take-home_Ex01\"\nauthor: \"Zou Jiaxun\"\ndate: \"Sep 2, 2024\"\ndata-modified: \"last-modified\"\nexecute: \n  eval: true\n  echo: true\n  warning: false\n  freeze: true\nformat:\n  html:\n    code-fold: true\n    code-summary: \"Click to view code\"\n---\n\n\n\n[Here](https://isss626-ay2024-25aug.netlify.app/take-home_ex01) are the requirement of take-home_Ex01\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(sf, spNetwork, tmap, tidyverse)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\ncar_acc <- read.csv('data/Thailand_Road_Accident/thai_road_accident_2019_2022.csv') %>%\n  # Remove rows with missing longitude or latitude\n  filter(!is.na(longitude) & !is.na(latitude)) %>%\n  \n  # Create new columns for month and day of the week\n  mutate(Month_num = month(incident_datetime)) %>%\n  mutate(Month_fac = month(incident_datetime, label = TRUE, abbr = TRUE)) %>%\n  mutate(dayofweek = day(incident_datetime)) %>%\n  \n  # Convert the data frame to a spatial sf object\n  st_as_sf(coords = c(\"longitude\", \"latitude\"), crs = 4326) %>%\n  \n  # Transform to a different CRS (Coordinate Reference System)\n  st_transform(crs = 32647)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nwrite_rds(car_acc, \"data/Thailand_Road_Accident/acc.rds\")\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nacc <- read_rds(\"data/Thailand_Road_Accident/acc.rds\")\n```\n:::",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

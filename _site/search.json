@@ -368,6 +368,6 @@
     "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html",
     "title": "Take-home_Ex01",
     "section": "",
-    "text": "Here are the requirement of take-home_Ex01"
+    "text": "Here are the requirement of take-home_Ex01\n\n\nClick to view code\npacman::p_load(sf, spNetwork, tmap, tidyverse)\n\n\n\n\nClick to view code\ncar_acc &lt;- read.csv('data/Thailand_Road_Accident/thai_road_accident_2019_2022.csv') %&gt;%\n  # Remove rows with missing longitude or latitude\n  filter(!is.na(longitude) & !is.na(latitude)) %&gt;%\n  \n  # Create new columns for month and day of the week\n  mutate(Month_num = month(incident_datetime)) %&gt;%\n  mutate(Month_fac = month(incident_datetime, label = TRUE, abbr = TRUE)) %&gt;%\n  mutate(dayofweek = day(incident_datetime)) %&gt;%\n  \n  # Convert the data frame to a spatial sf object\n  st_as_sf(coords = c(\"longitude\", \"latitude\"), crs = 4326) %&gt;%\n  \n  # Transform to a different CRS (Coordinate Reference System)\n  st_transform(crs = 32647)\n\n\n\n\nClick to view code\nwrite_rds(car_acc, \"data/Thailand_Road_Accident/acc.rds\")\n\n\n\n\nClick to view code\nacc &lt;- read_rds(\"data/Thailand_Road_Accident/acc.rds\")"
   }
 ]

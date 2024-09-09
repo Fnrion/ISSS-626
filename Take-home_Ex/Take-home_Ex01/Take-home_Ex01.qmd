@@ -15,3 +15,33 @@ format:
 ---
 
 [Here](https://isss626-ay2024-25aug.netlify.app/take-home_ex01) are the requirement of take-home_Ex01
+
+```{r}
+pacman::p_load(sf, spNetwork, tmap, tidyverse)
+```
+
+```{r}
+car_acc <- read.csv('data/Thailand_Road_Accident/thai_road_accident_2019_2022.csv') %>%
+  # Remove rows with missing longitude or latitude
+  filter(!is.na(longitude) & !is.na(latitude)) %>%
+  
+  # Create new columns for month and day of the week
+  mutate(Month_num = month(incident_datetime)) %>%
+  mutate(Month_fac = month(incident_datetime, label = TRUE, abbr = TRUE)) %>%
+  mutate(dayofweek = day(incident_datetime)) %>%
+  
+  # Convert the data frame to a spatial sf object
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>%
+  
+  # Transform to a different CRS (Coordinate Reference System)
+  st_transform(crs = 32647)
+  
+```
+
+```{r}
+write_rds(car_acc, "data/Thailand_Road_Accident/acc.rds")
+```
+
+```{r}
+acc <- read_rds("data/Thailand_Road_Accident/acc.rds")
+```
