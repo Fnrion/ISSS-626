@@ -1,1 +1,15 @@
 /* css styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+h1, h2, h3 {
+    color: #0055aa;
+    font-family: 'Georgia', serif;
+}
+
+a {
+    color: #d9534f;
+}

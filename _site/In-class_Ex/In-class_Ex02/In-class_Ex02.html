@@ -314,7 +314,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#woking-with-st_union" id="toc-woking-with-st_union" class="nav-link" data-scroll-target="#woking-with-st_union">Woking with st_union()</a></li>
   <li><a href="#introduce-to-the-spastat-package" id="toc-introduce-to-the-spastat-package" class="nav-link" data-scroll-target="#introduce-to-the-spastat-package">Introduce to the spastat package</a></li>
   <li><a href="#kernel-density-estimation" id="toc-kernel-density-estimation" class="nav-link" data-scroll-target="#kernel-density-estimation">Kernel Density Estimation</a></li>
-  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2"></a></li>
+  <li><a href="#the-study-area" id="toc-the-study-area" class="nav-link" data-scroll-target="#the-study-area">The study Area</a></li>
+  <li><a href="#importing-traffic-accident-data" id="toc-importing-traffic-accident-data" class="nav-link" data-scroll-target="#importing-traffic-accident-data">Importing Traffic Accident Data</a></li>
   </ul>
 </nav>
     </div>
@@ -368,7 +369,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stdout">
 <pre><code>
 The downloaded binary packages are in
-    /var/folders/k6/m28nhmy16gq06mch2hprzgfw0000gn/T//RtmpMQf3OD/downloaded_packages</code></pre>
+    /var/folders/k6/m28nhmy16gq06mch2hprzgfw0000gn/T//RtmpR1mXVH/downloaded_packages</code></pre>
 </div>
 </div>
 </section>
@@ -424,10 +425,10 @@ Projected CRS: SVY21</code></pre>
 </section>
 <section id="kernel-density-estimation" class="level2">
 <h2 class="anchored" data-anchor-id="kernel-density-estimation">Kernel Density Estimation</h2>
-</section>
-<div class="{panel}">
-<section id="section" class="level2">
-<h2 class="anchored" data-anchor-id="section">1</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">1</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">2</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
@@ -483,9 +484,8 @@ Geodetic CRS:  WGS 84</code></pre>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="do">## spplot(gridded_kde_childcareSG_ad)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</section>
-<section id="section-1" class="level2">
-<h2 class="anchored" data-anchor-id="section-1">2</h2>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
@@ -507,10 +507,30 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 </div>
 </div>
-</section>
 </div>
-<section id="section-2" class="level2">
-<h2 class="anchored" data-anchor-id="section-2"></h2>
+</div>
+</div>
+</section>
+<section id="the-study-area" class="level2">
+<h2 class="anchored" data-anchor-id="the-study-area">The study Area</h2>
+<p>Bangkok Metropolitan Region</p>
+<div class="{callout-note}">
+<p>WGS 84/ UTM zone 47N EPSG 32647</p>
+</div>
+</section>
+<section id="importing-traffic-accident-data" class="level2">
+<h2 class="anchored" data-anchor-id="importing-traffic-accident-data">Importing Traffic Accident Data</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>rdacc_sf <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/Thailand_Road_Accident/thai_road_accident_2019_2022.csv"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(longitude) <span class="sc">&amp;</span> longitude <span class="sc">!=</span> <span class="st">""</span> <span class="sc">&amp;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">is.na</span>(latitude) <span class="sc">&amp;</span> latitude <span class="sc">!=</span> <span class="st">""</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"longitude"</span>, <span class="st">"latitude"</span>),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">crs =</span> <span class="dv">4326</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">32647</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 
 
 </section>

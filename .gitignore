@@ -6,5 +6,10 @@
 .httr-oauth
 .DS_Store
 .quarto
+**/data/*
+Take-home_Ex/data/*.shp
+Take-home_Ex/data/*.dbf
+Take-home_Ex/data/*
+
 
 /.quarto/

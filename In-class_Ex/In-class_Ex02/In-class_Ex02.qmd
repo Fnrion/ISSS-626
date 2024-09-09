@@ -20,7 +20,6 @@ pacman::p_load(sf, raster, spatstat, tmap, tidyverse)
 
 ## Issue 1: Hands-on_2 standard answer 1
 
-
 ```{r}
 install.packages("maptools", repos = "https://packagemanager.posit.co/cran/2023-10-13")
 ```
@@ -53,10 +52,9 @@ plot(sg_sf)
 
 ## Kernel Density Estimation
 
-
-:::{panel}
-
+::: panel-tabset
 ## 1
+
 ```{r}
 childcare_sf <- st_read("data/child-care-services-geojson.geojson") %>%
   st_transform(crs = 3414)
@@ -90,6 +88,7 @@ kde_childcareSG_bw <- density(childcareSG_ppp,
 ```
 
 ## 2
+
 ```{r}
 
 childcareSG_ppp.km <- rescale.ppp(childcareSG_ppp, 1000, "km")
@@ -104,4 +103,21 @@ spplot(gridded_kde_childcareSG_ad)
 ```
 :::
 
-##
+## The study Area
+
+Bangkok Metropolitan Region
+
+::: {callout-note}
+WGS 84/ UTM zone 47N EPSG 32647
+:::
+
+## Importing Traffic Accident Data
+
+```{r}
+rdacc_sf <- read_csv("data/Thailand_Road_Accident/thai_road_accident_2019_2022.csv") %>%
+  filter(!is.na(longitude) & longitude != "" &
+         !is.na(latitude) & latitude != "") %>%
+  st_as_sf(coords = c("longitude", "latitude"),
+           crs = 4326) %>%
+  st_transform(crs = 32647)
+```
