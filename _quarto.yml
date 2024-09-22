@@ -89,12 +89,12 @@ website:
 format:
   html:
     theme:
-      light: morph
-      dark: cosmo
+      light: cosmo
+      dark: morph
     toc: true
-    fontsize: 0.9em
+    fontsize: 1.1em
     linestretch: 1.6
     backgroundcolor: Ivory
-    light: flatly
-    dark: darkly
+    light: darkly
+    dark: flatly
 editor: visual

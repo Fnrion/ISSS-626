@@ -1,47 +1,399 @@
 ---
 title: "Take-home_Ex01"
 author: "Zou Jiaxun"
-date: "Sep 2, 2024"
+date: "Sep 23, 2024"
 data-modified: "last-modified"
 execute: 
   eval: true
   echo: true
   warning: false
   freeze: true
+  cache: true
 format:
   html:
     code-fold: true
     code-summary: "Click to view code"
 ---
 
-[Here](https://isss626-ay2024-25aug.netlify.app/take-home_ex01) are the requirement of take-home_Ex01
+::: {.alert .alert-dismissible .alert-primary style="width: 94%;"}
+**OH NO!!!**
 
-```{r}
-pacman::p_load(sf, spNetwork, tmap, tidyverse)
+**There is a collapse after 1 day data processing!!**
+
+**Error: vector memory limit of 16.0 Gb reached, see mem.maxVSize()!!!**
+
+![](Picture/NONONO.png){fig-align="center" width="80" height="100"}
+
+**Important thing to learn, even if shrinking data into 1/30, still try saveRDS!!!**
+:::
+
+# **1 Overview**
+
+## **1.1 Background**
+
+Spatial Point Patterns Analysis (SPPA) has proven to be an effective tool in studying and identifying the factors that contribute to road traffic accidents. Previous research has highlighted its potential, particularly in exploring spatial distributions and correlations. However, much of this research has predominantly concentrated on either behavioral factors (such as driver behavior and road usage) or environmental factors (such as road conditions and weather). Temporal factors—such as seasonal variations, the day of the week, or specific times of day—have received limited attention, despite their potential influence on accident patterns. Addressing these temporal dimensions can offer a more comprehensive understanding of traffic accidents, contributing to more effective prevention strategies.
+
+## **1.2 Objectives**
+
+::: callout-caution
+[Here](https://isss626-ay2024-25aug.netlify.app/take-home_ex01) are the requirement of take-home_Ex01
+:::
+
+# **2 Loading Packages**
+
+```{r, cache = TRUE}
+pacman::p_load(sf, spNetwork, tmap, tidyverse, dplyr, spatstat, knitr)
 ```
 
 ```{r}
-car_acc <- read.csv('data/Thailand_Road_Accident/thai_road_accident_2019_2022.csv') %>%
+library(knitr)
+
+# Create a table with package names and descriptions
+package_info <- data.frame(
+  Package = c("sf", "spNetwork", "tmap", "tidyverse", "dplyr", "spatstat"),
+  Description = c(
+    "For importing, managing, and handling geospatial data",
+    "For network-based spatial analysis, including kernel density estimation on networks",
+    "For thematic mapping",
+    "For non-spatial data wrangling and general data analysis",
+    "For data manipulation and pipeline tools",
+    "For spatial statistics and point pattern analysis"
+  )
+)
+
+# Display the table using kable (knitr)
+kable(package_info, col.names = c("Package", "Description"))
+```
+
+# **3 Data Preparation**
+
+For the purpose of this exercise, three basic data sets are needed, they are:
+
+-   [Thailand Road Accident \[2019-2022\]](https://www.kaggle.com/datasets/thaweewatboy/thailand-road-accident-2019-2022) on Kaggle
+
+-   [Thailand Roads (OpenStreetMap Export)](https://data.humdata.org/dataset/hotosm_tha_roads) on HDX.
+
+-   [Thailand - Subnational Administrative Boundaries](https://data.humdata.org/dataset/cod-ab-tha?) on HDX.
+
+All of them are spatial data
+
+## **3.1 Import & Preparation**
+
+Now we’re loading both the event (acc), polygon (dm2) and road network (Road). Ensure that each layer is in the same CRS.
+
+## acc {.tabset}
+
+```{r, cache = TRUE}
+# List of BMR provinces
+bmr_provinces <- c("Bangkok", "Nonthaburi", "Pathum Thani", "Samut Prakan", "Nakhon Pathom", "Samut Sakhon")
+
+# Read and process the accident data
+car_acc <- read_csv('data/Thailand_Road_Accident/thai_road_accident_2019_2022.csv') %>%
+  
   # Remove rows with missing longitude or latitude
   filter(!is.na(longitude) & !is.na(latitude)) %>%
+
+  # Filter rows for BMR provinces
+  filter(province_en %in% bmr_provinces) %>%
   
-  # Create new columns for month and day of the week
-  mutate(Month_num = month(incident_datetime)) %>%
-  mutate(Month_fac = month(incident_datetime, label = TRUE, abbr = TRUE)) %>%
-  mutate(dayofweek = day(incident_datetime)) %>%
+  # Create new columns
+  mutate(Month_num = month(incident_datetime),
+         Month_fac = month(incident_datetime, label = TRUE, abbr = TRUE),
+         Day = day(incident_datetime),
+         Day_of_week = wday(incident_datetime, label = TRUE),
+         incident_datetime = ymd_hms(incident_datetime),
+         clock = format(incident_datetime, "%H:%M:%S")) %>%
   
-  # Convert the data frame to a spatial sf object
+  # Convert to an sf object
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326) %>%
   
-  # Transform to a different CRS (Coordinate Reference System)
+  # Reproject to UTM Zone 47N (for Thailand)
   st_transform(crs = 32647)
+
+  # add later time analysis car_acc_time
+car_acc_time <- car_acc
   
+car_acc <- car_acc_time %>%
+  select(1, 5, 17:22)
+```
+
+## dm2 {.tabset}
+
+```{r}
+# Load administrative boundaries (adm2 level)
+adm2 <- st_read(dsn = "data/tha_adm_rtsd_itos_20210121_shp", layer = "tha_admbnda_adm2_rtsd_20220121") %>%
+  st_transform(adm2, crs = 32647)
+adm2_time <- adm2
+adm2 <- adm2_time %>%
+  select(1:2,11,20)
+```
+
+```{r, cache = TRUE}
+# Filter administrative boundaries for BMR provinces
+bmr_boundaries <- adm2 %>%
+  filter(ADM1_EN %in% bmr_provinces)
+```
+
+## Road {.tabset}
+
+```{r, cache = TRUE}
+# Load road network
+Road <- st_read(dsn = "data/hotosm_tha_roads_lines_shp", layer = "hotosm_tha_roads_lines_shp") %>%
+    st_set_crs(4326) %>%  # Assign CRS if it's missing
+    st_transform(Road, crs = 32647)
 ```
 
 ```{r}
-write_rds(car_acc, "data/Thailand_Road_Accident/acc.rds")
+saveRDS(Road, file = "data/Road")
+```
+
+```{r, cache = TRUE}
+# Filter the road network to only include roads in the BMR area
+Road_bmr <- st_intersection(Road, bmr_boundaries)
+```
+
+## 3.2 Visualize Accident Data
+
+```{r, cache = TRUE}
+# Visualize accident points
+tmap_mode("plot")
+tm_shape(car_acc) +
+  tm_dots()
+```
+
+## 3.3 Spatial Join Accidents to Road Network
+
+Now we can use st_nearest_feature() to join the accident points with the nearest road segments from the road network.
+
+```{r, cache = TRUE}
+# Join accidents to the nearest road segment
+acc_with_roads <- st_join(car_acc, Road_bmr, join = st_nearest_feature)
+
+# Check the joined data
+print(acc_with_roads)
+```
+
+## 3.4 Network-Based Analysis with spNetwork
+
+Now we can perform network-based spatial analysis, like kernel density estimation (KDE) along the road network. The spNetwork package is useful for this type of analysis.
+
+```{r, cache = TRUE}
+# Convert generic geometries to LINESTRING
+Road_bmr <- st_cast(Road_bmr, "LINESTRING") 
+```
+
+```{r, cache = TRUE}
+lixels <- lixelize_lines(Road_bmr, 
+                         2000, 
+                         mindist = 1000)
+```
+
+```{r, cache = TRUE}
+samples <- lines_center(lixels) 
+```
+
+```{r eval = FALSE}
+# Now run NKDE with the samples argument included
+kde <- nkde(lines = Road_bmr,                
+            events = acc_with_roads,         
+            w = rep(1, nrow(acc_with_roads)), 
+            kernel_name = "quartic",         
+            bw = 500,                       
+            samples = samples,            
+            method = "simple",              
+            grid_shape = c(100, 100),         
+            verbose = TRUE)
+```
+
+```{r, eval = FALSE}
+class(kde)
+save(kde, file = "data/kde.Rdata")
+saveRDS(kde, file = "data/kde.rds")
+```
+
+Here is a 3 day handle, so we load the data directly from our save
+
+```{r, cache = TRUE}
+load("data/kde.Rdata")
+KDE <- readRDS("data/kde.rds")
+```
+
+```{r, cache = TRUE}
+samples$density <- KDE
+lixels$density <- KDE
 ```
 
 ```{r}
-acc <- read_rds("data/Thailand_Road_Accident/acc.rds")
+# remove the density with 0 
+filtered_samples <- samples[samples$density != 0, ]
+filtered_lixels <-lixels[lixels$density != 0, ]
+```
+
+```{r, cache = TRUE}
+# rescaling to help the mapping
+samples$density <- samples$density*1000
+lixels$density <- lixels$density*1000
+```
+
+```{r, cache = TRUE, eval = FALSE}
+tmap_mode('view')
+tm_shape(filtered_lixels)+
+  tm_lines(col="density")+
+tm_shape(acc_with_roads)+
+  tm_dots()
+tmap_mode('plot')
+```
+
+```{r, cache = TRUE}
+class(Road_bmr)
+class(acc_with_roads)
+```
+
+```{r, cache = TRUE}
+acc_ppp <- as.ppp(acc_with_roads)
+```
+
+```{r, eval: false}
+# Convert the filtered road network (lixels) geometry to psp and linnet objects
+# roads_psp <- as.psp(st_geometry(filtered_lixels), window = as.owin(filtered_lixels))
+# Road_bmr_linnet <- as.linnet(roads_psp)
+```
+
+```{r eval: fales}
+# kfun_bmr_accidents <- kfunctions(network = Road_bmr,   # The road network (linnet)
+#                                  events = acc_ppp,      # The accident points (ppp)
+#                                  start = 0,                  
+#                                  end = 5000,                 
+#                                  step = 100,                 
+#                                  width = 100,                
+#                                  nsim = 50,                  
+#                                  resolution = 50,            
+#                                  verbose = FALSE,            
+#                                  conf_int = 0.05)
+```
+
+## Temporal
+
+```{r, cache = TRUE}
+adm2_time <- st_read(dsn = "data/tha_adm_rtsd_itos_20210121_shp", layer = "tha_admbnda_adm2_rtsd_20220121") %>%
+  st_transform(adm2, crs = 32647) 
+```
+
+```{r, cache = TRUE}
+rd_time <- filtered_lixels
+```
+
+```{r, cache = TRUE}
+car_acc_time <- car_acc_time %>%
+  mutate(accident_severity = case_when(
+    number_of_fatalities >= 1 | number_of_injuries >= 10 ~ "Heavy",  # Heavy accidents
+    number_of_fatalities == 0 & number_of_injuries > 0 ~ "Middle",   # Middle accidents
+    number_of_fatalities == 0 & number_of_injuries == 0 & number_of_vehicles_involved > 0 ~ "Low"  # Low accidents
+  ))
+
+# Check the result
+print(car_acc_time %>% select(number_of_fatalities, number_of_injuries, number_of_vehicles_involved, accident_severity))
+```
+
+```{r, cache = TRUE}
+# Filter for heavy accidents
+heavy_accidents <- car_acc_time %>%
+  filter(accident_severity == "Heavy")
+
+# Filter for middle accidents
+middle_accidents <- car_acc_time %>%
+  filter(accident_severity == "Middle")
+
+# Filter for low accidents
+low_accidents <- car_acc_time %>%
+  filter(accident_severity == "Low")
+```
+
+```{r}
+# Check unique values of accident_severity to verify if "Middle" exists
+unique(car_acc_time$accident_severity)
+# Check rows where accident_severity is NA
+na_rows <- car_acc_time %>%
+  filter(is.na(accident_severity))
+
+# Display the rows with NA in accident_severity
+print(na_rows)
+```
+
+```{r}
+# Reorder the accident_severity factor to ensure "Heavy" is at the bottom
+car_acc_time <- car_acc_time %>%
+  mutate(accident_severity = factor(accident_severity, levels = c("N/A", "Low", "Middle", "Heavy")))
+
+# Verify the factor levels
+levels(car_acc_time$accident_severity)
+
+# Create a stacked bar plot with "Heavy" at the bottom
+ggplot(car_acc_time, aes(x = Month_num, fill = accident_severity)) +
+  geom_bar(position = "stack") +
+  labs(title = "Stacked Bar Plot of Traffic Accidents by Severity and Month",
+       x = "Month Number",
+       y = "Number of Accidents",
+       fill = "Accident Severity") +
+  scale_x_continuous(breaks = 1:12, labels = month.abb)  # Display month abbreviations
+```
+
+```{r}
+# Ensure Day_of_week is an ordered factor (starting from Monday)
+car_acc_time <- car_acc_time %>%
+  mutate(Day_of_week = factor(Day_of_week, levels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")))
+
+# Verify the levels
+levels(car_acc_time$Day_of_week)
+```
+
+```{r}
+# Create a stacked bar plot based on Day_of_week
+ggplot(car_acc_time, aes(x = Day_of_week, fill = accident_severity)) +
+  geom_bar(position = "stack") +
+  labs(title = "Stacked Bar Plot of Traffic Accidents by Severity and Day of the Week",
+       x = "Day of the Week",
+       y = "Number of Accidents",
+       fill = "Accident Severity")
+```
+
+```{r}
+# Extract just the hour from the clock column (assuming clock is in HH:MM:SS format)
+car_acc_time <- car_acc_time %>%
+  mutate(hour = format(as.POSIXct(clock, format = "%H:%M:%S"), "%H"))
+```
+
+```{r}
+# Create a stacked bar plot based on the hour of the day
+ggplot(car_acc_time, aes(x = hour, fill = accident_severity)) +
+  geom_bar(position = "stack") +
+  labs(title = "Stacked Bar Plot of Traffic Accidents by Severity and Time of Day",
+       x = "Hour of the Day",
+       y = "Number of Accidents",
+       fill = "Accident Severity") +
+  scale_x_discrete(breaks = 1:24)  # Ensure all hours (0-23) are shown on the x-axis
+```
+
+```{r}
+# Convert the clock to POSIXct format and classify into Morning and Evening
+car_acc_time <- car_acc_time %>%
+  mutate(time_of_day = case_when(
+    format(as.POSIXct(clock, format = "%H:%M:%S"), "%H") >= "06" & 
+    format(as.POSIXct(clock, format = "%H:%M:%S"), "%H") < "18" ~ "Morning",
+    
+    TRUE ~ "Evening"
+  ))
+
+# Verify the new time_of_day column
+table(car_acc_time$time_of_day)
+```
+
+```{r}
+# Create a stacked bar plot for Morning and Evening
+ggplot(car_acc_time, aes(x = time_of_day, fill = accident_severity)) +
+  geom_bar(position = "stack") +
+  labs(title = "Stacked Bar Plot of Traffic Accidents by Severity and Time of Day",
+       x = "Time of Day",
+       y = "Number of Accidents",
+       fill = "Accident Severity")
 ```
