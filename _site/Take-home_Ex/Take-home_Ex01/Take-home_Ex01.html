@@ -321,10 +321,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#acc" id="toc-acc" class="nav-link" data-scroll-target="#acc">acc</a></li>
   <li><a href="#dm2" id="toc-dm2" class="nav-link" data-scroll-target="#dm2">dm2</a></li>
   <li><a href="#road" id="toc-road" class="nav-link" data-scroll-target="#road">Road</a></li>
-  <li><a href="#visualize-accident-data" id="toc-visualize-accident-data" class="nav-link" data-scroll-target="#visualize-accident-data">3.2 Visualize Accident Data</a></li>
-  <li><a href="#spatial-join-accidents-to-road-network" id="toc-spatial-join-accidents-to-road-network" class="nav-link" data-scroll-target="#spatial-join-accidents-to-road-network">3.3 Spatial Join Accidents to Road Network</a></li>
-  <li><a href="#network-based-analysis-with-spnetwork" id="toc-network-based-analysis-with-spnetwork" class="nav-link" data-scroll-target="#network-based-analysis-with-spnetwork">3.4 Network-Based Analysis with spNetwork</a></li>
-  <li><a href="#temporal" id="toc-temporal" class="nav-link" data-scroll-target="#temporal">Temporal</a></li>
+  </ul></li>
+  <li><a href="#visualize-accident-data" id="toc-visualize-accident-data" class="nav-link" data-scroll-target="#visualize-accident-data">4 Visualize Accident Data</a>
+  <ul class="collapse">
+  <li><a href="#spatial-join-accidents-to-road-network" id="toc-spatial-join-accidents-to-road-network" class="nav-link" data-scroll-target="#spatial-join-accidents-to-road-network">4.1 Spatial Join Accidents to Road Network</a></li>
+  <li><a href="#network-based-analysis-with-spnetwork" id="toc-network-based-analysis-with-spnetwork" class="nav-link" data-scroll-target="#network-based-analysis-with-spnetwork">4.2 Network-Based Analysis with spNetwork</a></li>
+  </ul></li>
+  <li><a href="#temporal" id="toc-temporal" class="nav-link" data-scroll-target="#temporal">5. Temporal</a>
+  <ul class="collapse">
+  <li><a href="#regional-vision" id="toc-regional-vision" class="nav-link" data-scroll-target="#regional-vision"><strong>5.1 Regional Vision</strong></a></li>
+  <li><a href="#converting-the-generic-sp-format-into-spatstats-ppp-format" id="toc-converting-the-generic-sp-format-into-spatstats-ppp-format" class="nav-link" data-scroll-target="#converting-the-generic-sp-format-into-spatstats-ppp-format"><strong>5.2&nbsp;Converting the generic sp format into spatstat’s ppp format</strong></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -582,8 +588,9 @@ Geodetic CRS:  WGS 84</code></pre>
 </details>
 </div>
 </section>
-<section id="visualize-accident-data" class="level2">
-<h2 class="anchored" data-anchor-id="visualize-accident-data">3.2 Visualize Accident Data</h2>
+</section>
+<section id="visualize-accident-data" class="level1">
+<h1>4 Visualize Accident Data</h1>
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
@@ -600,9 +607,8 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 </div>
 </div>
-</section>
 <section id="spatial-join-accidents-to-road-network" class="level2">
-<h2 class="anchored" data-anchor-id="spatial-join-accidents-to-road-network">3.3 Spatial Join Accidents to Road Network</h2>
+<h2 class="anchored" data-anchor-id="spatial-join-accidents-to-road-network">4.1 Spatial Join Accidents to Road Network</h2>
 <p>Now we can use st_nearest_feature() to join the accident points with the nearest road segments from the road network.</p>
 <div class="cell">
 <details class="code-fold">
@@ -642,7 +648,7 @@ Projected CRS: WGS 84 / UTM zone 47N
 </div>
 </section>
 <section id="network-based-analysis-with-spnetwork" class="level2">
-<h2 class="anchored" data-anchor-id="network-based-analysis-with-spnetwork">3.4 Network-Based Analysis with spNetwork</h2>
+<h2 class="anchored" data-anchor-id="network-based-analysis-with-spnetwork">4.2 Network-Based Analysis with spNetwork</h2>
 <p>Now we can perform network-based spatial analysis, like kernel density estimation (KDE) along the road network. The spNetwork package is useful for this type of analysis.</p>
 <div class="cell">
 <details class="code-fold">
@@ -713,17 +719,15 @@ Projected CRS: WGS 84 / UTM zone 47N
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove the density with 0 </span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>filtered_samples <span class="ot">&lt;-</span> samples[samples<span class="sc">$</span>density <span class="sc">!=</span> <span class="dv">0</span>, ]</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>filtered_lixels <span class="ot">&lt;-</span>lixels[lixels<span class="sc">$</span>density <span class="sc">!=</span> <span class="dv">0</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rescaling to help the mapping</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>samples<span class="sc">$</span>density <span class="ot">&lt;-</span> samples<span class="sc">$</span>density</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>lixels<span class="sc">$</span>density <span class="ot">&lt;-</span> lixels<span class="sc">$</span>density</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rescaling to help the mapping</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>samples<span class="sc">$</span>density <span class="ot">&lt;-</span> samples<span class="sc">$</span>density<span class="sc">*</span><span class="dv">1000</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>lixels<span class="sc">$</span>density <span class="ot">&lt;-</span> lixels<span class="sc">$</span>density<span class="sc">*</span><span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>filtered_lixels <span class="ot">&lt;-</span> lixels[lixels<span class="sc">$</span>density <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
@@ -801,57 +805,797 @@ Projected CRS: WGS 84 / UTM zone 47N
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># kfun &lt;- kfunctions(Filtered_lixels_simple,</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co">#                    car_acc,</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co">#                    start = 0, </span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co">#                    end = 2000, </span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="co">#                    step = 100, </span></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="co">#                    width = 100, </span></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co">#                    nsim = 50, </span></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="co">#                    resolution = 50,</span></span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="co">#                    verbose = FALSE, </span></span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="co">#                    conf_int = 0.05,</span></span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="co">#                    agg = 1000)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter rows where 'ADM1_EN' is "Bangkok"</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>car_acc_bangkok <span class="ot">&lt;-</span> car_acc <span class="sc">%&gt;%</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(province_en <span class="sc">==</span> <span class="st">"Bangkok"</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="co"># View the filtered dataset</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(car_acc_bangkok)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 6 features and 7 fields
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 645371.9 ymin: 1506578 xmax: 684102 ymax: 1525144
+Projected CRS: WGS 84 / UTM zone 47N
+# A tibble: 6 × 8
+  acc_code province_en Month_num Month_fac   Day Day_of_week clock   
+     &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;ord&gt;     &lt;int&gt; &lt;ord&gt;       &lt;chr&gt;   
+1   629691 Bangkok             1 Jan           1 Tue         03:05:00
+2   629689 Bangkok             1 Jan           1 Tue         05:42:00
+3   604307 Bangkok             1 Jan           1 Tue         10:10:00
+4  3793736 Bangkok             1 Jan           1 Tue         17:30:00
+5   599070 Bangkok             1 Jan           1 Tue         19:20:00
+6   613605 Bangkok             1 Jan           1 Tue         21:40:00
+# ℹ 1 more variable: geometry &lt;POINT [m]&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find exact duplicates based on the geometry (coordinates)</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>duplicates <span class="ot">&lt;-</span> car_acc_bangkok[<span class="fu">duplicated</span>(car_acc_bangkok<span class="sc">$</span>geometry), ]</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co"># View the duplicated points</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(duplicates)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 777 features and 7 fields
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 645482.1 ymin: 1506204 xmax: 708415.7 ymax: 1541237
+Projected CRS: WGS 84 / UTM zone 47N
+# A tibble: 777 × 8
+   acc_code province_en Month_num Month_fac   Day Day_of_week clock   
+      &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;ord&gt;     &lt;int&gt; &lt;ord&gt;       &lt;chr&gt;   
+ 1   629689 Bangkok             1 Jan           1 Tue         05:42:00
+ 2   629711 Bangkok             1 Jan           2 Wed         10:07:00
+ 3   629713 Bangkok             1 Jan           2 Wed         10:33:00
+ 4   629701 Bangkok             1 Jan           2 Wed         11:46:00
+ 5   629722 Bangkok             1 Jan           4 Fri         08:01:00
+ 6   629729 Bangkok             1 Jan           4 Fri         09:01:00
+ 7   629718 Bangkok             1 Jan           4 Fri         09:46:00
+ 8   629724 Bangkok             1 Jan           4 Fri         11:23:00
+ 9   629720 Bangkok             1 Jan           4 Fri         16:36:00
+10   629733 Bangkok             1 Jan           5 Sat         12:25:00
+# ℹ 767 more rows
+# ℹ 1 more variable: geometry &lt;POINT [m]&gt;</code></pre>
+</div>
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Optionally, count how many duplicates there are</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>num_duplicates <span class="ot">&lt;-</span> <span class="fu">nrow</span>(duplicates)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Number of duplicate points:"</span>, num_duplicates))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Number of duplicate points: 777"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find which points are within 50 meters of each other</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>close_points <span class="ot">&lt;-</span> <span class="fu">st_is_within_distance</span>(car_acc_bangkok, <span class="at">dist =</span> <span class="dv">50</span>)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># View the list of indices where points are near each other</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(close_points)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sparse geometry binary predicate list of length 6089, where the
+predicate was `is_within_distance'
+first 10 elements:
+ 1: 1, 2, 3895
+ 2: 1, 2, 3895
+ 3: 3, 4813, 4849, 5826
+ 4: 4, 352, 1487, 1535, 1558, 3333
+ 5: 5, 10, 13, 729, 762, 1018, 1038, 1128, 1129, 1259, ...
+ 6: 6, 355, 3464, 5058, 5537, 5808
+ 7: 7
+ 8: 8, 2043, 3939, 4942, 5353
+ 9: 9
+ 10: 5, 10, 13, 443, 729, 762, 1018, 1038, 1128, 1129, ...</code></pre>
+</div>
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Optionally, create a summary to see how many points have close neighbors</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>num_close_points <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">lengths</span>(close_points) <span class="sc">&gt;</span> <span class="dv">1</span>)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Number of points with close neighbors:"</span>, num_close_points))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Number of points with close neighbors: 5317"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>points_with_neighbors <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">lengths</span>(close_points) <span class="sc">&gt;</span> <span class="dv">1</span>)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot all points</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> acc_with_roads, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> acc_with_roads[points_with_neighbors, ], <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Red points represent those with neighbors within 50 meters"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_geometry_type</span>(car_acc_bangkok)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   [1] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+  [13] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+  [25] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+  [37] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+  [49] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+  [61] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+  [73] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+  [85] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+  [97] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [109] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [121] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [133] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [145] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [157] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [169] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [181] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [193] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [205] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [217] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [229] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [241] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [253] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [265] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [277] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [289] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [301] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [313] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [325] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [337] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [349] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [361] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [373] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [385] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [397] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [409] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [421] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [433] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [445] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [457] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [469] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [481] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [493] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [505] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [517] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [529] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [541] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [553] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [565] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [577] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [589] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [601] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [613] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [625] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [637] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [649] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [661] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [673] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [685] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [697] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [709] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [721] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [733] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [745] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [757] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [769] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [781] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [793] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [805] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [817] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [829] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [841] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [853] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [865] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [877] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [889] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [901] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [913] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [925] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [937] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [949] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [961] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [973] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [985] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+ [997] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1009] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1021] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1033] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1045] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1057] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1069] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1081] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1093] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1105] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1117] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1129] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1141] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1153] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1165] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1177] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1189] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1201] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1213] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1225] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1237] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1249] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1261] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1273] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1285] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1297] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1309] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1321] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1333] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1345] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1357] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1369] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1381] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1393] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1405] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1417] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1429] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1441] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1453] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1465] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1477] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1489] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1501] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1513] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1525] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1537] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1549] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1561] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1573] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1585] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1597] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1609] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1621] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1633] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1645] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1657] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1669] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1681] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1693] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1705] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1717] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1729] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1741] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1753] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1765] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1777] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1789] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1801] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1813] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1825] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1837] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1849] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1861] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1873] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1885] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1897] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1909] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1921] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1933] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1945] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1957] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1969] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1981] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[1993] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2005] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2017] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2029] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2041] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2053] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2065] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2077] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2089] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2101] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2113] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2125] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2137] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2149] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2161] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2173] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2185] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2197] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2209] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2221] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2233] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2245] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2257] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2269] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2281] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2293] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2305] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2317] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2329] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2341] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2353] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2365] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2377] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2389] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2401] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2413] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2425] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2437] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2449] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2461] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2473] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2485] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2497] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2509] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2521] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2533] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2545] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2557] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2569] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2581] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2593] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2605] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2617] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2629] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2641] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2653] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2665] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2677] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2689] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2701] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2713] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2725] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2737] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2749] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2761] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2773] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2785] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2797] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2809] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2821] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2833] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2845] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2857] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2869] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2881] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2893] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2905] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2917] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2929] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2941] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2953] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2965] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2977] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[2989] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3001] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3013] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3025] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3037] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3049] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3061] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3073] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3085] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3097] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3109] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3121] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3133] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3145] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3157] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3169] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3181] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3193] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3205] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3217] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3229] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3241] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3253] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3265] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3277] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3289] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3301] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3313] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3325] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3337] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3349] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3361] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3373] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3385] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3397] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3409] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3421] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3433] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3445] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3457] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3469] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3481] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3493] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3505] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3517] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3529] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3541] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3553] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3565] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3577] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3589] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3601] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3613] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3625] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3637] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3649] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3661] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3673] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3685] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3697] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3709] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3721] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3733] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3745] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3757] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3769] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3781] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3793] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3805] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3817] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3829] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3841] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3853] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3865] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3877] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3889] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3901] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3913] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3925] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3937] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3949] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3961] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3973] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3985] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[3997] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4009] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4021] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4033] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4045] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4057] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4069] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4081] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4093] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4105] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4117] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4129] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4141] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4153] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4165] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4177] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4189] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4201] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4213] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4225] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4237] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4249] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4261] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4273] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4285] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4297] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4309] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4321] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4333] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4345] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4357] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4369] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4381] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4393] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4405] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4417] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4429] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4441] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4453] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4465] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4477] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4489] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4501] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4513] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4525] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4537] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4549] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4561] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4573] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4585] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4597] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4609] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4621] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4633] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4645] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4657] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4669] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4681] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4693] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4705] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4717] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4729] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4741] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4753] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4765] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4777] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4789] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4801] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4813] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4825] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4837] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4849] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4861] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4873] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4885] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4897] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4909] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4921] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4933] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4945] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4957] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4969] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4981] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[4993] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5005] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5017] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5029] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5041] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5053] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5065] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5077] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5089] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5101] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5113] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5125] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5137] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5149] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5161] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5173] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5185] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5197] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5209] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5221] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5233] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5245] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5257] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5269] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5281] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5293] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5305] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5317] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5329] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5341] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5353] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5365] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5377] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5389] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5401] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5413] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5425] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5437] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5449] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5461] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5473] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5485] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5497] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5509] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5521] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5533] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5545] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5557] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5569] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5581] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5593] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5605] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5617] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5629] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5641] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5653] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5665] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5677] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5689] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5701] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5713] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5725] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5737] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5749] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5761] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5773] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5785] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5797] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5809] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5821] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5833] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5845] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5857] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5869] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5881] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5893] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5905] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5917] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5929] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5941] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5953] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5965] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5977] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[5989] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[6001] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[6013] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[6025] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[6037] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[6049] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[6061] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[6073] POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT POINT
+[6085] POINT POINT POINT POINT POINT
+18 Levels: GEOMETRY POINT LINESTRING POLYGON MULTIPOINT ... TRIANGLE</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the coordinates from acc_with_roads</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>coords <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(car_acc_bangkok)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co"># View the first few coordinates</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(coords)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>            X       Y
+[1,] 674117.8 1525144
+[2,] 674117.8 1525144
+[3,] 650504.9 1506578
+[4,] 645371.9 1524720
+[5,] 648570.4 1524555
+[6,] 684102.0 1520421</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dbscan)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply DBSCAN clustering on the point coordinates (e.g., eps = 50 meters)</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>db_clusters <span class="ot">&lt;-</span> <span class="fu">dbscan</span>(coords, <span class="at">eps =</span> <span class="dv">10</span>, <span class="at">minPts =</span> <span class="dv">2</span>)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Add cluster results back to the sf object</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>car_acc_bangkok<span class="sc">$</span>cluster <span class="ot">&lt;-</span> db_clusters<span class="sc">$</span>cluster</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Group points by cluster and merge them</span></span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>acc_with_roads_merged <span class="ot">&lt;-</span> car_acc_bangkok <span class="sc">%&gt;%</span></span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cluster) <span class="sc">%&gt;%</span></span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">geometry =</span> <span class="fu">st_union</span>(geometry)) <span class="sc">%&gt;%</span></span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a><span class="co"># View the updated dataset</span></span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(acc_with_roads)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 6 features and 24 fields
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 627012.3 ymin: 1502876 xmax: 693488.9 ymax: 1533381
+Projected CRS: WGS 84 / UTM zone 47N
+# A tibble: 6 × 25
+  acc_code province_en   Month_num Month_fac   Day Day_of_week clock   
+     &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;ord&gt;     &lt;int&gt; &lt;ord&gt;       &lt;chr&gt;   
+1   571882 Nakhon Pathom         1 Jan           1 Tue         02:25:00
+2   600001 Nonthaburi            1 Jan           1 Tue         03:00:00
+3   605043 Samut Prakan          1 Jan           1 Tue         03:00:00
+4   629691 Bangkok               1 Jan           1 Tue         03:05:00
+5   571887 Nakhon Pathom         1 Jan           1 Tue         04:30:00
+6   599234 Samut Prakan          1 Jan           1 Tue         04:45:00
+# ℹ 18 more variables: geometry &lt;POINT [m]&gt;, name &lt;chr&gt;, name_en &lt;chr&gt;,
+#   highway &lt;chr&gt;, surface &lt;chr&gt;, smoothness &lt;chr&gt;, width &lt;chr&gt;, lanes &lt;chr&gt;,
+#   oneway &lt;chr&gt;, bridge &lt;chr&gt;, layer &lt;chr&gt;, source &lt;chr&gt;, name_th &lt;chr&gt;,
+#   osm_id &lt;dbl&gt;, osm_type &lt;chr&gt;, Shape_Leng &lt;dbl&gt;, Shape_Area &lt;dbl&gt;,
+#   ADM1_EN &lt;chr&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>kfun <span class="ot">&lt;-</span> <span class="fu">kfunctions</span>(Filtered_lixels_simple,</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>                   car_acc_bangkok,  <span class="co"># Use the dataset with cluster assignments if clustering was applied</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">start =</span> <span class="dv">0</span>, </span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">end =</span> <span class="dv">2000</span>, </span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">step =</span> <span class="dv">100</span>, </span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">width =</span> <span class="dv">50</span>, </span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">nsim =</span> <span class="dv">50</span>, </span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">resolution =</span> <span class="dv">50</span>,</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">verbose =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>                   <span class="at">conf_int =</span> <span class="fl">0.05</span>,</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">agg =</span> <span class="dv">10000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
-<section id="temporal" class="level2">
-<h2 class="anchored" data-anchor-id="temporal">Temporal</h2>
+</section>
+<section id="temporal" class="level1">
+<h1>5. Temporal</h1>
+<section id="regional-vision" class="level2">
+<h2 class="anchored" data-anchor-id="regional-vision"><strong>5.1 Regional Vision</strong></h2>
+<p>Now, we are going to prepare a basemap and a choropleth map showing the distribution of acc by using&nbsp;<em>qtm()</em>&nbsp;of&nbsp;<strong>tmap</strong>&nbsp;package.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>adm2_time <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/tha_adm_rtsd_itos_20210121_shp"</span>, <span class="at">layer =</span> <span class="st">"tha_admbnda_adm2_rtsd_20220121"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(adm2, <span class="at">crs =</span> <span class="dv">32647</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>joined_data <span class="ot">&lt;-</span> <span class="fu">st_join</span>(car_acc_time, adm2_time, <span class="at">join =</span> st_within)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust the basemap to use tm_dots() for point data</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>basemap <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(adm2_time) <span class="sc">+</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span> </span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_text</span>(<span class="st">"ADM2_EN"</span>, <span class="at">size =</span> <span class="fl">0.5</span>)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the fatalities map</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>fatalities <span class="ot">&lt;-</span> <span class="fu">qtm</span>(joined_data, <span class="st">"number_of_fatalities"</span>)</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange the maps side by side</span></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(basemap, fatalities, <span class="at">asp =</span> <span class="dv">1</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="converting-the-generic-sp-format-into-spatstats-ppp-format" class="level2">
+<h2 class="anchored" data-anchor-id="converting-the-generic-sp-format-into-spatstats-ppp-format"><strong>5.2&nbsp;Converting the generic sp format into spatstat’s ppp format</strong></h2>
+<p>Now, we will use&nbsp;<em>as.ppp()</em>&nbsp;function of&nbsp;<strong>spatstat</strong>&nbsp;to convert the spatial data into&nbsp;<strong>spatstat</strong>’s&nbsp;<strong><em>ppp</em></strong> object format.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>acc_ppp <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(car_acc_time)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>acc_ppp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Reading layer `tha_admbnda_adm2_rtsd_20220121' from data source 
-  `/Applications/SMU/S3/ISSS-626/ISSS-626 ZOUJIAXUN/Take-home_Ex/Take-home_Ex01/data/tha_adm_rtsd_itos_20210121_shp' 
-  using driver `ESRI Shapefile'
-Simple feature collection with 928 features and 19 fields
-Geometry type: MULTIPOLYGON
-Dimension:     XY
-Bounding box:  xmin: 97.34336 ymin: 5.613038 xmax: 105.637 ymax: 20.46507
-Geodetic CRS:  WGS 84</code></pre>
+<pre><code>Marked planar point pattern: 12986 points
+marks are numeric, of storage type  'double'
+window: rectangle = [591277.5, 710166.1] x [1486845.7, 1576520.5] units</code></pre>
 </div>
 </div>
+<p>Now, let us plot&nbsp;<strong><em>acc_ppp</em></strong>&nbsp;and examine the different.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>rd_time <span class="ot">&lt;-</span> filtered_lixels</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(acc_ppp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>car_acc_time <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">accident_severity =</span> <span class="fu">case_when</span>(</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    number_of_fatalities <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">|</span> number_of_injuries <span class="sc">&gt;=</span> <span class="dv">10</span> <span class="sc">~</span> <span class="st">"Heavy"</span>,  <span class="co"># Heavy accidents</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    number_of_fatalities <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> number_of_injuries <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Middle"</span>,   <span class="co"># Middle accidents</span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    number_of_fatalities <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> number_of_injuries <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> number_of_vehicles_involved <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Low"</span>  <span class="co"># Low accidents</span></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the result</span></span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(car_acc_time <span class="sc">%&gt;%</span> <span class="fu">select</span>(number_of_fatalities, number_of_injuries, number_of_vehicles_involved, accident_severity))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>car_acc_time <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">accident_severity =</span> <span class="fu">case_when</span>(</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    number_of_fatalities <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">|</span> number_of_injuries <span class="sc">&gt;=</span> <span class="dv">10</span> <span class="sc">~</span> <span class="st">"Heavy"</span>,  <span class="co"># Heavy accidents</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>    number_of_fatalities <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> number_of_injuries <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Middle"</span>,   <span class="co"># Middle accidents</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>    number_of_fatalities <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> number_of_injuries <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> number_of_vehicles_involved <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Low"</span>  <span class="co"># Low accidents</span></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the result</span></span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(car_acc_time <span class="sc">%&gt;%</span> <span class="fu">select</span>(number_of_fatalities, number_of_injuries, number_of_vehicles_involved, accident_severity))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Simple feature collection with 12986 features and 4 fields
@@ -879,36 +1623,36 @@ Projected CRS: WGS 84 / UTM zone 47N
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for heavy accidents</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>heavy_accidents <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(accident_severity <span class="sc">==</span> <span class="st">"Heavy"</span>)</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for middle accidents</span></span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>middle_accidents <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(accident_severity <span class="sc">==</span> <span class="st">"Middle"</span>)</span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for low accidents</span></span>
-<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>low_accidents <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
-<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(accident_severity <span class="sc">==</span> <span class="st">"Low"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for heavy accidents</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>heavy_accidents <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(accident_severity <span class="sc">==</span> <span class="st">"Heavy"</span>)</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for middle accidents</span></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>middle_accidents <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(accident_severity <span class="sc">==</span> <span class="st">"Middle"</span>)</span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for low accidents</span></span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>low_accidents <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(accident_severity <span class="sc">==</span> <span class="st">"Low"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check unique values of accident_severity to verify if "Middle" exists</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(car_acc_time<span class="sc">$</span>accident_severity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check unique values of accident_severity to verify if "Middle" exists</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(car_acc_time<span class="sc">$</span>accident_severity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Middle" "Low"    "Heavy"  NA      </code></pre>
 </div>
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check rows where accident_severity is NA</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>na_rows <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(accident_severity))</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the rows with NA in accident_severity</span></span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(na_rows)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check rows where accident_severity is NA</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>na_rows <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(accident_severity))</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the rows with NA in accident_severity</span></span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(na_rows)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Simple feature collection with 10 features and 22 fields
@@ -941,31 +1685,31 @@ Projected CRS: WGS 84 / UTM zone 47N
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reorder the accident_severity factor to ensure "Heavy" is at the bottom</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>car_acc_time <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">accident_severity =</span> <span class="fu">factor</span>(accident_severity, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"N/A"</span>, <span class="st">"Low"</span>, <span class="st">"Middle"</span>, <span class="st">"Heavy"</span>)))</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify the factor levels</span></span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(car_acc_time<span class="sc">$</span>accident_severity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reorder the accident_severity factor to ensure "Heavy" is at the bottom</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>car_acc_time <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">accident_severity =</span> <span class="fu">factor</span>(accident_severity, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"N/A"</span>, <span class="st">"Low"</span>, <span class="st">"Middle"</span>, <span class="st">"Heavy"</span>)))</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify the factor levels</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(car_acc_time<span class="sc">$</span>accident_severity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "N/A"    "Low"    "Middle" "Heavy" </code></pre>
 </div>
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a stacked bar plot with "Heavy" at the bottom</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(car_acc_time, <span class="fu">aes</span>(<span class="at">x =</span> Month_num, <span class="at">fill =</span> accident_severity)) <span class="sc">+</span></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stacked Bar Plot of Traffic Accidents by Severity and Month"</span>,</span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Month Number"</span>,</span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Accidents"</span>,</span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Accident Severity"</span>) <span class="sc">+</span></span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, <span class="at">labels =</span> month.abb)  <span class="co"># Display month abbreviations</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a stacked bar plot with "Heavy" at the bottom</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(car_acc_time, <span class="fu">aes</span>(<span class="at">x =</span> Month_num, <span class="at">fill =</span> accident_severity)) <span class="sc">+</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stacked Bar Plot of Traffic Accidents by Severity and Month"</span>,</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Month Number"</span>,</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Accidents"</span>,</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Accident Severity"</span>) <span class="sc">+</span></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, <span class="at">labels =</span> month.abb)  <span class="co"># Display month abbreviations</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -973,12 +1717,12 @@ Projected CRS: WGS 84 / UTM zone 47N
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure Day_of_week is an ordered factor (starting from Monday)</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>car_acc_time <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Day_of_week =</span> <span class="fu">factor</span>(Day_of_week, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Mon"</span>, <span class="st">"Tue"</span>, <span class="st">"Wed"</span>, <span class="st">"Thu"</span>, <span class="st">"Fri"</span>, <span class="st">"Sat"</span>, <span class="st">"Sun"</span>)))</span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify the levels</span></span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(car_acc_time<span class="sc">$</span>Day_of_week)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure Day_of_week is an ordered factor (starting from Monday)</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>car_acc_time <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Day_of_week =</span> <span class="fu">factor</span>(Day_of_week, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Mon"</span>, <span class="st">"Tue"</span>, <span class="st">"Wed"</span>, <span class="st">"Thu"</span>, <span class="st">"Fri"</span>, <span class="st">"Sat"</span>, <span class="st">"Sun"</span>)))</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify the levels</span></span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(car_acc_time<span class="sc">$</span>Day_of_week)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun"</code></pre>
@@ -987,18 +1731,18 @@ Projected CRS: WGS 84 / UTM zone 47N
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a stacked bar plot based on Day_of_week</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(car_acc_time, <span class="fu">aes</span>(<span class="at">x =</span> Day_of_week, <span class="at">fill =</span> accident_severity)) <span class="sc">+</span></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stacked Bar Plot of Traffic Accidents by Severity and Day of the Week"</span>,</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Day of the Week"</span>,</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Accidents"</span>,</span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Accident Severity"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a stacked bar plot based on Day_of_week</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(car_acc_time, <span class="fu">aes</span>(<span class="at">x =</span> Day_of_week, <span class="at">fill =</span> accident_severity)) <span class="sc">+</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stacked Bar Plot of Traffic Accidents by Severity and Day of the Week"</span>,</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Day of the Week"</span>,</span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Accidents"</span>,</span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Accident Severity"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1006,27 +1750,27 @@ Projected CRS: WGS 84 / UTM zone 47N
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract just the hour from the clock column (assuming clock is in HH:MM:SS format)</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>car_acc_time <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">hour =</span> <span class="fu">format</span>(<span class="fu">as.POSIXct</span>(clock, <span class="at">format =</span> <span class="st">"%H:%M:%S"</span>), <span class="st">"%H"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract just the hour from the clock column (assuming clock is in HH:MM:SS format)</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>car_acc_time <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">hour =</span> <span class="fu">format</span>(<span class="fu">as.POSIXct</span>(clock, <span class="at">format =</span> <span class="st">"%H:%M:%S"</span>), <span class="st">"%H"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a stacked bar plot based on the hour of the day</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(car_acc_time, <span class="fu">aes</span>(<span class="at">x =</span> hour, <span class="at">fill =</span> accident_severity)) <span class="sc">+</span></span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stacked Bar Plot of Traffic Accidents by Severity and Time of Day"</span>,</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Hour of the Day"</span>,</span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Accidents"</span>,</span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Accident Severity"</span>) <span class="sc">+</span></span>
-<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>)  <span class="co"># Ensure all hours (0-23) are shown on the x-axis</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a stacked bar plot based on the hour of the day</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(car_acc_time, <span class="fu">aes</span>(<span class="at">x =</span> hour, <span class="at">fill =</span> accident_severity)) <span class="sc">+</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stacked Bar Plot of Traffic Accidents by Severity and Time of Day"</span>,</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Hour of the Day"</span>,</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Accidents"</span>,</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Accident Severity"</span>) <span class="sc">+</span></span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>)  <span class="co"># Ensure all hours (0-23) are shown on the x-axis</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1034,17 +1778,17 @@ Projected CRS: WGS 84 / UTM zone 47N
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the clock to POSIXct format and classify into Morning and Evening</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>car_acc_time <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">time_of_day =</span> <span class="fu">case_when</span>(</span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">format</span>(<span class="fu">as.POSIXct</span>(clock, <span class="at">format =</span> <span class="st">"%H:%M:%S"</span>), <span class="st">"%H"</span>) <span class="sc">&gt;=</span> <span class="st">"06"</span> <span class="sc">&amp;</span> </span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">format</span>(<span class="fu">as.POSIXct</span>(clock, <span class="at">format =</span> <span class="st">"%H:%M:%S"</span>), <span class="st">"%H"</span>) <span class="sc">&lt;</span> <span class="st">"18"</span> <span class="sc">~</span> <span class="st">"Morning"</span>,</span>
-<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Evening"</span></span>
-<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify the new time_of_day column</span></span>
-<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(car_acc_time<span class="sc">$</span>time_of_day)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the clock to POSIXct format and classify into Morning and Evening</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>car_acc_time <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">time_of_day =</span> <span class="fu">case_when</span>(</span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">format</span>(<span class="fu">as.POSIXct</span>(clock, <span class="at">format =</span> <span class="st">"%H:%M:%S"</span>), <span class="st">"%H"</span>) <span class="sc">&gt;=</span> <span class="st">"06"</span> <span class="sc">&amp;</span> </span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">format</span>(<span class="fu">as.POSIXct</span>(clock, <span class="at">format =</span> <span class="st">"%H:%M:%S"</span>), <span class="st">"%H"</span>) <span class="sc">&lt;</span> <span class="st">"18"</span> <span class="sc">~</span> <span class="st">"Morning"</span>,</span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Evening"</span></span>
+<span id="cb71-8"><a href="#cb71-8" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb71-9"><a href="#cb71-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-10"><a href="#cb71-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify the new time_of_day column</span></span>
+<span id="cb71-11"><a href="#cb71-11" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(car_acc_time<span class="sc">$</span>time_of_day)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -1055,18 +1799,18 @@ Evening Morning
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a stacked bar plot for Morning and Evening</span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(car_acc_time, <span class="fu">aes</span>(<span class="at">x =</span> time_of_day, <span class="at">fill =</span> accident_severity)) <span class="sc">+</span></span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stacked Bar Plot of Traffic Accidents by Severity and Time of Day"</span>,</span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Time of Day"</span>,</span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Accidents"</span>,</span>
-<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Accident Severity"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a stacked bar plot for Morning and Evening</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(car_acc_time, <span class="fu">aes</span>(<span class="at">x =</span> time_of_day, <span class="at">fill =</span> accident_severity)) <span class="sc">+</span></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stacked Bar Plot of Traffic Accidents by Severity and Time of Day"</span>,</span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Time of Day"</span>,</span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Accidents"</span>,</span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Accident Severity"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Take-home_Ex01_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

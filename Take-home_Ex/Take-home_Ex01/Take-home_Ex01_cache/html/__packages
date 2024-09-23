@@ -22,3 +22,4 @@ spatstat.model
 spatstat.linnet
 spatstat
 knitr
+dbscan

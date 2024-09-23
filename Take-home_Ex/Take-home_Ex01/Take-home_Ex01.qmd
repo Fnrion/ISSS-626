@@ -154,7 +154,7 @@ saveRDS(Road, file = "data/Road")
 Road_bmr <- readRDS("data/Road_bmr.rds")
 ```
 
-## 3.2 Visualize Accident Data
+# 4 Visualize Accident Data
 
 ```{r, cache = TRUE}
 # Visualize accident points
@@ -163,7 +163,7 @@ tm_shape(car_acc) +
   tm_dots()
 ```
 
-## 3.3 Spatial Join Accidents to Road Network
+## 4.1 Spatial Join Accidents to Road Network
 
 Now we can use st_nearest_feature() to join the accident points with the nearest road segments from the road network.
 
@@ -175,7 +175,7 @@ acc_with_roads <- st_join(car_acc, Road_bmr, join = st_nearest_feature)
 print(acc_with_roads)
 ```
 
-## 3.4 Network-Based Analysis with spNetwork
+## 4.2 Network-Based Analysis with spNetwork
 
 Now we can perform network-based spatial analysis, like kernel density estimation (KDE) along the road network. The spNetwork package is useful for this type of analysis.
 
@@ -230,16 +230,14 @@ samples$density <- KDE
 lixels$density <- KDE
 ```
 
-```{r}
-# remove the density with 0 
-filtered_samples <- samples[samples$density != 0, ]
-filtered_lixels <-lixels[lixels$density != 0, ]
-```
-
 ```{r, cache = TRUE}
 # rescaling to help the mapping
-samples$density <- samples$density*1000
-lixels$density <- lixels$density*1000
+samples$density <- samples$density
+lixels$density <- lixels$density
+```
+
+```{r}
+filtered_lixels <- lixels[lixels$density > 0, ]
 ```
 
 ```{r, cache = TRUE, eval = FALSE}
@@ -271,28 +269,131 @@ head(Filtered_lixels_simple)
 ```
 
 ```{r}
-# kfun <- kfunctions(Filtered_lixels_simple,
-#                    car_acc,
-#                    start = 0, 
-#                    end = 2000, 
-#                    step = 100, 
-#                    width = 100, 
-#                    nsim = 50, 
-#                    resolution = 50,
-#                    verbose = FALSE, 
-#                    conf_int = 0.05,
-#                    agg = 1000)
+# Filter rows where 'ADM1_EN' is "Bangkok"
+car_acc_bangkok <- car_acc %>%
+  filter(province_en == "Bangkok")
+
+# View the filtered dataset
+head(car_acc_bangkok)
 ```
 
-## Temporal
+```{r}
+# Find exact duplicates based on the geometry (coordinates)
+duplicates <- car_acc_bangkok[duplicated(car_acc_bangkok$geometry), ]
 
-```{r, cache = TRUE}
-adm2_time <- st_read(dsn = "data/tha_adm_rtsd_itos_20210121_shp", layer = "tha_admbnda_adm2_rtsd_20220121") %>%
-  st_transform(adm2, crs = 32647) 
+# View the duplicated points
+print(duplicates)
+
+# Optionally, count how many duplicates there are
+num_duplicates <- nrow(duplicates)
+print(paste("Number of duplicate points:", num_duplicates))
 ```
 
-```{r, cache = TRUE}
-rd_time <- filtered_lixels
+```{r}
+
+# Find which points are within 50 meters of each other
+close_points <- st_is_within_distance(car_acc_bangkok, dist = 50)
+
+# View the list of indices where points are near each other
+print(close_points)
+
+# Optionally, create a summary to see how many points have close neighbors
+num_close_points <- sum(lengths(close_points) > 1)
+print(paste("Number of points with close neighbors:", num_close_points))
+```
+
+```{r}
+library(ggplot2)
+
+points_with_neighbors <- which(lengths(close_points) > 1)
+
+# Plot all points
+ggplot() +
+  geom_sf(data = acc_with_roads, color = "blue") +
+  geom_sf(data = acc_with_roads[points_with_neighbors, ], color = "red", size = 2) +
+  ggtitle("Red points represent those with neighbors within 50 meters")
+```
+
+```{r}
+st_geometry_type(car_acc_bangkok)
+```
+
+```{r}
+# Extract the coordinates from acc_with_roads
+coords <- st_coordinates(car_acc_bangkok)
+
+# View the first few coordinates
+head(coords)
+```
+
+```{r}
+library(dbscan)
+
+# Apply DBSCAN clustering on the point coordinates (e.g., eps = 50 meters)
+db_clusters <- dbscan(coords, eps = 10, minPts = 2)
+
+# Add cluster results back to the sf object
+car_acc_bangkok$cluster <- db_clusters$cluster
+
+# Group points by cluster and merge them
+acc_with_roads_merged <- car_acc_bangkok %>%
+  group_by(cluster) %>%
+  summarise(geometry = st_union(geometry)) %>%
+  ungroup()
+# View the updated dataset
+head(acc_with_roads)
+```
+
+```{r, eval=FALSE}
+kfun <- kfunctions(Filtered_lixels_simple,
+                   car_acc_bangkok,  # Use the dataset with cluster assignments if clustering was applied
+                   start = 0, 
+                   end = 2000, 
+                   step = 100, 
+                   width = 50, 
+                   nsim = 50, 
+                   resolution = 50,
+                   verbose = FALSE, 
+                   conf_int = 0.05,
+                   agg = 10000)
+```
+
+# 5. Temporal
+
+## **5.1 Regional Vision**
+
+Now, we are going to prepare a basemap and a choropleth map showing the distribution of acc by using *qtm()* of **tmap** package.
+
+```{r}
+joined_data <- st_join(car_acc_time, adm2_time, join = st_within)
+```
+
+```{r}
+# Adjust the basemap to use tm_dots() for point data
+basemap <- tm_shape(adm2_time) +
+  tm_polygons() + 
+  tm_text("ADM2_EN", size = 0.5)
+
+# Create the fatalities map
+fatalities <- qtm(joined_data, "number_of_fatalities")
+
+# Arrange the maps side by side
+tmap_arrange(basemap, fatalities, asp = 1, ncol = 2)
+```
+
+## **5.2 Converting the generic sp format into spatstat’s ppp format**
+
+Now, we will use *as.ppp()* function of **spatstat** to convert the spatial data into **spatstat**’s ***ppp*** object format.
+
+```{r}
+acc_ppp <- as.ppp(car_acc_time)
+acc_ppp
+```
+
+Now, let us plot ***acc_ppp*** and examine the different.
+
+```{r}
+plot(acc_ppp)
 ```
 
 ```{r, cache = TRUE}
