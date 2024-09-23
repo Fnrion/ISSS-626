@@ -117,7 +117,7 @@ car_acc <- car_acc_time %>%
   select(1, 5, 17:22)
 ```
 
-## dm2 {.tabset}
+## adm2 {.tabset}
 
 ```{r}
 # Load administrative boundaries (adm2 level)
