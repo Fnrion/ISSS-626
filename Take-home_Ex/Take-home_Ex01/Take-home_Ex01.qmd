@@ -79,7 +79,7 @@ All of them are spatial data
 
 ## **3.1 Import & Preparation**
 
-Now we’re loading both the event (acc), polygon (dm2) and road network (Road). Ensure that each layer is in the same CRS.
+Now we’re loading both the event (acc), polygon (dm2) and road network (Road). Ensure that each layer is in the same CRS. (P.S. this step will overlap the Kfun, since too many points in the same location)
 
 ## acc {.tabset}
 
@@ -137,10 +137,11 @@ bmr_boundaries <- adm2 %>%
 ## Road {.tabset}
 
 ```{r, cache = TRUE}
-# Load road network
-Road <- st_read(dsn = "data/hotosm_tha_roads_lines_shp", layer = "hotosm_tha_roads_lines_shp") %>%
-    st_set_crs(4326) %>%  # Assign CRS if it's missing
-    st_transform(Road, crs = 32647)
+# # Load road network
+# Road <- st_read(dsn = "data/hotosm_tha_roads_lines_shp", layer = "hotosm_tha_roads_lines_shp") %>%
+#     st_set_crs(4326) %>%  # Assign CRS if it's missing
+#     st_transform(Road, crs = 32647)
+Road <- readRDS("data/Road.rds")
 ```
 
 ```{r}
@@ -148,8 +149,9 @@ saveRDS(Road, file = "data/Road")
 ```
 
 ```{r, cache = TRUE}
-# Filter the road network to only include roads in the BMR area
-Road_bmr <- st_intersection(Road, bmr_boundaries)
+# # Filter the road network to only include roads in the BMR area
+# Road_bmr <- st_intersection(Road, bmr_boundaries)
+Road_bmr <- readRDS("data/Road_bmr.rds")
 ```
 
 ## 3.2 Visualize Accident Data
@@ -178,43 +180,48 @@ print(acc_with_roads)
 Now we can perform network-based spatial analysis, like kernel density estimation (KDE) along the road network. The spNetwork package is useful for this type of analysis.
 
 ```{r, cache = TRUE}
-# Convert generic geometries to LINESTRING
-Road_bmr <- st_cast(Road_bmr, "LINESTRING") 
+# # Convert generic geometries to LINESTRING
+# Road_bmr <- st_cast(Road_bmr, "LINESTRING")
+Road_bmr <- readRDS("data/Road_bmr.rds")
 ```
 
 ```{r, cache = TRUE}
-lixels <- lixelize_lines(Road_bmr, 
-                         2000, 
-                         mindist = 1000)
+# lixels <- lixelize_lines(Road_bmr, 
+#                          2000, 
+#                          mindist = 1000)
+lixels <- readRDS("data/lixels.rds")
 ```
 
 ```{r, cache = TRUE}
 samples <- lines_center(lixels) 
 ```
 
+```{r}
+saveRDS(samples, "data/samples.rds")
+```
+
 ```{r eval = FALSE}
-# Now run NKDE with the samples argument included
-kde <- nkde(lines = Road_bmr,                
-            events = acc_with_roads,         
-            w = rep(1, nrow(acc_with_roads)), 
-            kernel_name = "quartic",         
-            bw = 500,                       
-            samples = samples,            
-            method = "simple",              
-            grid_shape = c(100, 100),         
-            verbose = TRUE)
+# # Now run NKDE with the samples argument included
+# kde <- nkde(lines = Road_bmr,                
+#             events = acc_with_roads,         
+#             w = rep(1, nrow(acc_with_roads)), 
+#             kernel_name = "quartic",         
+#             bw = 500,                       
+#             samples = samples,            
+#             method = "simple",              
+#             grid_shape = c(100, 100),         
+#             verbose = TRUE)
 ```
 
 ```{r, eval = FALSE}
-class(kde)
-save(kde, file = "data/kde.Rdata")
-saveRDS(kde, file = "data/kde.rds")
+# class(kde)
+# save(kde, file = "data/kde.Rdata")
+# saveRDS(kde, file = "data/kde.rds")
 ```
 
 Here is a 3 day handle, so we load the data directly from our save
 
 ```{r, cache = TRUE}
-load("data/kde.Rdata")
 KDE <- readRDS("data/kde.rds")
 ```
 
@@ -236,12 +243,11 @@ lixels$density <- lixels$density*1000
 ```
 
 ```{r, cache = TRUE, eval = FALSE}
-tmap_mode('view')
+tmap_mode('plot')
 tm_shape(filtered_lixels)+
   tm_lines(col="density")+
 tm_shape(acc_with_roads)+
   tm_dots()
-tmap_mode('plot')
 ```
 
 ```{r, cache = TRUE}
@@ -249,27 +255,33 @@ class(Road_bmr)
 class(acc_with_roads)
 ```
 
-```{r, cache = TRUE}
-acc_ppp <- as.ppp(acc_with_roads)
+```{r}
+colnames(filtered_lixels)
 ```
 
-```{r, eval: false}
-# Convert the filtered road network (lixels) geometry to psp and linnet objects
-# roads_psp <- as.psp(st_geometry(filtered_lixels), window = as.owin(filtered_lixels))
-# Road_bmr_linnet <- as.linnet(roads_psp)
+```{r}
+# Filter the rows where 'ADM1_EN' is "Bangkok"
+Filtered_lixels_simple <- filtered_lixels[filtered_lixels$ADM1_EN == "Bangkok", ]
+
+# Select only columns 1 to 14 and column 20
+Filtered_lixels_simple <- Filtered_lixels_simple[, c(1, 14:20)]
+
+# Check the result
+head(Filtered_lixels_simple)
 ```
 
-```{r eval: fales}
-# kfun_bmr_accidents <- kfunctions(network = Road_bmr,   # The road network (linnet)
-#                                  events = acc_ppp,      # The accident points (ppp)
-#                                  start = 0,                  
-#                                  end = 5000,                 
-#                                  step = 100,                 
-#                                  width = 100,                
-#                                  nsim = 50,                  
-#                                  resolution = 50,            
-#                                  verbose = FALSE,            
-#                                  conf_int = 0.05)
+```{r}
+# kfun <- kfunctions(Filtered_lixels_simple,
+#                    car_acc,
+#                    start = 0, 
+#                    end = 2000, 
+#                    step = 100, 
+#                    width = 100, 
+#                    nsim = 50, 
+#                    resolution = 50,
+#                    verbose = FALSE, 
+#                    conf_int = 0.05,
+#                    agg = 1000)
 ```
 
 ## Temporal
