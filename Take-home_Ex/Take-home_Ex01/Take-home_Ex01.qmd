@@ -247,12 +247,13 @@ lixels$density <- lixels$density
 filtered_lixels <- lixels[lixels$density > 0, ]
 ```
 
-```{r, cache = TRUE, eval = FALSE}
-tmap_mode('view')
+```{r, cache = TRUE}
+tmap_mode('plot')
 tm_shape(filtered_lixels)+
   tm_lines(col="density")+
 tm_shape(acc_with_roads)+
-  tm_dots()
+  tm_dots(col = "black",
+          size = 0.01)
 ```
 
 ```{r, cache = TRUE}
