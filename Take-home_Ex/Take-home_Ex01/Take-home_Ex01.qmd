@@ -635,6 +635,10 @@ ggplot(car_acc_time, aes(x = Day_of_week, y = hour)) +
        fill = "Number of Accidents") +
   theme_minimal()
 ```
+:::{.callout-tip}
+A traffic safety strategy should focus on rush hour periods in Bangkok, with special attention to reducing the frequency of low and middle severity accidents. Implementing more targeted interventions during peak times and holiday periods, combined with improved traffic management in the most affected areas, can help reduce accident rates and improve road safety.
+:::
+
 
 ## 4.2 Spatio-temporal Analysis
 
