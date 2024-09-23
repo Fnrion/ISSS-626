@@ -421,8 +421,9 @@ kfun_new <- kfunctions(lixels_new,
 ```{r}
 kfun_new
 ```
-
-
+:::{.callout-note}
+The plot suggests that traffic accidents on the road network are non-randomly clustered, particularly at distances of around 2500 to 5000 meters. This clustering is statistically significant, as indicated by the blue line’s consistent deviation from the confidence envelope of random distribution. This could point to specific road segments or areas with higher accident rates, requiring targeted interventions for traffic safety.
+:::
 ```{r}
 saveRDS(samples, "data/samples.rds")
 ```
