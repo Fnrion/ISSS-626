@@ -449,7 +449,7 @@ Since the plot is too dark, we will use rescale.ppp()
 
 ```{r}
 
-sigma_value <- 12000  # Adjust this value based on your smoothing preference
+sigma_value <- 1000  # Adjust this value based on your smoothing preference
 
 accbmr_ppp.km <- rescale.ppp(accbmr_ppp, 1000, "km")
 
@@ -457,6 +457,10 @@ kde_accbmr_bw <- density(accbmr_ppp.km, sigma=sigma_value, edge=TRUE, kernel="ga
 
 plot(kde_accbmr_bw)
 ```
+
+::: {callout-note}
+The KDE map shows that car accidents are concentrated in specific high-risk areas, especially in the eastern region, where accident density is higher. In contrast, the western areas have fewer accidents. This map helps identify where safety improvements, such as better road design or enforcement, are most needed to reduce accidents in the most affected zones.
+:::
 
 ```{r, cache = TRUE}
 car_acc_time <- car_acc_time %>%
@@ -572,3 +576,5 @@ ggplot(car_acc_time, aes(x = time_of_day, fill = accident_severity)) +
        y = "Number of Accidents",
        fill = "Accident Severity")
 ```
+
+

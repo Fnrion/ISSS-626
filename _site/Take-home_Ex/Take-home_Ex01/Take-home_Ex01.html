@@ -1273,7 +1273,7 @@ window: rectangle = [591277.5, 710166.1] x [1486845.7, 1576520.5] units</code></
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>sigma_value <span class="ot">&lt;-</span> <span class="dv">12000</span>  <span class="co"># Adjust this value based on your smoothing preference</span></span>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>sigma_value <span class="ot">&lt;-</span> <span class="dv">1000</span>  <span class="co"># Adjust this value based on your smoothing preference</span></span>
 <span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>accbmr_ppp.km <span class="ot">&lt;-</span> <span class="fu">rescale.ppp</span>(accbmr_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>)</span>
 <span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1288,6 +1288,9 @@ window: rectangle = [591277.5, 710166.1] x [1486845.7, 1576520.5] units</code></
 </figure>
 </div>
 </div>
+</div>
+<div class="{callout-note}">
+<p>The KDE map shows that car accidents are concentrated in specific high-risk areas, especially in the eastern region, where accident density is higher. In contrast, the western areas have fewer accidents. This map helps identify where safety improvements, such as better road design or enforcement, are most needed to reduce accidents in the most affected zones.</p>
 </div>
 <div class="cell">
 <details class="code-fold">
