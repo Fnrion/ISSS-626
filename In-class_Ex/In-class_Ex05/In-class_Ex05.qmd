@@ -13,3 +13,101 @@ format:
     code-fold: true
     code-summary: "Click to view code"
 ---
+
+# ```{r}
+# pacman::p_load(sf, spdep, tmap, tidyverse)
+# ```
+# 
+# ```{r}
+# hunan <- st_read(dsn = "data/geospatial", 
+#                  layer = "Hunan")
+# ```
+# 
+# ```{r}
+# hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+# ```
+# 
+# ```{r}
+# hunan <- left_join(hunan,hunan2012) %>%
+#   select(1:4, 7, 15)
+# ```
+# 
+# ```{r}
+# wm_q <- poly2nb(hunan, 
+#                 queen=TRUE)
+# summary(wm_q)
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- hunan_GDPPC <- left_join(hunan, hunan2012) %>% -->
+<!--   select(1:4, 7, 9, 15) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- # Calculate neighbors (nb) based on contiguity of the geometries -->
+<!-- nb <- poly2nb(st_geometry(hunan_GDPPC)) -->
+
+<!-- # Calculate spatial weights (wt) based on the neighbors -->
+<!-- wt <- nb2listw(nb, style = "W") -->
+
+<!-- # Add the neighbors and weights as list columns to the data frame -->
+<!-- wm_q <- hunan_GDPPC %>% -->
+<!--   mutate(nb = list(nb),  # Store 'nb' as a list column -->
+<!--          wt = list(wt))  # Store 'wt' as a list column -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- global_moran_test <- moran.test(wm_q$GDPPC, wm_q$wt, nsim = 99) -->
+<!-- ``` -->
+
+<!-- change nsim = 999 -->
+
+<!-- ```{r} -->
+<!-- lisa <- wm_q %>% -->
+<!--   mutate(local_moran = local_moran( -->
+<!--     GDPPC, nb, wt, nsim = 99), -->
+<!--     .before = 1) %>% -->
+<!--   unnest(local_moran) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- lisa_sig <- lisa %>% -->
+<!--   filter(p_ii < 0.05) -->
+<!-- tmap_mode("plot") -->
+<!-- tm_shape(lisa) + -->
+<!--   tm_polygons() + -->
+<!--   tm_boarders(alpha = 0.5) + -->
+<!-- tm_shape(lias_sig) + -->
+<!--   tm_fill("mean") + -->
+<!--   tm_boarder(alpha = 0.4) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- wm_idw <- hunan_GDPPC%>% -->
+<!--   mutate(nb = st_contiguity(geometry), -->
+<!--          wts = st_inverse_distance(mn, geometry, -->
+<!--                                    scale = 1, -->
+<!--                                    aplha = 1), -->
+<!--          .before = 1) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- HCSA <- wm_idw %>% -->
+<!--   mutate(local_Gi = local_gstar_perm( -->
+<!--     GDPPC, nb, wts, nsim = 99), -->
+<!--     .before = 1) %>% -->
+<!-- unnest(local_Gi) -->
+<!-- HCSA -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- HCSA_sig <- HCSA %>% -->
+<!--   filter(p_sim < 0.05) -->
+<!-- tmap_mode("plot") -->
+<!-- tm_shape(HSCA) + -->
+<!--   tm_polygons() + -->
+<!--   tm_boarders(alpha = 0.5) + -->
+<!-- tm_shape(HSCA_siq) + -->
+<!--   tm_fill("cluster") + -->
+<!--   tm_boarders(appha = 0.4) -->
+<!-- ``` -->

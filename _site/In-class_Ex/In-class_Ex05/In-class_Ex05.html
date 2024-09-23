@@ -270,8 +270,22 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#r-pacmanp_loadsf-spdep-tmap-tidyverse" id="toc-r-pacmanp_loadsf-spdep-tmap-tidyverse" class="nav-link active" data-scroll-target="#r-pacmanp_loadsf-spdep-tmap-tidyverse"><code>{r} # pacman::p_load(sf, spdep, tmap, tidyverse) #</code></a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
+  <li><a href="#r-hunan---st_readdsn-datageospatial-layer-hunan" id="toc-r-hunan---st_readdsn-datageospatial-layer-hunan" class="nav-link" data-scroll-target="#r-hunan---st_readdsn-datageospatial-layer-hunan"><code>{r} # hunan &lt;- st_read(dsn = "data/geospatial",  #                  layer = "Hunan") #</code></a></li>
+  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1"></a></li>
+  <li><a href="#r-hunan2012---read_csvdataaspatialhunan_2012.csv" id="toc-r-hunan2012---read_csvdataaspatialhunan_2012.csv" class="nav-link" data-scroll-target="#r-hunan2012---read_csvdataaspatialhunan_2012.csv"><code>{r} # hunan2012 &lt;- read_csv("data/aspatial/Hunan_2012.csv") #</code></a></li>
+  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2"></a></li>
+  <li><a href="#r-hunan---left_joinhunanhunan2012-select14-7-15" id="toc-r-hunan---left_joinhunanhunan2012-select14-7-15" class="nav-link" data-scroll-target="#r-hunan---left_joinhunanhunan2012-select14-7-15"><code>{r} # hunan &lt;- left_join(hunan,hunan2012) %&gt;% #   select(1:4, 7, 15) #</code></a></li>
+  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3"></a></li>
+  <li><a href="#r-wm_q---poly2nbhunan-queentrue-summarywm_q---" id="toc-r-wm_q---poly2nbhunan-queentrue-summarywm_q---" class="nav-link" data-scroll-target="#r-wm_q---poly2nbhunan-queentrue-summarywm_q---"><code>{r} # wm_q &lt;- poly2nb(hunan,  #                 queen=TRUE) # summary(wm_q) &lt;!--</code> –&gt;</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -307,8 +321,98 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="r-pacmanp_loadsf-spdep-tmap-tidyverse" class="level1">
+<h1><code>{r} # pacman::p_load(sf, spdep, tmap, tidyverse) #</code></h1>
+</section>
+<section id="section" class="level1">
+<h1></h1>
+</section>
+<section id="r-hunan---st_readdsn-datageospatial-layer-hunan" class="level1">
+<h1><code>{r} # hunan &lt;- st_read(dsn = "data/geospatial",  #                  layer = "Hunan") #</code></h1>
+</section>
+<section id="section-1" class="level1">
+<h1></h1>
+</section>
+<section id="r-hunan2012---read_csvdataaspatialhunan_2012.csv" class="level1">
+<h1><code>{r} # hunan2012 &lt;- read_csv("data/aspatial/Hunan_2012.csv") #</code></h1>
+</section>
+<section id="section-2" class="level1">
+<h1></h1>
+</section>
+<section id="r-hunan---left_joinhunanhunan2012-select14-7-15" class="level1">
+<h1><code>{r} # hunan &lt;- left_join(hunan,hunan2012) %&gt;% #   select(1:4, 7, 15) #</code></h1>
+</section>
+<section id="section-3" class="level1">
+<h1></h1>
+</section>
+<section id="r-wm_q---poly2nbhunan-queentrue-summarywm_q---" class="level1">
+<h1><code>{r} # wm_q &lt;- poly2nb(hunan,  #                 queen=TRUE) # summary(wm_q) &lt;!--</code> –&gt;</h1>
+<!-- ```{r} -->
+<!-- hunan_GDPPC <- left_join(hunan, hunan2012) %>% -->
+<!--   select(1:4, 7, 9, 15) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- # Calculate neighbors (nb) based on contiguity of the geometries -->
+<!-- nb <- poly2nb(st_geometry(hunan_GDPPC)) -->
+<!-- # Calculate spatial weights (wt) based on the neighbors -->
+<!-- wt <- nb2listw(nb, style = "W") -->
+<!-- # Add the neighbors and weights as list columns to the data frame -->
+<!-- wm_q <- hunan_GDPPC %>% -->
+<!--   mutate(nb = list(nb),  # Store 'nb' as a list column -->
+<!--          wt = list(wt))  # Store 'wt' as a list column -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- global_moran_test <- moran.test(wm_q$GDPPC, wm_q$wt, nsim = 99) -->
+<!-- ``` -->
+<!-- change nsim = 999 -->
+<!-- ```{r} -->
+<!-- lisa <- wm_q %>% -->
+<!--   mutate(local_moran = local_moran( -->
+<!--     GDPPC, nb, wt, nsim = 99), -->
+<!--     .before = 1) %>% -->
+<!--   unnest(local_moran) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- lisa_sig <- lisa %>% -->
+<!--   filter(p_ii < 0.05) -->
+<!-- tmap_mode("plot") -->
+<!-- tm_shape(lisa) + -->
+<!--   tm_polygons() + -->
+<!--   tm_boarders(alpha = 0.5) + -->
+<!-- tm_shape(lias_sig) + -->
+<!--   tm_fill("mean") + -->
+<!--   tm_boarder(alpha = 0.4) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- wm_idw <- hunan_GDPPC%>% -->
+<!--   mutate(nb = st_contiguity(geometry), -->
+<!--          wts = st_inverse_distance(mn, geometry, -->
+<!--                                    scale = 1, -->
+<!--                                    aplha = 1), -->
+<!--          .before = 1) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- HCSA <- wm_idw %>% -->
+<!--   mutate(local_Gi = local_gstar_perm( -->
+<!--     GDPPC, nb, wts, nsim = 99), -->
+<!--     .before = 1) %>% -->
+<!-- unnest(local_Gi) -->
+<!-- HCSA -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- HCSA_sig <- HCSA %>% -->
+<!--   filter(p_sim < 0.05) -->
+<!-- tmap_mode("plot") -->
+<!-- tm_shape(HSCA) + -->
+<!--   tm_polygons() + -->
+<!--   tm_boarders(alpha = 0.5) + -->
+<!-- tm_shape(HSCA_siq) + -->
+<!--   tm_fill("cluster") + -->
+<!--   tm_boarders(appha = 0.4) -->
+<!-- ``` -->
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
