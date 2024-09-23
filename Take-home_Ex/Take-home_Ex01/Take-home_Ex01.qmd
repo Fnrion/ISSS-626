@@ -115,6 +115,8 @@ car_acc_time <- car_acc
   
 car_acc <- car_acc_time %>%
   select(1, 5, 17:22)
+
+car_acc
 ```
 
 ## adm2 {.tabset}
