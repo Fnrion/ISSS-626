@@ -333,7 +333,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#converting-the-generic-sp-format-into-spatstats-ppp-format" id="toc-converting-the-generic-sp-format-into-spatstats-ppp-format" class="nav-link" data-scroll-target="#converting-the-generic-sp-format-into-spatstats-ppp-format"><strong>5.2&nbsp;Converting the generic sp format into spatstat’s ppp format</strong></a></li>
   <li><a href="#handling-duplicated-points" id="toc-handling-duplicated-points" class="nav-link" data-scroll-target="#handling-duplicated-points"><strong>5.3&nbsp;Handling duplicated points</strong></a></li>
   <li><a href="#combining-point-events-object-and-owin-object" id="toc-combining-point-events-object-and-owin-object" class="nav-link" data-scroll-target="#combining-point-events-object-and-owin-object"><strong>5.6&nbsp;Combining point events object and owin object</strong></a></li>
-  <li><a href="#kernel-density-estimation" id="toc-kernel-density-estimation" class="nav-link" data-scroll-target="#kernel-density-estimation"><strong>5.7&nbsp;Kernel Density Estimation</strong></a></li>
+  <li><a href="#kernel-density-estimation" id="toc-kernel-density-estimation" class="nav-link" data-scroll-target="#kernel-density-estimation"><strong>5.7 Kernel Density Estimation</strong></a></li>
+  <li><a href="#analysis-based-on-accident-time" id="toc-analysis-based-on-accident-time" class="nav-link" data-scroll-target="#analysis-based-on-accident-time">5.8 Analysis based on Accident Time</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -1251,7 +1252,7 @@ window: rectangle = [591277.5, 710166.1] x [1486845.7, 1576520.5] units</code></
 </div>
 </section>
 <section id="kernel-density-estimation" class="level2">
-<h2 class="anchored" data-anchor-id="kernel-density-estimation"><strong>5.7&nbsp;Kernel Density Estimation</strong></h2>
+<h2 class="anchored" data-anchor-id="kernel-density-estimation"><strong>5.7 Kernel Density Estimation</strong></h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
@@ -1302,6 +1303,10 @@ Note
 <p>The KDE map shows that car accidents are concentrated in specific high-risk areas, especially in the eastern region, where accident density is higher. In contrast, the western areas have fewer accidents. This map helps identify where safety improvements, such as better road design or enforcement, are most needed to reduce accidents in the most affected zones.</p>
 </div>
 </div>
+</section>
+<section id="analysis-based-on-accident-time" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-based-on-accident-time">5.8 Analysis based on Accident Time</h2>
+<p>First we divide the accident severity based on “number_of_vichel_involved”, “number_of_fatalities” &amp; “number_of injuries”</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
@@ -1365,12 +1370,11 @@ Projected CRS: WGS 84 / UTM zone 47N
 </div>
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check rows where accident_severity is NA</span></span>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check rows where accident_severity is N/A</span></span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>na_rows <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
 <span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(accident_severity))</span>
 <span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the rows with NA in accident_severity</span></span>
-<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(na_rows)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(na_rows)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Simple feature collection with 10 features and 22 fields
@@ -1407,22 +1411,22 @@ Projected CRS: WGS 84 / UTM zone 47N
 <span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>car_acc_time <span class="ot">&lt;-</span> car_acc_time <span class="sc">%&gt;%</span></span>
 <span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">accident_severity =</span> <span class="fu">factor</span>(accident_severity, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"N/A"</span>, <span class="st">"Low"</span>, <span class="st">"Middle"</span>, <span class="st">"Heavy"</span>)))</span>
 <span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify the factor levels</span></span>
-<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(car_acc_time<span class="sc">$</span>accident_severity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(car_acc_time<span class="sc">$</span>accident_severity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "N/A"    "Low"    "Middle" "Heavy" </code></pre>
 </div>
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a stacked bar plot with "Heavy" at the bottom</span></span>
-<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(car_acc_time, <span class="fu">aes</span>(<span class="at">x =</span> Month_num, <span class="at">fill =</span> accident_severity)) <span class="sc">+</span></span>
-<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
-<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stacked Bar Plot of Traffic Accidents by Severity and Month"</span>,</span>
-<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Month Number"</span>,</span>
-<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Accidents"</span>,</span>
-<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Accident Severity"</span>) <span class="sc">+</span></span>
-<span id="cb80-8"><a href="#cb80-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, <span class="at">labels =</span> month.abb)  <span class="co"># Display month abbreviations</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>plot_m <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(car_acc_time, <span class="fu">aes</span>(<span class="at">x =</span> Month_num, <span class="at">fill =</span> accident_severity)) <span class="sc">+</span></span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Traffic Accidents by Severity and Month"</span>,</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Month"</span>,</span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Accidents"</span>,</span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Accident Severity"</span>) <span class="sc">+</span></span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, <span class="at">labels =</span> month.abb) <span class="sc">+</span>  <span class="co"># Display month abbreviations</span></span>
+<span id="cb80-8"><a href="#cb80-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()  <span class="co"># Use a minimal theme for cleaner appearance</span></span>
+<span id="cb80-9"><a href="#cb80-9" aria-hidden="true" tabindex="-1"></a>plot_m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1449,13 +1453,14 @@ Projected CRS: WGS 84 / UTM zone 47N
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a stacked bar plot based on Day_of_week</span></span>
-<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(car_acc_time, <span class="fu">aes</span>(<span class="at">x =</span> Day_of_week, <span class="at">fill =</span> accident_severity)) <span class="sc">+</span></span>
-<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
-<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stacked Bar Plot of Traffic Accidents by Severity and Day of the Week"</span>,</span>
-<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Day of the Week"</span>,</span>
-<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Accidents"</span>,</span>
-<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Accident Severity"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>plot_w <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(car_acc_time, <span class="fu">aes</span>(<span class="at">x =</span> Day_of_week, <span class="at">fill =</span> accident_severity)) <span class="sc">+</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Traffic Accidents by Severity and Day of the Week"</span>,</span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Day of the Week"</span>,</span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Accidents"</span>,</span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Accident Severity"</span>) <span class="sc">+</span></span>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()  <span class="co"># Cleaner appearance</span></span>
+<span id="cb83-8"><a href="#cb83-8" aria-hidden="true" tabindex="-1"></a>plot_w</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1476,14 +1481,18 @@ Projected CRS: WGS 84 / UTM zone 47N
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a stacked bar plot based on the hour of the day</span></span>
-<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(car_acc_time, <span class="fu">aes</span>(<span class="at">x =</span> hour, <span class="at">fill =</span> accident_severity)) <span class="sc">+</span></span>
-<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
-<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stacked Bar Plot of Traffic Accidents by Severity and Time of Day"</span>,</span>
-<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Hour of the Day"</span>,</span>
-<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Accidents"</span>,</span>
-<span id="cb85-7"><a href="#cb85-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Accident Severity"</span>) <span class="sc">+</span></span>
-<span id="cb85-8"><a href="#cb85-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>)  <span class="co"># Ensure all hours (0-23) are shown on the x-axis</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure the 'hour' column is numeric</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>car_acc_time<span class="sc">$</span>hour <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(car_acc_time<span class="sc">$</span>hour)</span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>plot_h <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(car_acc_time, <span class="fu">aes</span>(<span class="at">x =</span> hour, <span class="at">fill =</span> accident_severity)) <span class="sc">+</span></span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
+<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Traffic Accidents by Severity and Time of Day"</span>,</span>
+<span id="cb85-7"><a href="#cb85-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Hour of the Day"</span>,</span>
+<span id="cb85-8"><a href="#cb85-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Accidents"</span>,</span>
+<span id="cb85-9"><a href="#cb85-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Accident Severity"</span>) <span class="sc">+</span></span>
+<span id="cb85-10"><a href="#cb85-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">23</span>) <span class="sc">+</span>  <span class="co"># Show all hours (0-23)</span></span>
+<span id="cb85-11"><a href="#cb85-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()  <span class="co"># Cleaner look</span></span>
+<span id="cb85-12"><a href="#cb85-12" aria-hidden="true" tabindex="-1"></a>plot_h</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1517,13 +1526,14 @@ Evening Morning
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a stacked bar plot for Morning and Evening</span></span>
-<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(car_acc_time, <span class="fu">aes</span>(<span class="at">x =</span> time_of_day, <span class="at">fill =</span> accident_severity)) <span class="sc">+</span></span>
-<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
-<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stacked Bar Plot of Traffic Accidents by Severity and Time of Day"</span>,</span>
-<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Time of Day"</span>,</span>
-<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Accidents"</span>,</span>
-<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Accident Severity"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>plot_mn <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(car_acc_time, <span class="fu">aes</span>(<span class="at">x =</span> time_of_day, <span class="at">fill =</span> accident_severity)) <span class="sc">+</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Traffic Accidents by Severity and Time of Day"</span>,</span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Time of Day (Morning vs Evening)"</span>,</span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Accidents"</span>,</span>
+<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Accident Severity"</span>) <span class="sc">+</span></span>
+<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()  <span class="co"># For consistency with other plots</span></span>
+<span id="cb88-8"><a href="#cb88-8" aria-hidden="true" tabindex="-1"></a>plot_mn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>

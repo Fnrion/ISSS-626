@@ -435,7 +435,7 @@ accbmr_ppp = acc_ppp[bmr_owin]
 plot(accbmr_ppp)
 ```
 
-## **5.7 Kernel Density Estimation**
+## **5.7 Kernel Density Estimation**
 
 ```{r}
 kde_accbmr_bw <- density(accbmr_ppp,
@@ -458,9 +458,13 @@ kde_accbmr_bw <- density(accbmr_ppp.km, sigma=sigma_value, edge=TRUE, kernel="ga
 plot(kde_accbmr_bw)
 ```
 
-::: {.callout-note}
+::: callout-note
 The KDE map shows that car accidents are concentrated in specific high-risk areas, especially in the eastern region, where accident density is higher. In contrast, the western areas have fewer accidents. This map helps identify where safety improvements, such as better road design or enforcement, are most needed to reduce accidents in the most affected zones.
 :::
+
+## 5.8 Analysis based on Accident Time
+
+First we divide the accident severity based on "number_of_vichel_involved", "number_of_fatalities" & "number_of injuries"
 
 ```{r, cache = TRUE}
 car_acc_time <- car_acc_time %>%
@@ -491,11 +495,10 @@ low_accidents <- car_acc_time %>%
 ```{r}
 # Check unique values of accident_severity to verify if "Middle" exists
 unique(car_acc_time$accident_severity)
-# Check rows where accident_severity is NA
+# Check rows where accident_severity is N/A
 na_rows <- car_acc_time %>%
   filter(is.na(accident_severity))
 
-# Display the rows with NA in accident_severity
 print(na_rows)
 ```
 
@@ -504,17 +507,17 @@ print(na_rows)
 car_acc_time <- car_acc_time %>%
   mutate(accident_severity = factor(accident_severity, levels = c("N/A", "Low", "Middle", "Heavy")))
 
-# Verify the factor levels
 levels(car_acc_time$accident_severity)
 
-# Create a stacked bar plot with "Heavy" at the bottom
-ggplot(car_acc_time, aes(x = Month_num, fill = accident_severity)) +
+plot_m <- ggplot(car_acc_time, aes(x = Month_num, fill = accident_severity)) +
   geom_bar(position = "stack") +
-  labs(title = "Stacked Bar Plot of Traffic Accidents by Severity and Month",
-       x = "Month Number",
+  labs(title = "Traffic Accidents by Severity and Month",
+       x = "Month",
        y = "Number of Accidents",
        fill = "Accident Severity") +
-  scale_x_continuous(breaks = 1:12, labels = month.abb)  # Display month abbreviations
+  scale_x_continuous(breaks = 1:12, labels = month.abb) +  # Display month abbreviations
+  theme_minimal()  # Use a minimal theme for cleaner appearance
+plot_m
 ```
 
 ```{r}
@@ -527,13 +530,14 @@ levels(car_acc_time$Day_of_week)
 ```
 
 ```{r}
-# Create a stacked bar plot based on Day_of_week
-ggplot(car_acc_time, aes(x = Day_of_week, fill = accident_severity)) +
+plot_w <- ggplot(car_acc_time, aes(x = Day_of_week, fill = accident_severity)) +
   geom_bar(position = "stack") +
-  labs(title = "Stacked Bar Plot of Traffic Accidents by Severity and Day of the Week",
+  labs(title = "Traffic Accidents by Severity and Day of the Week",
        x = "Day of the Week",
        y = "Number of Accidents",
-       fill = "Accident Severity")
+       fill = "Accident Severity") +
+  theme_minimal()  # Cleaner appearance
+plot_w
 ```
 
 ```{r}
@@ -543,14 +547,19 @@ car_acc_time <- car_acc_time %>%
 ```
 
 ```{r}
-# Create a stacked bar plot based on the hour of the day
-ggplot(car_acc_time, aes(x = hour, fill = accident_severity)) +
+# Ensure the 'hour' column is numeric
+car_acc_time$hour <- as.numeric(car_acc_time$hour)
+
+plot_h <- ggplot(car_acc_time, aes(x = hour, fill = accident_severity)) +
   geom_bar(position = "stack") +
-  labs(title = "Stacked Bar Plot of Traffic Accidents by Severity and Time of Day",
+  labs(title = "Traffic Accidents by Severity and Time of Day",
        x = "Hour of the Day",
        y = "Number of Accidents",
        fill = "Accident Severity") +
-  scale_x_discrete(breaks = 1:24)  # Ensure all hours (0-23) are shown on the x-axis
+  scale_x_continuous(breaks = 0:23) +  # Show all hours (0-23)
+  theme_minimal()  # Cleaner look
+plot_h
+
 ```
 
 ```{r}
@@ -568,13 +577,12 @@ table(car_acc_time$time_of_day)
 ```
 
 ```{r}
-# Create a stacked bar plot for Morning and Evening
-ggplot(car_acc_time, aes(x = time_of_day, fill = accident_severity)) +
+plot_mn <- ggplot(car_acc_time, aes(x = time_of_day, fill = accident_severity)) +
   geom_bar(position = "stack") +
-  labs(title = "Stacked Bar Plot of Traffic Accidents by Severity and Time of Day",
-       x = "Time of Day",
+  labs(title = "Traffic Accidents by Severity and Time of Day",
+       x = "Time of Day (Morning vs Evening)",
        y = "Number of Accidents",
-       fill = "Accident Severity")
+       fill = "Accident Severity") +
+  theme_minimal()  # For consistency with other plots
+plot_mn
 ```
-
-
