@@ -426,6 +426,38 @@ bmr_owin <- as.owin(bmr_boundaries)
 plot(bmr_owin)
 ```
 
+## **5.6 Combining point events object and owin object**
+
+In this last step of geospatial data wrangling, we will extract acc events that are located within bmr by using the code chunk below.
+
+```{r}
+accbmr_ppp = acc_ppp[bmr_owin]
+plot(accbmr_ppp)
+```
+
+## **5.7 Kernel Density Estimation**
+
+```{r}
+kde_accbmr_bw <- density(accbmr_ppp,
+                              sigma=bw.diggle,
+                              edge=TRUE,
+                            kernel="gaussian") 
+plot(kde_accbmr_bw)
+```
+
+Since the plot is too dark, we will use rescale.ppp()
+
+```{r}
+
+sigma_value <- 12000  # Adjust this value based on your smoothing preference
+
+accbmr_ppp.km <- rescale.ppp(accbmr_ppp, 1000, "km")
+
+kde_accbmr_bw <- density(accbmr_ppp.km, sigma=sigma_value, edge=TRUE, kernel="gaussian")
+
+plot(kde_accbmr_bw)
+```
+
 ```{r, cache = TRUE}
 car_acc_time <- car_acc_time %>%
   mutate(accident_severity = case_when(
