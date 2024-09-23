@@ -403,6 +403,29 @@ Now, let us plot ***acc_ppp*** and examine the different.
 plot(acc_ppp)
 ```
 
+## **5.3 Handling duplicated points**
+
+We can check the duplication in a ***ppp*** object by using the code chunk below.
+
+```{r}
+any(duplicated(acc_ppp))
+```
+
+To count the number of co-indicence point, we will use the *multiplicity()* function as shown in the code chunk below.
+
+```{r}
+head(multiplicity(acc_ppp),10)
+sum(multiplicity(acc_ppp) > 1)
+```
+
+```{r}
+bmr_owin <- as.owin(bmr_boundaries)
+```
+
+```{r}
+plot(bmr_owin)
+```
+
 ```{r, cache = TRUE}
 car_acc_time <- car_acc_time %>%
   mutate(accident_severity = case_when(
