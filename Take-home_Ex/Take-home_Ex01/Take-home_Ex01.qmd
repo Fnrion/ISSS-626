@@ -172,7 +172,7 @@ tm_shape(car_acc) +
 
 ## 4.1 Spatial Join Accidents to Road Network
 
-Now we can use st_nearest_feature() to join the accident points with the nearest road segments from the road network.
+Now we can use st_nearest_feature() to join the accident points with the nearest road segments from the road network. (This will cause the increaing same location point, don't try)
 
 ```{r, cache = TRUE}
 # Join accidents to the nearest road segment
@@ -322,7 +322,7 @@ ggplot() +
 ```
 
 ```{r}
-st_geometry_type(car_acc_bangkok)
+head(st_geometry_type(car_acc_bangkok),10)
 ```
 
 ```{r}
