@@ -254,9 +254,64 @@ plot(kde_accbmr_bw)
 ```
 
 ::: callout-note
-The KDE map shows that car accidents are concentrated in specific high-risk areas, especially in the eastern region, where accident density is higher. In contrast, the western areas have fewer accidents. This map helps identify where safety improvements, such as better road design or enforcement, are most needed to reduce accidents in the most affected zones.
+The KDE map shows that car accidents are concentrated in specific high-risk areas, especially in the eastern region, where accident density is higher. In contrast, the western areas have fewer accidents. 
 :::
 
+Let's divide the province and see what's on the south-east
+
+```{r}
+# Load the required library
+library(spatstat)
+
+# Define the six provinces for BMR (Bangkok Metropolitan Region)
+provinces <- c("Bangkok", "Nonthaburi", "Pathum Thani", "Samut Prakan", "Samut Sakhon", "Nakhon Pathom")
+
+# Loop through each province and generate KDE
+for (province in provinces) {
+  # Subset the boundary for the specific province
+  province_boundary <- subset(bmr_boundaries, ADM1_EN == province)
+  
+  # Convert the province boundary to owin format for spatstat
+  province_owin <- as.owin(province_boundary)
+  
+  # Subset the accident data for the specific province using province_en
+  province_data <- subset(car_acc_time, province_en == province)
+  
+  # Convert the accident data to ppp format (assuming coordinates are columns 'x' and 'y')
+  # Adjust 'x' and 'y' to the correct column names in your dataset
+  province_ppp <- as.ppp(province_data, W=province_owin)
+  
+  # Rescale to kilometers if necessary
+  province_ppp.km <- rescale.ppp(province_ppp, 1000, "km")
+  
+  # Apply KDE with appropriate sigma
+  sigma_value <- 1000  # Adjust this value based on preference
+  kde_province <- density(province_ppp.km, sigma=sigma_value, edge=TRUE, kernel="gaussian")
+  
+  # Plot KDE (this will automatically handle coloring)
+  plot(kde_province, main = paste("KDE for", province))
+  
+  # Overlay the boundary on top (without overriding color)
+  plot(province_owin, add=TRUE, border="black")
+}
+```
+Based on the KDE, we will choose west "Bangkok" as our analysis item in road network accident analysis
+
+## 3.5 Analysing Spatial Point Process Using G-Function
+
+The G function measures the distribution of the distances from an arbitrary event to its nearest event.
+
+```{r}
+g_function <- Gest(accbmr_ppp)
+plot(g_function, main="G-Function for Accidents in BMR", xlim = c(0,500))
+```
+```{r}
+G_CK.csr <- envelope(accbmr_ppp, Gest, nsim = 99)
+plot(G_CK.csr)
+```
+::: callout-note
+Both plots suggest that the accidents in the BMR region are spatially clustered, especially at shorter distances
+:::
 
 
 # 4 Visualize Accident Data
