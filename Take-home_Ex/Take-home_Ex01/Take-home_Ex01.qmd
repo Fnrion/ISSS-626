@@ -39,8 +39,9 @@ Spatial Point Patterns Analysis (SPPA) has proven to be an effective tool in stu
 [Here](https://isss626-ay2024-25aug.netlify.app/take-home_ex01) are the requirement of take-home_Ex01
 :::
 
-# **2 Loading Packages**
+# **2 Data Wrangling**
 
+## **2.1 Loading Packages**
 ```{r, cache = TRUE}
 pacman::p_load(sf, spNetwork, tmap, tidyverse, dplyr, spatstat, knitr)
 ```
@@ -65,7 +66,7 @@ package_info <- data.frame(
 kable(package_info, col.names = c("Package", "Description"))
 ```
 
-# **3 Data Preparation**
+## **2.2 Data Collect**
 
 For the purpose of this exercise, three basic data sets are needed, they are:
 
@@ -77,12 +78,13 @@ For the purpose of this exercise, three basic data sets are needed, they are:
 
 All of them are spatial data
 
-## **3.1 Import & Preparation**
+## **2.3 Preparation**
 
 Now we’re loading both the event (acc), polygon (dm2) and road network (Road). Ensure that each layer is in the same CRS. (P.S. this step will overlap the Kfun, since too many points in the same location)
 
-## acc {.tabset}
+:::{.panel-tabset}
 
+## Car accident (acc)
 ```{r, cache = TRUE}
 # List of BMR provinces
 bmr_provinces <- c("Bangkok", "Nonthaburi", "Pathum Thani", "Samut Prakan", "Nakhon Pathom", "Samut Sakhon")
@@ -119,7 +121,7 @@ car_acc <- car_acc_time %>%
 car_acc
 ```
 
-## adm2 {.tabset}
+## Administration level 2 (adm2)
 
 ```{r}
 # Load administrative boundaries (adm2 level)
@@ -129,18 +131,17 @@ adm2_time <- adm2
 adm2 <- adm2_time %>%
   select(1:2,11,20)
 ```
-
+Filter administrative boundaries for BMR provinces
 ```{r, cache = TRUE}
-# Filter administrative boundaries for BMR provinces
+
 bmr_boundaries <- adm2 %>%
   filter(ADM1_EN %in% bmr_provinces)
 bmr_boundaries
 ```
 
-## Road {.tabset}
+## Road
 
 ```{r, cache = TRUE}
-# # Load road network
 # Road <- st_read(dsn = "data/hotosm_tha_roads_lines_shp", layer = "hotosm_tha_roads_lines_shp") %>%
 #     st_set_crs(4326) %>%  # Assign CRS if it's missing
 #     st_transform(Road, crs = 32647)
@@ -150,16 +151,111 @@ Road <- readRDS("data/Road.rds")
 ```{r}
 saveRDS(Road, file = "data/Road")
 ```
-
+Filter the road network to only include roads in the BMR area
 ```{r, cache = TRUE}
-# # Filter the road network to only include roads in the BMR area
 # Road_bmr <- st_intersection(Road, bmr_boundaries)
 Road_bmr <- readRDS("data/Road_bmr.rds")
 ```
 
 ```{r}
-Road_bmr
+head(Road_bmr,5)
 ```
+:::
+
+# **3 Geospatial Analysis **
+
+Now, we are going to prepare a basemap and a choropleth map showing the distribution of acc by using *qtm()* of **tmap** package.
+
+```{r}
+joined_data <- st_join(car_acc_time, adm2_time, join = st_within)
+```
+
+```{r}
+# Adjust the basemap to use tm_dots() for point data
+basemap <- tm_shape(adm2_time) +
+  tm_polygons() + 
+  tm_text("ADM2_EN", size = 0.5)
+
+# Create the fatalities map
+fatalities <- qtm(joined_data, "number_of_fatalities")
+
+# Arrange the maps side by side
+tmap_arrange(basemap, fatalities, asp = 1, ncol = 2)
+```
+
+### **3.1 Converting the generic sp format into spatstat’s ppp format**
+
+Now, we will use *as.ppp()* function of **spatstat** to convert the spatial data into **spatstat**’s ***ppp*** object format.
+
+```{r}
+acc_ppp <- as.ppp(car_acc_time)
+acc_ppp
+```
+
+Now, let us plot ***acc_ppp*** and examine the different.
+
+```{r}
+plot(acc_ppp)
+```
+
+### **3.2 Handling duplicated points**
+
+We can check the duplication in a ***ppp*** object by using the code chunk below.
+
+```{r}
+any(duplicated(acc_ppp))
+```
+
+To count the number of co-indicence point, we will use the *multiplicity()* function as shown in the code chunk below.
+
+```{r}
+head(multiplicity(acc_ppp),10)
+sum(multiplicity(acc_ppp) > 1)
+```
+
+```{r}
+bmr_owin <- as.owin(bmr_boundaries)
+```
+
+```{r}
+plot(bmr_owin)
+```
+
+### **3.3 Combining point events object and owin object**
+
+In this last step of geospatial data wrangling, we will extract acc events that are located within bmr by using the code chunk below.
+
+```{r}
+accbmr_ppp = acc_ppp[bmr_owin]
+plot(accbmr_ppp)
+```
+
+### **3.4 Kernel Density Estimation**
+
+```{r}
+kde_accbmr_bw <- density(accbmr_ppp,
+                              sigma=bw.diggle,
+                              edge=TRUE,
+                            kernel="gaussian") 
+plot(kde_accbmr_bw)
+```
+
+Since the plot is too dark, we will use rescale.ppp() and change the sigma_value
+
+```{r}
+
+sigma_value <- 1000  # Adjust this value based on your smoothing preference
+
+accbmr_ppp.km <- rescale.ppp(accbmr_ppp, 1000, "km")
+
+kde_accbmr_bw <- density(accbmr_ppp.km, sigma=sigma_value, edge=TRUE, kernel="gaussian")
+
+plot(kde_accbmr_bw)
+```
+
+::: callout-note
+The KDE map shows that car accidents are concentrated in specific high-risk areas, especially in the eastern region, where accident density is higher. In contrast, the western areas have fewer accidents. This map helps identify where safety improvements, such as better road design or enforcement, are most needed to reduce accidents in the most affected zones.
+:::
 
 # 4 Visualize Accident Data
 
@@ -368,100 +464,7 @@ kfun <- kfunctions(Filtered_lixels_simple,
 
 # 5. Temporal
 
-## **5.1 Regional Vision**
 
-Now, we are going to prepare a basemap and a choropleth map showing the distribution of acc by using *qtm()* of **tmap** package.
-
-```{r}
-joined_data <- st_join(car_acc_time, adm2_time, join = st_within)
-```
-
-```{r}
-# Adjust the basemap to use tm_dots() for point data
-basemap <- tm_shape(adm2_time) +
-  tm_polygons() + 
-  tm_text("ADM2_EN", size = 0.5)
-
-# Create the fatalities map
-fatalities <- qtm(joined_data, "number_of_fatalities")
-
-# Arrange the maps side by side
-tmap_arrange(basemap, fatalities, asp = 1, ncol = 2)
-```
-
-## **5.2 Converting the generic sp format into spatstat’s ppp format**
-
-Now, we will use *as.ppp()* function of **spatstat** to convert the spatial data into **spatstat**’s ***ppp*** object format.
-
-```{r}
-acc_ppp <- as.ppp(car_acc_time)
-acc_ppp
-```
-
-Now, let us plot ***acc_ppp*** and examine the different.
-
-```{r}
-plot(acc_ppp)
-```
-
-## **5.3 Handling duplicated points**
-
-We can check the duplication in a ***ppp*** object by using the code chunk below.
-
-```{r}
-any(duplicated(acc_ppp))
-```
-
-To count the number of co-indicence point, we will use the *multiplicity()* function as shown in the code chunk below.
-
-```{r}
-head(multiplicity(acc_ppp),10)
-sum(multiplicity(acc_ppp) > 1)
-```
-
-```{r}
-bmr_owin <- as.owin(bmr_boundaries)
-```
-
-```{r}
-plot(bmr_owin)
-```
-
-## **5.6 Combining point events object and owin object**
-
-In this last step of geospatial data wrangling, we will extract acc events that are located within bmr by using the code chunk below.
-
-```{r}
-accbmr_ppp = acc_ppp[bmr_owin]
-plot(accbmr_ppp)
-```
-
-## **5.7 Kernel Density Estimation**
-
-```{r}
-kde_accbmr_bw <- density(accbmr_ppp,
-                              sigma=bw.diggle,
-                              edge=TRUE,
-                            kernel="gaussian") 
-plot(kde_accbmr_bw)
-```
-
-Since the plot is too dark, we will use rescale.ppp()
-
-```{r}
-
-sigma_value <- 1000  # Adjust this value based on your smoothing preference
-
-accbmr_ppp.km <- rescale.ppp(accbmr_ppp, 1000, "km")
-
-kde_accbmr_bw <- density(accbmr_ppp.km, sigma=sigma_value, edge=TRUE, kernel="gaussian")
-
-plot(kde_accbmr_bw)
-```
-
-::: callout-note
-The KDE map shows that car accidents are concentrated in specific high-risk areas, especially in the eastern region, where accident density is higher. In contrast, the western areas have fewer accidents. This map helps identify where safety improvements, such as better road design or enforcement, are most needed to reduce accidents in the most affected zones.
-:::
 
 ## 5.8 Analysis based on Accident Time
 
