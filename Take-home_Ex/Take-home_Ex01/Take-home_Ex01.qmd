@@ -164,7 +164,7 @@ head(Road_bmr,5)
 
 # **3 Geospatial Analysis **
 
-Now, we are going to prepare a basemap and a choropleth map showing the distribution of acc by using *qtm()* of **tmap** package.
+We are going to prepare a basemap and a choropleth map showing the distribution of acc by using *qtm()* of **tmap** package.
 
 ```{r}
 joined_data <- st_join(car_acc_time, adm2_time, join = st_within)
@@ -192,7 +192,7 @@ acc_ppp <- as.ppp(car_acc_time)
 acc_ppp
 ```
 
-Now, let us plot ***acc_ppp*** and examine the different.
+Let us plot ***acc_ppp*** and examine the different.
 
 ```{r}
 plot(acc_ppp)
@@ -256,6 +256,8 @@ plot(kde_accbmr_bw)
 ::: callout-note
 The KDE map shows that car accidents are concentrated in specific high-risk areas, especially in the eastern region, where accident density is higher. In contrast, the western areas have fewer accidents. This map helps identify where safety improvements, such as better road design or enforcement, are most needed to reduce accidents in the most affected zones.
 :::
+
+
 
 # 4 Visualize Accident Data
 
@@ -344,7 +346,7 @@ filtered_lixels <- lixels[lixels$density > 0, ]
 ```
 
 ```{r, cache = TRUE}
-tmap_mode('plot')
+tmap_mode("plot")
 tm_shape(filtered_lixels)+
   tm_lines(col="density")+
 tm_shape(acc_with_roads)+

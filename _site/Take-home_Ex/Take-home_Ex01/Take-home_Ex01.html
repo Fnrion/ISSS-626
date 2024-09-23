@@ -674,7 +674,7 @@ Projected CRS: WGS 84 / UTM zone 47N
 </section>
 <section id="geospatial-analysis" class="level1">
 <h1><strong>3 Geospatial Analysis </strong></h1>
-<p>Now, we are going to prepare a basemap and a choropleth map showing the distribution of acc by using&nbsp;<em>qtm()</em>&nbsp;of&nbsp;<strong>tmap</strong>&nbsp;package.</p>
+<p>We are going to prepare a basemap and a choropleth map showing the distribution of acc by using&nbsp;<em>qtm()</em>&nbsp;of&nbsp;<strong>tmap</strong>&nbsp;package.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
@@ -718,7 +718,7 @@ marks are numeric, of storage type  'double'
 window: rectangle = [591277.5, 710166.1] x [1486845.7, 1576520.5] units</code></pre>
 </div>
 </div>
-<p>Now, let us plot&nbsp;<strong><em>acc_ppp</em></strong>&nbsp;and examine the different.</p>
+<p>Let us plot&nbsp;<strong><em>acc_ppp</em></strong>&nbsp;and examine the different.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
@@ -998,7 +998,7 @@ Projected CRS: WGS 84 / UTM zone 47N
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">'plot'</span>)</span>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(filtered_lixels)<span class="sc">+</span></span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_lines</span>(<span class="at">col=</span><span class="st">"density"</span>)<span class="sc">+</span></span>
 <span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(acc_with_roads)<span class="sc">+</span></span>
