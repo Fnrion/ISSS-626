@@ -129,7 +129,7 @@ adm2 <- st_read(dsn = "data/tha_adm_rtsd_itos_20210121_shp", layer = "tha_admbnd
   st_transform(adm2, crs = 32647)
 adm2_time <- adm2
 adm2 <- adm2_time %>%
-  select(1:2,11,20)
+  select(1:3,11,20)
 ```
 Filter administrative boundaries for BMR provinces
 ```{r, cache = TRUE}
@@ -295,7 +295,17 @@ for (province in provinces) {
   plot(province_owin, add=TRUE, border="black")
 }
 ```
-Based on the KDE, we will choose west "Bangkok" as our analysis item in road network accident analysis
+
+Based on the KDE, we will choose "Khlong Luang", "Bang Phli" and "Mueang Samut Sakhon" in "Bangkok" as our analysis item in road network accident analysis
+
+```{r}
+car_acc_adm2 <- st_join(car_acc_time, adm2)
+# Group by ADM2_EN and count the number of fatalities
+fatalities_by_adm2 <- car_acc_adm2 %>%
+  group_by(ADM2_EN) %>%
+  summarise(total_fatalities = sum(number_of_fatalities, na.rm = TRUE))
+print(fatalities_by_adm2)
+```
 
 ## 3.5 Analysing Spatial Point Process Using G-Function
 
@@ -314,7 +324,7 @@ Both plots suggest that the accidents in the BMR region are spatially clustered,
 :::
 
 
-# 4 Visualize Accident Data
+## 3.6 NKDE
 
 ```{r, cache = TRUE}
 # Visualize accident points
@@ -323,7 +333,7 @@ tm_shape(car_acc) +
   tm_dots()
 ```
 
-## 4.1 Spatial Join Accidents to Road Network
+### 3.6.1 Spatial Join Accidents to Road Network
 
 Now we can use st_nearest_feature() to join the accident points with the nearest road segments from the road network. (This will cause the increaing same location point, don't try)
 
@@ -335,7 +345,7 @@ acc_with_roads <- st_join(car_acc, Road_bmr, join = st_nearest_feature)
 print(acc_with_roads)
 ```
 
-## 4.2 Network-Based Analysis with spNetwork
+### 3.6.2 Network-Based Analysis with spNetwork
 
 Now we can perform network-based spatial analysis, like kernel density estimation (KDE) along the road network. The spNetwork package is useful for this type of analysis.
 
@@ -343,6 +353,32 @@ Now we can perform network-based spatial analysis, like kernel density estimatio
 # # Convert generic geometries to LINESTRING
 # Road_bmr <- st_cast(Road_bmr, "LINESTRING")
 Road_bmr <- readRDS("data/Road_bmr.rds")
+```
+
+```{r}
+# Filter the adm2 dataset for the selected sub-districts
+selected_adm2 <- adm2 %>%
+  filter(ADM2_EN %in% c("Khlong Luang", "Bang Phli", "Mueang Samut Sakhon"))
+```
+
+```{r}
+# Perform spatial join for the filtered sub-districts
+car_acc_selected_adm2 <- st_intersection(car_acc_time, selected_adm2)
+```
+
+```{r}
+# Perform spatial join between Road_bmr and selected_adm2 (the filtered sub-districts)
+road_selected_adm2 <- st_join(Road_bmr, selected_adm2, left = FALSE)
+```
+
+```{r}
+lixels_new <- lixelize_lines(road_selected_adm2, 
+                             5000, 
+                             mindist = 1000)
+```
+
+```{r, cache = TRUE}
+samples_new <- lines_center(lixels_new) 
 ```
 
 ```{r, cache = TRUE}
@@ -355,6 +391,37 @@ lixels <- readRDS("data/lixels.rds")
 ```{r, cache = TRUE}
 samples <- lines_center(lixels) 
 ```
+
+```{r eval = FALSE}
+# Now run NKDE with the samples argument included
+kde_new <- nkde(lines = lixels_new,
+            events = car_acc_selected_adm2,
+            w = rep(1, nrow(car_acc_selected_adm2)),
+            kernel_name = "quartic",
+            bw = 500,
+            samples = samples_new,
+            method = "simple",
+            grid_shape = c(100, 100),
+            verbose = TRUE)
+```
+```{r}
+kfun_new <- kfunctions(lixels_new,
+                   car_acc_selected_adm2,  
+                   start = 0, 
+                   end = 10000, 
+                   step = 1000, 
+                   width = 50, 
+                   nsim = 50, 
+                   resolution = 50,
+                   verbose = FALSE, 
+                   conf_int = 0.05,
+                   agg = 100)
+```
+
+```{r}
+kfun_new
+```
+
 
 ```{r}
 saveRDS(samples, "data/samples.rds")
@@ -414,100 +481,10 @@ class(Road_bmr)
 class(acc_with_roads)
 ```
 
-```{r}
-colnames(filtered_lixels)
-```
-
-```{r}
-# Filter the rows where 'ADM1_EN' is "Bangkok"
-Filtered_lixels_simple <- filtered_lixels[filtered_lixels$ADM1_EN == "Bangkok", ]
-
-# Select only columns 1 to 14 and column 20
-Filtered_lixels_simple <- Filtered_lixels_simple[, c(1, 14:20)]
-
-# Check the result
-head(Filtered_lixels_simple)
-```
-
-```{r}
-# Filter rows where 'ADM1_EN' is "Bangkok"
-car_acc_bangkok <- car_acc %>%
-  filter(province_en == "Bangkok")
-
-# View the filtered dataset
-head(car_acc_bangkok)
-```
-
-```{r}
-# Find exact duplicates based on the geometry (coordinates)
-duplicates <- car_acc_bangkok[duplicated(car_acc_bangkok$geometry), ]
-
-# View the duplicated points
-print(duplicates)
-
-# Optionally, count how many duplicates there are
-num_duplicates <- nrow(duplicates)
-print(paste("Number of duplicate points:", num_duplicates))
-```
-
-```{r}
-
-# Find which points are within 50 meters of each other
-close_points <- st_is_within_distance(car_acc_bangkok, dist = 50)
-
-# View the list of indices where points are near each other
-print(close_points)
-
-# Optionally, create a summary to see how many points have close neighbors
-num_close_points <- sum(lengths(close_points) > 1)
-print(paste("Number of points with close neighbors:", num_close_points))
-```
-
-```{r}
-library(ggplot2)
-
-points_with_neighbors <- which(lengths(close_points) > 1)
-
-# Plot all points
-ggplot() +
-  geom_sf(data = acc_with_roads, color = "blue") +
-  geom_sf(data = acc_with_roads[points_with_neighbors, ], color = "red", size = 2) +
-  ggtitle("Red points represent those with neighbors within 50 meters")
-```
-
-```{r}
-head(st_geometry_type(car_acc_bangkok),10)
-```
-
-```{r}
-# Extract the coordinates from acc_with_roads
-coords <- st_coordinates(car_acc_bangkok)
-
-# View the first few coordinates
-head(coords)
-```
-
-```{r}
-library(dbscan)
-
-# Apply DBSCAN clustering on the point coordinates (e.g., eps = 50 meters)
-db_clusters <- dbscan(coords, eps = 10, minPts = 2)
-
-# Add cluster results back to the sf object
-car_acc_bangkok$cluster <- db_clusters$cluster
-
-# Group points by cluster and merge them
-acc_with_roads_merged <- car_acc_bangkok %>%
-  group_by(cluster) %>%
-  summarise(geometry = st_union(geometry)) %>%
-  ungroup()
-# View the updated dataset
-head(acc_with_roads)
-```
 
 ```{r, eval=FALSE}
 kfun <- kfunctions(Filtered_lixels_simple,
-                   car_acc_bangkok,  # Use the dataset with cluster assignments if clustering was applied
+                   car_acc_bangkok,  
                    start = 0, 
                    end = 2000, 
                    step = 100, 
@@ -519,11 +496,9 @@ kfun <- kfunctions(Filtered_lixels_simple,
                    agg = 10000)
 ```
 
-# 5. Temporal
+# 4. Visual Analysis
 
-
-
-## 5.8 Analysis based on Accident Time
+## 4.1 Analysis based on Accident Time
 
 First we divide the accident severity based on "number_of_vichel_involved", "number_of_fatalities" & "number_of injuries"
 
