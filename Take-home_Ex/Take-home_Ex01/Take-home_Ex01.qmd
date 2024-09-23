@@ -499,7 +499,7 @@ kfun <- kfunctions(Filtered_lixels_simple,
 
 # 4. Visual Analysis
 
-## 4.1 Analysis based on Accident Time
+## 4.1 Analysis based on Accident Time with ggplot
 
 First we divide the accident severity based on "number_of_vichel_involved", "number_of_fatalities" & "number_of injuries"
 
@@ -569,11 +569,12 @@ levels(car_acc_time$Day_of_week)
 ```{r}
 plot_w <- ggplot(car_acc_time, aes(x = Day_of_week, fill = accident_severity)) +
   geom_bar(position = "stack") +
-  labs(title = "Traffic Accidents by Severity and Day of the Week",
+  facet_wrap(~ province_en) +
+  labs(title = "Traffic Accidents by Province and Day of the Week",
        x = "Day of the Week",
        y = "Number of Accidents",
        fill = "Accident Severity") +
-  theme_minimal()  # Cleaner appearance
+  theme_minimal()
 plot_w
 ```
 
@@ -596,7 +597,6 @@ plot_h <- ggplot(car_acc_time, aes(x = hour, fill = accident_severity)) +
   scale_x_continuous(breaks = 0:23) +  # Show all hours (0-23)
   theme_minimal()  # Cleaner look
 plot_h
-
 ```
 
 ```{r}
@@ -624,4 +624,52 @@ plot_mn <- ggplot(car_acc_time, aes(x = time_of_day, fill = accident_severity)) 
 plot_mn
 ```
 
-Since there is no obvious
+```{r}
+ggplot(car_acc_time, aes(x = Day_of_week, y = hour)) +
+  geom_tile(aes(fill = ..count..), stat = "bin2d", binwidth = c(1, 1)) +
+  facet_wrap(~ accident_severity) +
+  scale_fill_gradient(low = "white", high = "red") +
+  labs(title = "Heatmap of Accidents by Day, Hour, and Severity",
+       x = "Day of the Week",
+       y = "Hour",
+       fill = "Number of Accidents") +
+  theme_minimal()
+```
+
+## 4.2 Spatio-temporal Analysis
+
+```{r}
+# Set tmap mode to "plot" for static maps or "view" for interactive maps
+tmap_mode("plot")
+
+# Add a new column for 'day_type' to distinguish between weekday and weekend
+car_acc_time <- car_acc_time %>%
+  mutate(day_type = case_when(
+    Day_of_week %in% c("Sat", "Sun") ~ "Weekend",
+    TRUE ~ "Weekday"
+  ))
+
+# Create a tmap with facets for weekday and weekend, and color for accident severity
+tm_shape(car_acc_time) +
+  tm_dots(col = "accident_severity",   # Color points by 'accident_severity'
+          palette = c("green", "yellow", "red"),  # Different colors for Low, Middle, Heavy
+          size = 0.1,                  # Set point size
+          alpha = 0.7,                 # Set transparency
+          title = "Accident Severity") +  # Title for the legend
+  tm_facets(by = "day_type", ncol = 1) +  # Separate the map into facets for Weekday and Weekend
+  tm_layout(main.title = "Accidents by Severity and Day Type",  # Set the main title
+            main.title.position = "center",            # Center the title
+            main.title.size = 0.8,                     # Adjust title size
+            legend.height = 0.45,                      # Adjust legend height
+            legend.width = 0.35,                       # Adjust legend width
+            frame = TRUE) +                            # Add a frame around the map
+  tm_compass(type = "8star", size = 2) +               # Add a compass (8-star style)
+  tm_scale_bar() +                                     # Add a scale bar
+  tm_grid(alpha = 0.2) +                               # Add a grid with light transparency
+  tm_credits("Source: Accident data",                  # Add credits to the map
+             position = c("left", "bottom"))
+```
+
+:::{.callout-note}
+This spatial analysis reveals that traffic accidents, especially of low and middle severity, are concentrated along major roads both during weekdays and weekends. Heavy accidents tend to cluster around central or high-traffic areas, necessitating further traffic safety interventions. The distinction between weekdays and weekends suggests that accident frequency is strongly linked to traffic volume, with weekdays showing a higher density of incidents.
+:::
