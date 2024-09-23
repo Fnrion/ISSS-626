@@ -134,6 +134,7 @@ adm2 <- adm2_time %>%
 # Filter administrative boundaries for BMR provinces
 bmr_boundaries <- adm2 %>%
   filter(ADM1_EN %in% bmr_provinces)
+bmr_boundaries
 ```
 
 ## Road {.tabset}
@@ -154,6 +155,10 @@ saveRDS(Road, file = "data/Road")
 # # Filter the road network to only include roads in the BMR area
 # Road_bmr <- st_intersection(Road, bmr_boundaries)
 Road_bmr <- readRDS("data/Road_bmr.rds")
+```
+
+```{r}
+Road_bmr
 ```
 
 # 4 Visualize Accident Data
