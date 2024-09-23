@@ -248,7 +248,7 @@ filtered_lixels <- lixels[lixels$density > 0, ]
 ```
 
 ```{r, cache = TRUE, eval = FALSE}
-tmap_mode('plot')
+tmap_mode('view')
 tm_shape(filtered_lixels)+
   tm_lines(col="density")+
 tm_shape(acc_with_roads)+
@@ -586,3 +586,5 @@ plot_mn <- ggplot(car_acc_time, aes(x = time_of_day, fill = accident_severity)) 
   theme_minimal()  # For consistency with other plots
 plot_mn
 ```
+
+Since there is no obvious
