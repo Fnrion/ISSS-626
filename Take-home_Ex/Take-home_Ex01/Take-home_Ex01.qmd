@@ -512,55 +512,42 @@ kfun <- kfunctions(Filtered_lixels_simple,
 First we divide the accident severity based on "number_of_vichel_involved", "number_of_fatalities" & "number_of injuries"
 
 ```{r, cache = TRUE}
-# Assign accident severity and set NA for undefined cases
-car_acc_time <- car_acc_time %>%
+# Assign accident severity without setting NA (only keep defined cases)
+car_acc_time_filtered <- car_acc_time %>%
   mutate(accident_severity = case_when(
     number_of_fatalities >= 1 | number_of_injuries >= 10 ~ "Heavy", 
     number_of_fatalities == 0 & number_of_injuries > 0 ~ "Middle",
-    number_of_fatalities == 0 & number_of_injuries == 0 & number_of_vehicles_involved > 0 ~ "Low",  
-    TRUE ~ NA_character_  # Set NA for undefined cases
-  ))
-
-# Filter out rows where accident_severity is NA
-car_acc_time_filtered <- car_acc_time %>%
-  filter(!is.na(accident_severity))
+    number_of_fatalities == 0 & number_of_injuries == 0 & number_of_vehicles_involved > 0 ~ "Low"
+  )) %>%
+  filter(!is.na(accident_severity))  # Automatically filters rows where accident_severity is not defined
 
 # Check the result
 print(car_acc_time_filtered %>% select(number_of_fatalities, number_of_injuries, number_of_vehicles_involved, accident_severity))
 ```
 
-```{r, cache = TRUE}
-# Filter for heavy accidents and remove rows with accident_severity not classified
-heavy_accidents <- car_acc_time %>%
-  filter(accident_severity == "Heavy")  # Keep only rows with 'Heavy'
-
-# Filter for middle accidents and remove rows with accident_severity not classified
-middle_accidents <- car_acc_time %>%
-  filter(accident_severity == "Middle")  # Keep only rows with 'Middle'
-
-# Filter for low accidents and remove rows with accident_severity not classified
-low_accidents <- car_acc_time %>%
-  filter(accident_severity == "Low")  # Keep only rows with 'Low'
-
-filtered_accidents <- car_acc_time %>%
-  filter(accident_severity %in% c("Heavy", "Middle", "Low"))  # Keep only valid categories
-```
-
 ```{r}
+# Remove rows with NA in accident_severity
+car_acc_time_filtered <- car_acc_time %>%
+  filter(!is.na(accident_severity))
+
 # Reorder the accident_severity factor to ensure "Heavy" is at the bottom
-car_acc_time <- car_acc_time %>%
+car_acc_time_filtered <- car_acc_time_filtered %>%
   mutate(accident_severity = factor(accident_severity, levels = c("Low", "Middle", "Heavy")))
 
-levels(car_acc_time$accident_severity)
+# Check the levels
+levels(car_acc_time_filtered$accident_severity)
 
-plot_m <- ggplot(car_acc_time, aes(x = Month_num, fill = accident_severity)) +
+# Create the plot without N/A values
+plot_m <- ggplot(car_acc_time_filtered, aes(x = Month_num, fill = accident_severity)) +
   geom_bar(position = "stack") +
   labs(title = "Traffic Accidents by Severity and Month",
        x = "Month",
        y = "Number of Accidents",
        fill = "Accident Severity") +
-  scale_x_continuous(breaks = 1:12, labels = month.abb) +  # Display month abbreviations
-  theme_minimal() 
+  scale_x_continuous(breaks = 1:12, labels = month.abb) + 
+  theme_minimal()
+
+# Show the plot
 plot_m
 ```
 
@@ -574,7 +561,10 @@ levels(car_acc_time$Day_of_week)
 ```
 
 ```{r}
-plot_w <- ggplot(car_acc_time, aes(x = Day_of_week, fill = accident_severity)) +
+car_acc_time_filtered <- car_acc_time %>%
+  filter(!is.na(accident_severity))
+
+plot_w <- ggplot(car_acc_time_filtered, aes(x = Day_of_week, fill = accident_severity)) +
   geom_bar(position = "stack") +
   facet_wrap(~ province_en) +
   labs(title = "Traffic Accidents by Province and Day of the Week",
@@ -582,6 +572,7 @@ plot_w <- ggplot(car_acc_time, aes(x = Day_of_week, fill = accident_severity)) +
        y = "Number of Accidents",
        fill = "Accident Severity") +
   theme_minimal()
+
 plot_w
 ```
 
@@ -595,14 +586,19 @@ car_acc_time <- car_acc_time %>%
 # Ensure the 'hour' column is numeric
 car_acc_time$hour <- as.numeric(car_acc_time$hour)
 
-plot_h <- ggplot(car_acc_time, aes(x = hour, fill = accident_severity)) +
+car_acc_time_filtered <- car_acc_time %>%
+  filter(!is.na(hour), !is.na(accident_severity))
+
+plot_h <- ggplot(car_acc_time_filtered, aes(x = hour, fill = accident_severity)) +
   geom_bar(position = "stack") +
   labs(title = "Traffic Accidents by Severity and Time of Day",
        x = "Hour of the Day",
        y = "Number of Accidents",
        fill = "Accident Severity") +
-  scale_x_continuous(breaks = 0:23) +  # Show all hours (0-23)
-  theme_minimal()  # Cleaner look
+  scale_x_continuous(breaks = 0:23) +
+  theme_minimal()
+
+# Display the plot
 plot_h
 ```
 
@@ -616,31 +612,31 @@ car_acc_time <- car_acc_time %>%
     TRUE ~ "Evening"
   ))
 
-# Verify the new time_of_day column
 table(car_acc_time$time_of_day)
 ```
 
 ```{r}
-plot_mn <- ggplot(car_acc_time, aes(x = time_of_day, fill = accident_severity)) +
+car_acc_time$hour <- as.numeric(car_acc_time$hour)
+
+car_acc_time <- car_acc_time %>%
+  mutate(time_of_day = case_when(
+    hour >= 6 & hour < 18 ~ "Morning",  
+    TRUE ~ "Evening"                     
+  ))
+
+car_acc_time_filtered <- car_acc_time %>%
+  filter(!is.na(hour), !is.na(time_of_day), !is.na(accident_severity))
+
+plot_mn <- ggplot(car_acc_time_filtered, aes(x = time_of_day, fill = accident_severity)) +
   geom_bar(position = "stack") +
   labs(title = "Traffic Accidents by Severity and Time of Day",
        x = "Time of Day (Morning vs Evening)",
        y = "Number of Accidents",
        fill = "Accident Severity") +
-  theme_minimal()  # For consistency with other plots
-plot_mn
-```
-
-```{r}
-ggplot(car_acc_time, aes(x = Day_of_week, y = hour)) +
-  geom_tile(aes(fill = ..count..), stat = "bin2d", binwidth = c(1, 1)) +
-  facet_wrap(~ accident_severity) +
-  scale_fill_gradient(low = "white", high = "red") +
-  labs(title = "Heatmap of Accidents by Day, Hour, and Severity",
-       x = "Day of the Week",
-       y = "Hour",
-       fill = "Number of Accidents") +
   theme_minimal()
+
+# Display the plot
+plot_mn
 ```
 
 ::: callout-tip
