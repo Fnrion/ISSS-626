@@ -8,106 +8,202 @@ execute:
   echo: true
   warning: false
   freeze: true
+  cache: true
 format:
   html:
     code-fold: true
     code-summary: "Click to view code"
 ---
 
-# ```{r}
-# pacman::p_load(sf, spdep, tmap, tidyverse)
-# ```
-# 
-# ```{r}
-# hunan <- st_read(dsn = "data/geospatial", 
-#                  layer = "Hunan")
-# ```
-# 
-# ```{r}
-# hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
-# ```
-# 
-# ```{r}
-# hunan <- left_join(hunan,hunan2012) %>%
-#   select(1:4, 7, 15)
-# ```
-# 
-# ```{r}
-# wm_q <- poly2nb(hunan, 
-#                 queen=TRUE)
-# summary(wm_q)
-<!-- ``` -->
+```{r}
+pacman::p_load(sf, spdep, dplyr, tmap, tidyverse, sfdep)
+```
 
-<!-- ```{r} -->
-<!-- hunan_GDPPC <- left_join(hunan, hunan2012) %>% -->
-<!--   select(1:4, 7, 9, 15) -->
-<!-- ``` -->
+```{r}
+hunan <- st_read(dsn = "data/geospatial", 
+               layer = "Hunan")
+```
 
-<!-- ```{r} -->
-<!-- # Calculate neighbors (nb) based on contiguity of the geometries -->
-<!-- nb <- poly2nb(st_geometry(hunan_GDPPC)) -->
+```{r}
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+```
 
-<!-- # Calculate spatial weights (wt) based on the neighbors -->
-<!-- wt <- nb2listw(nb, style = "W") -->
+```{r}
+hunan_GDPPC <- left_join(hunan,hunan2012) %>%
+  select(1:4, 7, 15)
+```
 
-<!-- # Add the neighbors and weights as list columns to the data frame -->
-<!-- wm_q <- hunan_GDPPC %>% -->
-<!--   mutate(nb = list(nb),  # Store 'nb' as a list column -->
-<!--          wt = list(wt))  # Store 'wt' as a list column -->
-<!-- ``` -->
+```{r}
+tmap_mode("plot")
+tm_shape(hunan_GDPPC) +
+  tm_fill("GDPPC",
+          style = "quantile",
+          palette = "Blues",
+          title = "GDPPC") +
+  tm_layout(main.title = "Distribution of GDP per capita by county, Hunan Province",
+            main.title.position = "center",
+            main.title.size = 1.2,
+            legend.height = 0.45,
+            legend.width = 0.35,
+            frame = TRUE) +
+  tm_borders(alpha = 0.5) +
+  tm_compass(type = "8star", size = 2) +
+  tm_scale_bar() +
+  tm_grid(alpha = 0.2)
+```
 
-<!-- ```{r} -->
-<!-- global_moran_test <- moran.test(wm_q$GDPPC, wm_q$wt, nsim = 99) -->
-<!-- ``` -->
+```{r}
+wm_q <- hunan_GDPPC %>%
+  mutate(nb = st_contiguity(geometry),
+         wt = st_weights(nb,
+                         style = "W"),
+         .before = 1) 
+```
 
-<!-- change nsim = 999 -->
+```{r}
+head(wm_q, 5)
+```
 
-<!-- ```{r} -->
-<!-- lisa <- wm_q %>% -->
-<!--   mutate(local_moran = local_moran( -->
-<!--     GDPPC, nb, wt, nsim = 99), -->
-<!--     .before = 1) %>% -->
-<!--   unnest(local_moran) -->
-<!-- ``` -->
+```{r}
+moranI <- global_moran(wm_q$GDPPC,
+                       wm_q$nb,
+                       wm_q$wt)
+glimpse(moranI)
+```
 
-<!-- ```{r} -->
-<!-- lisa_sig <- lisa %>% -->
-<!--   filter(p_ii < 0.05) -->
-<!-- tmap_mode("plot") -->
-<!-- tm_shape(lisa) + -->
-<!--   tm_polygons() + -->
-<!--   tm_boarders(alpha = 0.5) + -->
-<!-- tm_shape(lias_sig) + -->
-<!--   tm_fill("mean") + -->
-<!--   tm_boarder(alpha = 0.4) -->
-<!-- ``` -->
+```{r}
+global_moran_test(wm_q$GDPPC,
+                       wm_q$nb,
+                       wm_q$wt)
+```
 
-<!-- ```{r} -->
-<!-- wm_idw <- hunan_GDPPC%>% -->
-<!--   mutate(nb = st_contiguity(geometry), -->
-<!--          wts = st_inverse_distance(mn, geometry, -->
-<!--                                    scale = 1, -->
-<!--                                    aplha = 1), -->
-<!--          .before = 1) -->
-<!-- ``` -->
+```{r}
+set.seed(1234)
+```
 
-<!-- ```{r} -->
-<!-- HCSA <- wm_idw %>% -->
-<!--   mutate(local_Gi = local_gstar_perm( -->
-<!--     GDPPC, nb, wts, nsim = 99), -->
-<!--     .before = 1) %>% -->
-<!-- unnest(local_Gi) -->
-<!-- HCSA -->
-<!-- ``` -->
+```{r}
+lisa <- wm_q %>% 
+  mutate(local_moran = local_moran(
+    GDPPC, nb, wt, nsim = 99),
+         .before = 1) %>%
+  unnest(local_moran)
+```
 
-<!-- ```{r} -->
-<!-- HCSA_sig <- HCSA %>% -->
-<!--   filter(p_sim < 0.05) -->
-<!-- tmap_mode("plot") -->
-<!-- tm_shape(HSCA) + -->
-<!--   tm_polygons() + -->
-<!--   tm_boarders(alpha = 0.5) + -->
-<!-- tm_shape(HSCA_siq) + -->
-<!--   tm_fill("cluster") + -->
-<!--   tm_boarders(appha = 0.4) -->
-<!-- ``` -->
+```{r}
+tmap_mode("plot")
+tm_shape(lisa) +
+  tm_fill("ii") + 
+  tm_borders(alpha = 0.5) +
+  tm_view(set.zoom.limits = c(6,8)) +
+  tm_layout(
+    main.title = "local Moran's I of GDPPC",
+    main.title.size = 2)
+```
+
+```{r}
+tmap_mode("plot")
+tm_shape(lisa) +
+  tm_fill("p_ii_sim") + 
+  tm_borders(alpha = 0.5) +
+   tm_layout(main.title = "p-value of local Moran's I",
+            main.title.size = 2)
+```
+
+```{r}
+tmap_mode("plot")
+map1 <- tm_shape(lisa) +
+  tm_fill("ii") + 
+  tm_borders(alpha = 0.5) +
+  tm_view(set.zoom.limits = c(6,8)) +
+  tm_layout(main.title = "local Moran's I of GDPPC",
+            main.title.size = 0.8)
+
+map2 <- tm_shape(lisa) +
+  tm_fill("p_ii",
+          breaks = c(0, 0.001, 0.01, 0.05, 1),
+              labels = c("0.001", "0.01", "0.05", "Not sig")) + 
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "p-value of local Moran's I",
+            main.title.size = 0.8)
+
+tmap_arrange(map1, map2, ncol = 2)
+```
+
+```{r}
+lisa_sig <- lisa  %>%
+  filter(p_ii_sim < 0.05)
+tmap_mode("plot")
+tm_shape(lisa) +
+  tm_polygons() +
+  tm_borders(alpha = 0.5) +
+tm_shape(lisa_sig) +
+  tm_fill("mean") + 
+  tm_borders(alpha = 0.4)
+```
+
+```{r}
+wm_idw <- hunan_GDPPC %>%
+  mutate(nb = include_self(
+    st_contiguity(geometry)),
+    wts = st_inverse_distance(nb, 
+                              geometry, 
+                              scale = 1,
+                              alpha = 1),
+         .before = 1)
+```
+
+```{r}
+HCSA <- wm_idw %>% 
+  mutate(local_Gi = local_gstar_perm(
+    GDPPC, nb, wts, nsim = 99),
+         .before = 1) %>%
+  unnest(local_Gi)
+HCSA
+```
+
+```{r}
+tmap_mode("plot")
+tm_shape(HCSA) +
+  tm_fill("gi_star") + 
+  tm_borders(alpha = 0.5) +
+  tm_view(set.zoom.limits = c(6,8))
+```
+
+```{r}
+tmap_mode("plot")
+tm_shape(HCSA) +
+  tm_fill("p_sim") + 
+  tm_borders(alpha = 0.5)
+```
+
+```{r}
+tmap_mode("plot")
+map1 <- tm_shape(HCSA) +
+  tm_fill("gi_star") + 
+  tm_borders(alpha = 0.5) +
+  tm_view(set.zoom.limits = c(6,8)) +
+  tm_layout(main.title = "Gi* of GDPPC",
+            main.title.size = 0.8)
+
+map2 <- tm_shape(HCSA) +
+  tm_fill("p_value",
+          breaks = c(0, 0.001, 0.01, 0.05, 1),
+              labels = c("0.001", "0.01", "0.05", "Not sig")) + 
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "p-value of Gi*",
+            main.title.size = 0.8)
+
+tmap_arrange(map1, map2, ncol = 2)
+```
+
+```{r}
+HCSA_sig <- HCSA  %>%
+  filter(p_sim < 0.05)
+tmap_mode("plot")
+tm_shape(HCSA) +
+  tm_polygons() +
+  tm_borders(alpha = 0.5) +
+tm_shape(HCSA_sig) +
+  tm_fill("cluster") + 
+  tm_borders(alpha = 0.4)
+```

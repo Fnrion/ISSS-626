@@ -42,6 +42,7 @@ Spatial Point Patterns Analysis (SPPA) has proven to be an effective tool in stu
 # **2 Data Wrangling**
 
 ## **2.1 Loading Packages**
+
 ```{r, cache = TRUE}
 pacman::p_load(sf, spNetwork, tmap, tidyverse, dplyr, spatstat, knitr)
 ```
@@ -82,9 +83,9 @@ All of them are spatial data
 
 Now we’re loading both the event (acc), polygon (dm2) and road network (Road). Ensure that each layer is in the same CRS. (P.S. this step will overlap the Kfun, since too many points in the same location)
 
-:::{.panel-tabset}
-
+::: panel-tabset
 ## Car accident (acc)
+
 ```{r, cache = TRUE}
 # List of BMR provinces
 bmr_provinces <- c("Bangkok", "Nonthaburi", "Pathum Thani", "Samut Prakan", "Nakhon Pathom", "Samut Sakhon")
@@ -131,7 +132,9 @@ adm2_time <- adm2
 adm2 <- adm2_time %>%
   select(1:3,11,20)
 ```
+
 Filter administrative boundaries for BMR provinces
+
 ```{r, cache = TRUE}
 
 bmr_boundaries <- adm2 %>%
@@ -151,7 +154,9 @@ Road <- readRDS("data/Road.rds")
 ```{r}
 saveRDS(Road, file = "data/Road")
 ```
+
 Filter the road network to only include roads in the BMR area
+
 ```{r, cache = TRUE}
 # Road_bmr <- st_intersection(Road, bmr_boundaries)
 Road_bmr <- readRDS("data/Road_bmr.rds")
@@ -162,7 +167,7 @@ head(Road_bmr,5)
 ```
 :::
 
-# **3 Geospatial Analysis **
+# **3 Geospatial Analysis** 
 
 We are going to prepare a basemap and a choropleth map showing the distribution of acc by using *qtm()* of **tmap** package.
 
@@ -254,7 +259,7 @@ plot(kde_accbmr_bw)
 ```
 
 ::: callout-note
-The KDE map shows that car accidents are concentrated in specific high-risk areas, especially in the eastern region, where accident density is higher. In contrast, the western areas have fewer accidents. 
+The KDE map shows that car accidents are concentrated in specific high-risk areas, especially in the eastern region, where accident density is higher. In contrast, the western areas have fewer accidents.
 :::
 
 Let's divide the province and see what's on the south-east
@@ -315,14 +320,15 @@ The G function measures the distribution of the distances from an arbitrary even
 g_function <- Gest(accbmr_ppp)
 plot(g_function, main="G-Function for Accidents in BMR", xlim = c(0,500))
 ```
+
 ```{r}
 G_CK.csr <- envelope(accbmr_ppp, Gest, nsim = 99)
 plot(G_CK.csr)
 ```
+
 ::: callout-note
 Both plots suggest that the accidents in the BMR region are spatially clustered, especially at shorter distances
 :::
-
 
 ## 3.6 NKDE
 
@@ -404,6 +410,7 @@ kde_new <- nkde(lines = lixels_new,
             grid_shape = c(100, 100),
             verbose = TRUE)
 ```
+
 ```{r}
 kfun_new <- kfunctions(lixels_new,
                    car_acc_selected_adm2,  
@@ -421,9 +428,11 @@ kfun_new <- kfunctions(lixels_new,
 ```{r}
 kfun_new
 ```
-:::{.callout-note}
+
+::: callout-note
 The plot suggests that traffic accidents on the road network are non-randomly clustered, particularly at distances of around 2500 to 5000 meters. This clustering is statistically significant, as indicated by the blue line’s consistent deviation from the confidence envelope of random distribution. This could point to specific road segments or areas with higher accident rates, requiring targeted interventions for traffic safety.
 :::
+
 ```{r}
 saveRDS(samples, "data/samples.rds")
 ```
@@ -481,7 +490,6 @@ tm_shape(acc_with_roads)+
 class(Road_bmr)
 class(acc_with_roads)
 ```
-
 
 ```{r, eval=FALSE}
 kfun <- kfunctions(Filtered_lixels_simple,
@@ -635,10 +643,10 @@ ggplot(car_acc_time, aes(x = Day_of_week, y = hour)) +
        fill = "Number of Accidents") +
   theme_minimal()
 ```
-:::{.callout-tip}
+
+::: callout-tip
 A traffic safety strategy should focus on rush hour periods in Bangkok, with special attention to reducing the frequency of low and middle severity accidents. Implementing more targeted interventions during peak times and holiday periods, combined with improved traffic management in the most affected areas, can help reduce accident rates and improve road safety.
 :::
-
 
 ## 4.2 Spatio-temporal Analysis
 
@@ -674,6 +682,6 @@ tm_shape(car_acc_time) +
              position = c("left", "bottom"))
 ```
 
-:::{.callout-note}
+::: callout-note
 This spatial analysis reveals that traffic accidents, especially of low and middle severity, are concentrated along major roads both during weekdays and weekends. Heavy accidents tend to cluster around central or high-traffic areas, necessitating further traffic safety interventions. The distinction between weekdays and weekends suggests that accident frequency is strongly linked to traffic volume, with weekdays showing a higher density of incidents.
 :::
