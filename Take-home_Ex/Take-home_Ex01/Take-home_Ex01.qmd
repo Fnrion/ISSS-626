@@ -312,7 +312,7 @@ fatalities_by_adm2 <- car_acc_adm2 %>%
 print(fatalities_by_adm2)
 ```
 
-## 3.5 Analysing Spatial Point Process Using G-Function
+## **3.5 Analysing Spatial Point Process Using G-Function**
 
 The G function measures the distribution of the distances from an arbitrary event to its nearest event.
 
@@ -330,7 +330,7 @@ plot(G_CK.csr)
 Both plots suggest that the accidents in the BMR region are spatially clustered, especially at shorter distances
 :::
 
-## 3.6 NKDE
+## **3.6 NKDE**
 
 ```{r, cache = TRUE}
 # Visualize accident points
@@ -339,7 +339,7 @@ tm_shape(car_acc) +
   tm_dots()
 ```
 
-### 3.6.1 Spatial Join Accidents to Road Network
+### **3.6.1 Spatial Join Accidents to Road Network**
 
 Now we can use st_nearest_feature() to join the accident points with the nearest road segments from the road network. (This will cause the increaing same location point, don't try)
 
@@ -351,7 +351,7 @@ acc_with_roads <- st_join(car_acc, Road_bmr, join = st_nearest_feature)
 print(acc_with_roads)
 ```
 
-### 3.6.2 Network-Based Analysis with spNetwork
+### **3.6.2 Network-Based Analysis with spNetwork**
 
 Now we can perform network-based spatial analysis, like kernel density estimation (KDE) along the road network. The spNetwork package is useful for this type of analysis.
 
@@ -505,65 +505,69 @@ kfun <- kfunctions(Filtered_lixels_simple,
                    agg = 10000)
 ```
 
-# 4. Visual Analysis
+# **4. Visual Analysis**
 
-## 4.1 Analysis based on Accident Time with ggplot
+## **4.1 Analysis based on Accident Time with ggplot**
 
 First we divide the accident severity based on "number_of_vichel_involved", "number_of_fatalities" & "number_of injuries"
 
 ```{r, cache = TRUE}
-# Assign accident severity without setting NA (only keep defined cases)
-car_acc_time_filtered <- car_acc_time %>%
+car_acc_time <- car_acc_time %>%
   mutate(accident_severity = case_when(
-    number_of_fatalities >= 1 | number_of_injuries >= 10 ~ "Heavy", 
-    number_of_fatalities == 0 & number_of_injuries > 0 ~ "Middle",
-    number_of_fatalities == 0 & number_of_injuries == 0 & number_of_vehicles_involved > 0 ~ "Low"
-  )) %>%
-  filter(!is.na(accident_severity))  # Automatically filters rows where accident_severity is not defined
+    number_of_fatalities >= 1 | number_of_injuries >= 10 ~ "Heavy",  # Heavy accidents
+    number_of_fatalities == 0 & number_of_injuries > 0 ~ "Middle",   # Middle accidents
+    number_of_fatalities == 0 & number_of_injuries == 0 & number_of_vehicles_involved > 0 ~ "Low"  # Low accidents
+  ))
 
-# Check the result
-print(car_acc_time_filtered %>% select(number_of_fatalities, number_of_injuries, number_of_vehicles_involved, accident_severity))
 ```
 
 ```{r}
-# Remove rows with NA in accident_severity
-car_acc_time_filtered <- car_acc_time %>%
-  filter(!is.na(accident_severity))
+heavy_accidents <- car_acc_time %>%
+  filter(accident_severity == "Heavy")
 
+middle_accidents <- car_acc_time %>%
+  filter(accident_severity == "Middle")
+
+low_accidents <- car_acc_time %>%
+  filter(accident_severity == "Low")
+```
+
+```{r}
 # Reorder the accident_severity factor to ensure "Heavy" is at the bottom
-car_acc_time_filtered <- car_acc_time_filtered %>%
+car_acc_time <- car_acc_time %>%
   mutate(accident_severity = factor(accident_severity, levels = c("Low", "Middle", "Heavy")))
 
-# Check the levels
-levels(car_acc_time_filtered$accident_severity)
+# Filter out the "N/A" values from the data
+car_acc_time_filtered <- car_acc_time %>%
+  filter(!is.na(accident_severity) & accident_severity != "N/A")
 
-# Create the plot without N/A values
+# Create the plot
 plot_m <- ggplot(car_acc_time_filtered, aes(x = Month_num, fill = accident_severity)) +
   geom_bar(position = "stack") +
   labs(title = "Traffic Accidents by Severity and Month",
        x = "Month",
        y = "Number of Accidents",
        fill = "Accident Severity") +
-  scale_x_continuous(breaks = 1:12, labels = month.abb) + 
-  theme_minimal()
+  scale_x_continuous(breaks = 1:12, labels = month.abb) +  # Display month abbreviations
+  theme_minimal()  # Use a minimal theme for cleaner appearance
 
 # Show the plot
 plot_m
+
 ```
 
 ```{r}
-# Ensure Day_of_week is an ordered factor (starting from Monday)
 car_acc_time <- car_acc_time %>%
   mutate(Day_of_week = factor(Day_of_week, levels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")))
 
-# Verify the levels
-levels(car_acc_time$Day_of_week)
 ```
 
 ```{r}
+# Filter out the "N/A" values from the data
 car_acc_time_filtered <- car_acc_time %>%
-  filter(!is.na(accident_severity))
+  filter(!is.na(accident_severity) & accident_severity != "N/A")
 
+# Create the plot
 plot_w <- ggplot(car_acc_time_filtered, aes(x = Day_of_week, fill = accident_severity)) +
   geom_bar(position = "stack") +
   facet_wrap(~ province_en) +
@@ -573,11 +577,12 @@ plot_w <- ggplot(car_acc_time_filtered, aes(x = Day_of_week, fill = accident_sev
        fill = "Accident Severity") +
   theme_minimal()
 
+# Show the plot
 plot_w
+
 ```
 
 ```{r}
-# Extract just the hour from the clock column (assuming clock is in HH:MM:SS format)
 car_acc_time <- car_acc_time %>%
   mutate(hour = format(as.POSIXct(clock, format = "%H:%M:%S"), "%H"))
 ```
@@ -586,64 +591,60 @@ car_acc_time <- car_acc_time %>%
 # Ensure the 'hour' column is numeric
 car_acc_time$hour <- as.numeric(car_acc_time$hour)
 
+# Filter out the "N/A" values from the data
 car_acc_time_filtered <- car_acc_time %>%
-  filter(!is.na(hour), !is.na(accident_severity))
+  filter(!is.na(accident_severity) & accident_severity != "N/A")
 
+# Create the plot
 plot_h <- ggplot(car_acc_time_filtered, aes(x = hour, fill = accident_severity)) +
   geom_bar(position = "stack") +
   labs(title = "Traffic Accidents by Severity and Time of Day",
        x = "Hour of the Day",
        y = "Number of Accidents",
        fill = "Accident Severity") +
-  scale_x_continuous(breaks = 0:23) +
-  theme_minimal()
+  scale_x_continuous(breaks = 0:23) +  # Show all hours (0-23)
+  theme_minimal()  # Cleaner look
 
-# Display the plot
+# Show the plot
 plot_h
+
 ```
 
 ```{r}
-# Convert the clock to POSIXct format and classify into Morning and Evening
+# Convert 'clock' column to POSIXct format and create 'time_of_day' column
 car_acc_time <- car_acc_time %>%
   mutate(time_of_day = case_when(
-    format(as.POSIXct(clock, format = "%H:%M:%S"), "%H") >= "06" & 
-    format(as.POSIXct(clock, format = "%H:%M:%S"), "%H") < "18" ~ "Morning",
-    
-    TRUE ~ "Evening"
+    hour >= 6 & hour < 18 ~ "Morning",  # Between 6 AM and 6 PM is Morning
+    TRUE ~ "Evening"                     # Otherwise, it's Evening
   ))
 
-table(car_acc_time$time_of_day)
-```
-
-```{r}
-car_acc_time$hour <- as.numeric(car_acc_time$hour)
-
-car_acc_time <- car_acc_time %>%
-  mutate(time_of_day = case_when(
-    hour >= 6 & hour < 18 ~ "Morning",  
-    TRUE ~ "Evening"                     
-  ))
-
+# Filter out "N/A" accident_severity values
 car_acc_time_filtered <- car_acc_time %>%
-  filter(!is.na(hour), !is.na(time_of_day), !is.na(accident_severity))
+  filter(!is.na(accident_severity) & accident_severity != "N/A")
 
+# Create the plot
 plot_mn <- ggplot(car_acc_time_filtered, aes(x = time_of_day, fill = accident_severity)) +
   geom_bar(position = "stack") +
   labs(title = "Traffic Accidents by Severity and Time of Day",
        x = "Time of Day (Morning vs Evening)",
        y = "Number of Accidents",
        fill = "Accident Severity") +
-  theme_minimal()
+  theme_minimal()  # For consistency with other plots
 
-# Display the plot
+# Show the plot
 plot_mn
+
+# Display the frequency table for 'time_of_day'
+table(car_acc_time_filtered$time_of_day)
+
+
 ```
 
 ::: callout-tip
 A traffic safety strategy should focus on rush hour periods in Bangkok, with special attention to reducing the frequency of low and middle severity accidents. Implementing more targeted interventions during peak times and holiday periods, combined with improved traffic management in the most affected areas, can help reduce accident rates and improve road safety.
 :::
 
-## 4.2 Spatio-temporal Analysis
+## **4.2 Spatio-temporal Analysis**
 
 ```{r}
 # Set tmap mode to "plot" for static maps or "view" for interactive maps
