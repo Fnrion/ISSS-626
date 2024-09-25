@@ -167,7 +167,7 @@ head(Road_bmr,5)
 ```
 :::
 
-# **3 Geospatial Analysis** 
+# **3 Geospatial Analysis**
 
 We are going to prepare a basemap and a choropleth map showing the distribution of acc by using *qtm()* of **tmap** package.
 
