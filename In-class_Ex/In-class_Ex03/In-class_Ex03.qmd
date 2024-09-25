@@ -8,6 +8,7 @@ execute:
   echo: true
   warning: false
   freeze: true
+  cache: true
 format:
   html:
     code-fold: true
@@ -28,17 +29,16 @@ childcare <- st_read(dsn="data/geospatial",
                      layer="Punggol_CC")
 ```
 
-
 ```{r}
 plot(network)
 plot(childcare,add=T,col='red',pch = 19)
 ```
 
-
 ```{r}
 plot(st_geometry(network))
 plot(childcare,add=T,col='red',pch = 19)
 ```
+
 ```{r}
 tmap_mode('plot')
 tm_shape(childcare) +
@@ -47,6 +47,7 @@ tm_shape(childcare) +
   tm_lines() 
 tmap_mode('plot')
 ```
+
 ```{r}
 lixels <- lixelize_lines(network, 
                          700, 
@@ -67,6 +68,7 @@ tm_shape(lixels) +
   tm_dots() 
 tmap_mode('plot')
 ```
+
 ```{r}
 tmap_mode('plot')
 ```
@@ -109,4 +111,5 @@ kfun_childcare <- kfunctions(network,
 ```{r}
 kfun_childcare$plotk
 ```
-```
+
+\`\`\`
