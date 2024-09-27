@@ -83,9 +83,9 @@ website:
       - icon: github
         menu:
           - text: Source Code
-            href:  https://github.com/Fnrion/jiaxun.zou
+            href: https://github.com/Fnrion/ISSS-626
           - text: Report a Bug
-            href:  https://bugs.com
+            href: https://bugs.com
 format:
   html:
     theme:
