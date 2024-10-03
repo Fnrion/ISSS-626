@@ -317,6 +317,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling"><strong>2 Data Wrangling</strong></a>
   <ul class="collapse">
   <li><a href="#loading-packages" id="toc-loading-packages" class="nav-link" data-scroll-target="#loading-packages"><strong>2.1 Loading Packages</strong></a></li>
+  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data"><strong>2.2 The Data</strong></a></li>
+  <li><a href="#import-preparation" id="toc-import-preparation" class="nav-link" data-scroll-target="#import-preparation">2.3 Import &amp; Preparation</a></li>
   </ul></li>
   <li><a href="#geospatial-analysis" id="toc-geospatial-analysis" class="nav-link" data-scroll-target="#geospatial-analysis"><strong>3 Geospatial Analysis</strong></a>
   <ul class="collapse">
@@ -531,24 +533,108 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 </div>
 </div>
-<p><strong>The Data</strong></p>
+</section>
+<section id="the-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-data"><strong>2.2 The Data</strong></h2>
 <p>The following data are used for this study:</p>
 <ul>
 <li><p>Aspatial:</p>
 <ul>
-<li><em>Thailand Domestic Tourism Statistics</em>&nbsp;at Kaggle. You are required to use version 2 of the data set.</li>
+<li><em>Thailand Domestic Tourism Statistics</em>&nbsp;at Kaggle. Version 2 is required to do the data set.</li>
 </ul></li>
-<li><p>Geospatial</p>
+<li><p>Geospatial:</p>
 <ul>
-<li><p><em>Bus Stop Location</em>&nbsp;from&nbsp;<a href="https://datamall.lta.gov.sg/content/datamall/en/static-data.html">LTA DataMall</a>. It provides information about all the bus stops currently being serviced by buses, including the bus stop code (identifier) and location coordinates.</p></li>
-<li><p><em>hexagon</em>, a&nbsp;<a href="https://desktop.arcgis.com/en/arcmap/latest/tools/spatial-statistics-toolbox/h-whyhexagons.htm">hexagon</a>&nbsp;layer of 250m to replace the relative coarse and irregular Master Plan 2019 Planning Sub-zone GIS data set of URA.</p></li>
+<li><em>Thailand - Subnational Administrative Boundaries</em> at HDX.</li>
+</ul></li>
+</ul>
+</section>
+<section id="import-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="import-preparation">2.3 Import &amp; Preparation</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Aspatial</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Geospatial</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>We will be importing the <em>Thailand domestic tourism from 2019 to 2023</em> by using the <em>read_csv()</em> or <strong>readr</strong> package, and check the repeat columns with the <em>duplicated()</em></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tourism <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/thailand_domestic_tourism_2019_2023_ver2.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tourism, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 7
+  date       province_thai province_eng    region_thai region_eng variable value
+  &lt;date&gt;     &lt;chr&gt;         &lt;chr&gt;           &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;    &lt;dbl&gt;
+1 2019-01-01 กรุงเทพมหานคร  Bangkok         ภาคกลาง     central    ratio_t…  93.4
+2 2019-01-01 ลพบุรี          Lopburi         ภาคกลาง     central    ratio_t…  61.3
+3 2019-01-01 พระนครศรีอยุธยา Phra Nakhon Si… ภาคกลาง     central    ratio_t…  73.4
+4 2019-01-01 สระบุรี         Saraburi        ภาคกลาง     central    ratio_t…  67.3
+5 2019-01-01 ชัยนาท         Chainat         ภาคกลาง     central    ratio_t…  79.3</code></pre>
+</div>
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">duplicated</span>(tourism))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+<ul>
+<li><p>There are 7 variables in the <em>tourism</em> data, they are:</p>
+<ul>
+<li><p><strong><em>Date</em></strong>: The month and year when the statistics were recorded. The dataset spans the years 2019-2023</p></li>
+<li><p><strong><em>province_thai</em></strong>: The name of the province in Thailand, in the Thai language</p></li>
+<li><p><strong><em>province_eng</em></strong>: The name of the province in Thailand, in English</p></li>
+<li><p><strong><em>region_thai</em></strong>: The name of the region in Thailand to which the province belongs, in the Thai language</p></li>
+<li><p><strong><em>region_eng</em></strong>: The name of the region in Thailand to which the province belongs, in English</p></li>
+<li><p><strong><em>variable</em></strong>: The 8 type of data being recorded, such as the number of tourists or the occupancy rate.</p></li>
+<li><p><strong><em>value</em></strong>: The value of the data being recorded</p></li>
+</ul></li>
+<li><p>We also note that values in&nbsp;<em>variable</em>&nbsp; are 8 different types of data that represent different occupancy rate.</p>
+<ul>
+<li><p><strong><em>no_tourist_all</em></strong>: The total number of domestic tourists who visited the province</p></li>
+<li><p><strong><em>no_tourist_foreign</em></strong>: The number of foreign tourists who visited the province</p></li>
+<li><p><strong><em>no_tourist_occupied</em></strong>: The total number of occupied hotel rooms in the province</p></li>
+<li><p><strong><em>no_tourist_thai</em></strong>: The number of Thai tourists who visited the province</p></li>
+<li><p><strong><em>occupancy_rate</em></strong>: The percentage of occupied travel accommodation in the province</p></li>
+<li><p><strong><em>revenue_all</em></strong>: The revenue generated by the tourism industry in the province, in Thai Baht</p></li>
+<li><p><strong><em>revenue_foreign</em></strong>: The revenue generated by foreign tourists in the province, in Thai Baht</p></li>
+<li><p><strong><em>revenue_thai</em></strong>: The revenue generated by Thai tourists in the province, in Thai Baht</p></li>
 </ul></li>
 </ul>
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tourism <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/thailand_domestic_tourism_2019_2023_ver2.csv"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>bd <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial"</span>, <span class="at">layer =</span> <span class="st">"tha_admbnda_adm2_rtsd_20220121"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>filtered_tourism <span class="ot">&lt;-</span> tourism <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, province_eng, region_eng, variable, value) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> variable, <span class="at">values_from =</span> value) </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(filtered_tourism, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 11
+   date       province_eng         region_eng ratio_tourist_stay no_tourist_stay
+   &lt;date&gt;     &lt;chr&gt;                &lt;chr&gt;                   &lt;dbl&gt;           &lt;dbl&gt;
+ 1 2019-01-01 Bangkok              central                  93.4         3334971
+ 2 2019-01-01 Lopburi              central                  61.3           51858
+ 3 2019-01-01 Phra Nakhon Si Ayut… central                  73.4          117052
+ 4 2019-01-01 Saraburi             central                  67.3           89850
+ 5 2019-01-01 Chainat              central                  79.3           27141
+ 6 2019-01-01 Nakhon Pathom        central                  71.7          118629
+ 7 2019-01-01 Sing Buri            central                  64.6           18147
+ 8 2019-01-01 Ang Thong            central                  71.2           19140
+ 9 2019-01-01 Nonthaburi           central                  75.1          100553
+10 2019-01-01 Pathum Thani         central                  60.8           56118
+# ℹ 6 more variables: no_tourist_all &lt;dbl&gt;, no_tourist_thai &lt;dbl&gt;,
+#   no_tourist_foreign &lt;dbl&gt;, revenue_all &lt;dbl&gt;, revenue_thai &lt;dbl&gt;,
+#   revenue_foreign &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>bd <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial"</span>, <span class="at">layer =</span> <span class="st">"tha_admbnda_adm2_rtsd_20220121"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `tha_admbnda_adm2_rtsd_20220121' from data source 
@@ -562,7 +648,7 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(bd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(bd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Coordinate Reference System:
@@ -585,8 +671,8 @@ GEOGCRS["WGS 84",
 </div>
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>bd <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(bd, <span class="at">crs =</span> <span class="dv">32647</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(bd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>bd <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(bd, <span class="at">crs =</span> <span class="dv">32647</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(bd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Coordinate Reference System:
@@ -641,16 +727,19 @@ PROJCRS["WGS 84 / UTM zone 47N",
 </div>
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">duplicated</span>(bd))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">duplicated</span>(bd))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] FALSE</code></pre>
 </div>
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>bd_clean <span class="ot">&lt;-</span> bd <span class="sc">%&gt;%</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="sc">!</span><span class="fu">all</span>(<span class="fu">is.na</span>(.))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>bd_clean <span class="ot">&lt;-</span> bd <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="sc">!</span><span class="fu">all</span>(<span class="fu">is.na</span>(.))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+</div>
+</div>
+</div>
 </div>
 </section>
 </section>
