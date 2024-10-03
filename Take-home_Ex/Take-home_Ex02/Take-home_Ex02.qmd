@@ -1,0 +1,140 @@
+---
+title: "Take-home_Ex02"
+author: "Zou Jiaxun"
+date: "Oct 2, 2024"
+data-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+  cache: true
+format:
+  html:
+    code-fold: true
+    code-summary: "Click to view code"
+---
+
+# **1 Overview**
+
+## **1.1 Background**
+
+Tourism is a critical pillar of Thailand’s economy, contributing around 20% of the country’s GDP. In 2019, the sector generated approximately 90 billion US dollars from both domestic and international tourism. However, the COVID-19 pandemic severely impacted the industry, reducing revenues to 24 billion US dollars in 2020. Since September 2021, tourism revenue has shown a steady recovery, as indicated by the data from January 2019 to February 2023. Despite this rebound, the benefits of the tourism economy are concentrated in a few key provinces—Bangkok, Phuket, Chiang Mai, Sukhothai, and Phetchaburi—highlighting an uneven distribution of tourism income across the country.
+
+## **1.2 Objectives**
+
+::: {.panel-tabset}
+
+## Aim
+
+Test **tourism economy** of Thailand are **independent** from space and space and time or not.
+
+Detect where are the **clusters and outliers**, and the emerging **hot spot/cold spot areas**.
+
+## Test
+
+Using appropriate function of **sf** and **tidyverse**, preparing the following geospatial data layer:
+
+-   a study area layer in sf polygon features. It must be at [province level](http://localhost:3980/Take-Home_Ex/Take-home_Ex02/Take-home_Ex02.html#0) (including Bangkok) of Thailand.
+
+-   a tourism economy indicators layer within the study area in sf polygon features.
+
+-   a derived tourism economy indicator layer in [**spacetime s3 class of sfdep**](http://localhost:3980/Take-Home_Ex/Take-home_Ex02/Take-home_Ex02.html#0). Keep the time series at **month and year levels**.
+
+Using the extracted data, perform
+
+-   global spatial autocorrelation analysis
+
+-   local spatial autocorrelation analysis
+
+-   emerging hotspot analysis
+
+by using [sfdep methods](http://localhost:3980/Take-Home_Ex/Take-home_Ex02/Take-home_Ex02.html#0).
+
+Describe the spatial patterns revealed by the analysis above.
+
+:::
+
+# **2 Data Wrangling**
+
+## **2.1 Loading Packages**
+
+The following packages will be used for this exercise:
+
+```{r}
+pacman::p_load(sf, spNetwork, tmap, tidyverse, dplyr,
+               spatstat, knitr, sfdep, spdep, ClustGeo,
+               ggpubr, cluster, factoextra, NbClust,
+               heatmaply, corrplot, psych, GGally)
+
+package_info <- data.frame(
+  Package = c(
+    "sf", "spNetwork", "tmap", "tidyverse", "dplyr", 
+    "spatstat", "knitr", "sfdep", "spdep", "ClustGeo", 
+    "ggpubr", "cluster", "factoextra", "NbClust", 
+    "heatmaply", "corrplot", "psych", "GGally"
+  ),
+  Description = c(
+    "For importing, managing, and handling geospatial data",
+    "For network-based spatial analysis, including kernel density estimation on networks",
+    "For thematic mapping and interactive visualizations",
+    "For non-spatial data wrangling and general data analysis with a collection of packages",
+    "For data manipulation and pipeline tools, part of the tidyverse",
+    "For spatial statistics and point pattern analysis",
+    "For dynamic report generation using LaTeX, HTML, and Markdown",
+    "For spatial statistics with a focus on spatial dependence and spatial autoregressive models",
+    "For spatial dependence analysis in spatial econometrics, including spatial lag and error models",
+    "For clustering spatial data using hierarchical clustering and geographical constraints",
+    "For creating publication-ready plots",
+    "For performing various clustering algorithms and analysis",
+    "For visualizing and interpreting the results of multivariate data clustering",
+    "For determining the optimal number of clusters in a dataset using various indices",
+    "For creating interactive heatmaps and hierarchical clustering visualizations",
+    "For visualizing correlation matrices using various methods",
+    "For performing descriptive statistics, factor analysis, and psychometrics",
+    "For visualizing correlations, pair plots, and creating enhanced data analysis plots"
+  )
+)
+
+knitr::kable(package_info, col.names = c("Package", "Description"))
+```
+
+**The Data**
+
+The following data are used for this study:
+
+-   Aspatial:
+
+    -   *Thailand Domestic Tourism Statistics* at Kaggle. You are required to use version 2 of the data set.
+
+-   Geospatial
+
+    -   *Bus Stop Location* from [LTA DataMall](https://datamall.lta.gov.sg/content/datamall/en/static-data.html). It provides information about all the bus stops currently being serviced by buses, including the bus stop code (identifier) and location coordinates.
+
+    -   *hexagon*, a [hexagon](https://desktop.arcgis.com/en/arcmap/latest/tools/spatial-statistics-toolbox/h-whyhexagons.htm) layer of 250m to replace the relative coarse and irregular Master Plan 2019 Planning Sub-zone GIS data set of URA.
+
+```{r}
+tourism <- read_csv("data/aspatial/thailand_domestic_tourism_2019_2023_ver2.csv")
+bd <- st_read(dsn = "data/geospatial", layer = "tha_admbnda_adm2_rtsd_20220121")
+st_crs(bd)
+
+bd <- st_transform(bd, crs = 32647)
+st_crs(bd)
+
+any(duplicated(bd))
+
+bd_clean <- bd %>%
+  select(where(~ !all(is.na(.))))
+```
+
+# **3 Geospatial Analysis**
+
+## **3.1 if the key indicators of tourism economy of Thailand are independent from space and space and time.**
+
+# **4 Geovisualisation & Geocommunication**
+
+# **5 Reproducibility**
+
+# **6 Bonus**
+
+# **7 Reference**
