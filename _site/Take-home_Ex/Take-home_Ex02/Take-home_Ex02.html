@@ -385,7 +385,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p>a study area layer in sf polygon features. It must be at&nbsp;<a href="http://localhost:3980/Take-Home_Ex/Take-home_Ex02/Take-home_Ex02.html#0">province level</a>&nbsp;(including Bangkok) of Thailand.</p></li>
 <li><p>a tourism economy indicators layer within the study area in sf polygon features.</p></li>
-<li><p>a derived tourism economy indicator layer in&nbsp;<a href="http://localhost:3980/Take-Home_Ex/Take-home_Ex02/Take-home_Ex02.html#0"><strong>spacetime s3 class of sfdep</strong></a>. Keep the time series at&nbsp;<strong>month and year levels</strong>.</p></li>
+<li><p>a derived tourism economy indicator layer in&nbsp;<a href="http://localhost:3980/Take-Home_Ex/Take-home_Ex02/Take-home_Ex02.html#0">spacetime s3 class of sfdep</a>. Keep the time series at&nbsp;<strong>month and year levels</strong>.</p></li>
 </ul>
 <p>Using the extracted data, perform</p>
 <ul>
@@ -606,35 +606,67 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details class="code-fold">
 <summary>Click to view code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>filtered_tourism <span class="ot">&lt;-</span> tourism <span class="sc">%&gt;%</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, province_eng, region_eng, variable, value) <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, province_eng, variable, value) <span class="sc">%&gt;%</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> variable, <span class="at">values_from =</span> value) </span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(filtered_tourism, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 10 × 11
-   date       province_eng         region_eng ratio_tourist_stay no_tourist_stay
-   &lt;date&gt;     &lt;chr&gt;                &lt;chr&gt;                   &lt;dbl&gt;           &lt;dbl&gt;
- 1 2019-01-01 Bangkok              central                  93.4         3334971
- 2 2019-01-01 Lopburi              central                  61.3           51858
- 3 2019-01-01 Phra Nakhon Si Ayut… central                  73.4          117052
- 4 2019-01-01 Saraburi             central                  67.3           89850
- 5 2019-01-01 Chainat              central                  79.3           27141
- 6 2019-01-01 Nakhon Pathom        central                  71.7          118629
- 7 2019-01-01 Sing Buri            central                  64.6           18147
- 8 2019-01-01 Ang Thong            central                  71.2           19140
- 9 2019-01-01 Nonthaburi           central                  75.1          100553
-10 2019-01-01 Pathum Thani         central                  60.8           56118
-# ℹ 6 more variables: no_tourist_all &lt;dbl&gt;, no_tourist_thai &lt;dbl&gt;,
-#   no_tourist_foreign &lt;dbl&gt;, revenue_all &lt;dbl&gt;, revenue_thai &lt;dbl&gt;,
-#   revenue_foreign &lt;dbl&gt;</code></pre>
+<pre><code># A tibble: 10 × 10
+   date       province_eng     ratio_tourist_stay no_tourist_stay no_tourist_all
+   &lt;date&gt;     &lt;chr&gt;                         &lt;dbl&gt;           &lt;dbl&gt;          &lt;dbl&gt;
+ 1 2019-01-01 Bangkok                        93.4         3334971        5959075
+ 2 2019-01-01 Lopburi                        61.3           51858         268664
+ 3 2019-01-01 Phra Nakhon Si …               73.4          117052         730329
+ 4 2019-01-01 Saraburi                       67.3           89850         207236
+ 5 2019-01-01 Chainat                        79.3           27141          79073
+ 6 2019-01-01 Nakhon Pathom                  71.7          118629         296107
+ 7 2019-01-01 Sing Buri                      64.6           18147          49438
+ 8 2019-01-01 Ang Thong                      71.2           19140         104097
+ 9 2019-01-01 Nonthaburi                     75.1          100553         323717
+10 2019-01-01 Pathum Thani                   60.8           56118         233295
+# ℹ 5 more variables: no_tourist_thai &lt;dbl&gt;, no_tourist_foreign &lt;dbl&gt;,
+#   revenue_all &lt;dbl&gt;, revenue_thai &lt;dbl&gt;, revenue_foreign &lt;dbl&gt;</code></pre>
 </div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Now, we have different values based on variable! Let’s go to solving these data further to make it at month and year levels!</p>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>tourism_adm1 <span class="ot">&lt;-</span> filtered_tourism <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">adm1 =</span> province_eng) <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">year</span>(date),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Month =</span> <span class="fu">month</span>(date)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(adm1, </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>         ratio_tourist_stay, </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>         no_tourist_stay, </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>         no_tourist_all, </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>         no_tourist_thai, </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>         no_tourist_foreign, </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>         revenue_all, </span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>         revenue_thai, </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>         revenue_foreign, </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>         Year, </span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>         Month)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>bd <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial"</span>, <span class="at">layer =</span> <span class="st">"tha_admbnda_adm2_rtsd_20220121"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>bd <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial"</span>, <span class="at">layer =</span> <span class="st">"tha_admbnda_adm2_rtsd_20220121"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `tha_admbnda_adm2_rtsd_20220121' from data source 
@@ -648,95 +680,41 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(bd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Coordinate Reference System:
-  User input: WGS 84 
-  wkt:
-GEOGCRS["WGS 84",
-    DATUM["World Geodetic System 1984",
-        ELLIPSOID["WGS 84",6378137,298.257223563,
-            LENGTHUNIT["metre",1]]],
-    PRIMEM["Greenwich",0,
-        ANGLEUNIT["degree",0.0174532925199433]],
-    CS[ellipsoidal,2],
-        AXIS["latitude",north,
-            ORDER[1],
-            ANGLEUNIT["degree",0.0174532925199433]],
-        AXIS["longitude",east,
-            ORDER[2],
-            ANGLEUNIT["degree",0.0174532925199433]],
-    ID["EPSG",4326]]</code></pre>
-</div>
-<details class="code-fold">
-<summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>bd <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(bd, <span class="at">crs =</span> <span class="dv">32647</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(bd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Coordinate Reference System:
-  User input: EPSG:32647 
-  wkt:
-PROJCRS["WGS 84 / UTM zone 47N",
-    BASEGEOGCRS["WGS 84",
-        ENSEMBLE["World Geodetic System 1984 ensemble",
-            MEMBER["World Geodetic System 1984 (Transit)"],
-            MEMBER["World Geodetic System 1984 (G730)"],
-            MEMBER["World Geodetic System 1984 (G873)"],
-            MEMBER["World Geodetic System 1984 (G1150)"],
-            MEMBER["World Geodetic System 1984 (G1674)"],
-            MEMBER["World Geodetic System 1984 (G1762)"],
-            MEMBER["World Geodetic System 1984 (G2139)"],
-            ELLIPSOID["WGS 84",6378137,298.257223563,
-                LENGTHUNIT["metre",1]],
-            ENSEMBLEACCURACY[2.0]],
-        PRIMEM["Greenwich",0,
-            ANGLEUNIT["degree",0.0174532925199433]],
-        ID["EPSG",4326]],
-    CONVERSION["UTM zone 47N",
-        METHOD["Transverse Mercator",
-            ID["EPSG",9807]],
-        PARAMETER["Latitude of natural origin",0,
-            ANGLEUNIT["degree",0.0174532925199433],
-            ID["EPSG",8801]],
-        PARAMETER["Longitude of natural origin",99,
-            ANGLEUNIT["degree",0.0174532925199433],
-            ID["EPSG",8802]],
-        PARAMETER["Scale factor at natural origin",0.9996,
-            SCALEUNIT["unity",1],
-            ID["EPSG",8805]],
-        PARAMETER["False easting",500000,
-            LENGTHUNIT["metre",1],
-            ID["EPSG",8806]],
-        PARAMETER["False northing",0,
-            LENGTHUNIT["metre",1],
-            ID["EPSG",8807]]],
-    CS[Cartesian,2],
-        AXIS["(E)",east,
-            ORDER[1],
-            LENGTHUNIT["metre",1]],
-        AXIS["(N)",north,
-            ORDER[2],
-            LENGTHUNIT["metre",1]],
-    USAGE[
-        SCOPE["Engineering survey, topographic mapping."],
-        AREA["Between 96°E and 102°E, northern hemisphere between equator and 84°N, onshore and offshore. China. Indonesia. Laos. Malaysia - West Malaysia. Mongolia. Myanmar (Burma). Russian Federation. Thailand."],
-        BBOX[0,96,84,102]],
-    ID["EPSG",32647]]</code></pre>
-</div>
-<details class="code-fold">
-<summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">duplicated</span>(bd))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># st_crs(bd)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>bd <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(bd, <span class="at">crs =</span> <span class="dv">32647</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># st_crs(bd)</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">duplicated</span>(bd))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] FALSE</code></pre>
 </div>
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>bd_clean <span class="ot">&lt;-</span> bd <span class="sc">%&gt;%</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="sc">!</span><span class="fu">all</span>(<span class="fu">is.na</span>(.))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>bd_clean <span class="ot">&lt;-</span> bd <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="sc">!</span><span class="fu">all</span>(<span class="fu">is.na</span>(.)))) <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Shape_Leng, Shape_Area, ADM1_EN, date, geometry) <span class="sc">%&gt;%</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(ADM1_EN) <span class="sc">%&gt;%</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">geometry =</span> <span class="fu">st_union</span>(geometry),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">Shape_Leng =</span> <span class="fu">sum</span>(Shape_Leng),</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">Shape_Area =</span> <span class="fu">sum</span>(Shape_Area)) <span class="sc">%&gt;%</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">adm1 =</span> ADM1_EN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+</div>
+<p>The imported shape file is simple features object of sf. From the output, we can see that there are 928 features and 19 fields, and confirm that the datum WGS 84 is correct. Moreover, based on the province level, we <em>summarise()</em> the geometry.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(bd_clean))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 </div>
 </div>

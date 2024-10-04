@@ -38,7 +38,7 @@ Using appropriate function of **sf** and **tidyverse**, preparing the followi
 
 -   a tourism economy indicators layer within the study area in sf polygon features.
 
--   a derived tourism economy indicator layer in [**spacetime s3 class of sfdep**](http://localhost:3980/Take-Home_Ex/Take-home_Ex02/Take-home_Ex02.html#0). Keep the time series at **month and year levels**.
+-   a derived tourism economy indicator layer in [spacetime s3 class of sfdep](http://localhost:3980/Take-Home_Ex/Take-home_Ex02/Take-home_Ex02.html#0). Keep the time series at **month and year levels**.
 
 Using the extracted data, perform
 
@@ -111,7 +111,7 @@ The following data are used for this study:
 
 ## 2.3 Import & Preparation
 
-::: panel-tabset
+:::: panel-tabset
 ## Aspatial
 
 We will be importing the *Thailand domestic tourism from 2019 to 2023* by using the *read_csv()* or **readr** package, and check the repeat columns with the *duplicated()*
@@ -158,27 +158,61 @@ any(duplicated(tourism))
 
 ```{r}
 filtered_tourism <- tourism %>%
-  select(date, province_eng, region_eng, variable, value) %>%
+  select(date, province_eng, variable, value) %>%
   pivot_wider(names_from = variable, values_from = value) 
 head(filtered_tourism, 10)
 ```
 
+::: callout-note
+Now, we have different values based on variable! Let's go to solving these data further to make it at month and year levels!
+:::
+
+```{r}
+tourism_adm1 <- filtered_tourism %>%
+  rename(adm1 = province_eng) %>%
+  mutate(Year = year(date),
+         Month = month(date)) %>%
+  select(adm1, 
+         ratio_tourist_stay, 
+         no_tourist_stay, 
+         no_tourist_all, 
+         no_tourist_thai, 
+         no_tourist_foreign, 
+         revenue_all, 
+         revenue_thai, 
+         revenue_foreign, 
+         Year, 
+         Month)
+  
+```
 
 ## Geospatial
 
 ```{r}
 bd <- st_read(dsn = "data/geospatial", layer = "tha_admbnda_adm2_rtsd_20220121")
-st_crs(bd)
+# st_crs(bd)
 
 bd <- st_transform(bd, crs = 32647)
-st_crs(bd)
+# st_crs(bd)
 
 any(duplicated(bd))
 
 bd_clean <- bd %>%
-  select(where(~ !all(is.na(.))))
+  select(where(~ !all(is.na(.)))) %>%
+  select(Shape_Leng, Shape_Area, ADM1_EN, date, geometry) %>%
+  group_by(ADM1_EN) %>%
+  summarise(geometry = st_union(geometry),
+            Shape_Leng = sum(Shape_Leng),
+            Shape_Area = sum(Shape_Area)) %>%
+  rename(adm1 = ADM1_EN)
 ```
-:::
+
+The imported shape file is simple features object of sf. From the output, we can see that there are 928 features and 19 fields, and confirm that the datum WGS 84 is correct. Moreover, based on the province level, we *summarise()* the geometry.
+
+```{r}
+plot(st_geometry(bd_clean))
+```
+::::
 
 # **3 Geospatial Analysis**
 
