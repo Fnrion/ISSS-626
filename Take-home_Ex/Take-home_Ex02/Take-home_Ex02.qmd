@@ -442,7 +442,9 @@ plot(wm_q, coords, pch = 19, cex = 0.2, add = TRUE, col = "red")
 
 ## **3.2 Spatial Autocorrelation**
 
-We will first use Moran’s I to check whether similar values cluster geographically
+In this section, we will demonstrate how to perform Moran’s I statistics testing by using [*moran.test()*](https://r-spatial.github.io/spdep/reference/moran.test.html) of **spdep**. Moran’s I is a test for spatial autocorrelation. It measures the overall spatial autocorrelation of the data, i.e. overall, how one object is similar or dissimilar to others surrounding it, evaluating whether the observation (in our case,  revenue province) is clustered, dispersed, or random.
+
+The values of Moran’s I range from +1 meaning strong positive spatial autocorrelation (clustering) to 0 meaning no autocorrelation (a random pattern) to -1 indicating strong negative spatial autocorrelation (dispersion).
 
 ```{r}
 # Check the CRS (Coordinate Reference System)
@@ -462,6 +464,10 @@ nb <- poly2nb(filtered_data_simplified)
 # Convert the neighbors list to a weights list
 lw <- nb2listw(nb, style = "W", zero.policy = TRUE)
 ```
+
+The null hypothesis we are testing states that: “The values for tourism revenue are randomly distributed across Thailand’s provinces, following a completely random spatial process.” The alternative hypothesis is: “The values for tourism revenue are not randomly dispersed, indicating spatial clustering.”
+
+The following code chunk performs Moran’s I statistic test using moran.test() from the **spdep** package.
 
 ```{r}
 moran_test <- moran.test(filtered_data_simplified$revenue_all, lw)
@@ -483,7 +489,7 @@ tm_shape(filtered_data_simplified) +
   tm_layout(title = "LISA for Tourism Revenue")
 ```
 
-The LISA results show local clusters of provinces with high or low tourism revenue and detect any outliers where a province is significantly different from its neighbors.
+Local Indicators of Spatial Association (LISA) address the limitations of the global Moran’s I test by allowing us to identify **local clusters or outliers** of tourism revenue and assess their statistical significance. In addition to identifying the four types of spatial relationships (high-high, high-low, low-high, and low-low) in the **LISA cluster map**, there is a fifth category: **provinces with no statistically significant spatial autocorrelation** (no clustering).
 
 ```{r}
 hotspot_analysis <- localG(filtered_data_simplified$revenue_all, lw)
