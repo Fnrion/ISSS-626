@@ -322,8 +322,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#geospatial-analysis" id="toc-geospatial-analysis" class="nav-link" data-scroll-target="#geospatial-analysis"><strong>3 Geospatial Analysis</strong></a>
   <ul class="collapse">
-  <li><a href="#cluster-visualization" id="toc-cluster-visualization" class="nav-link" data-scroll-target="#cluster-visualization"><strong>3.1 Cluster Visualization</strong></a></li>
-  <li><a href="#spatial-autocorrelation" id="toc-spatial-autocorrelation" class="nav-link" data-scroll-target="#spatial-autocorrelation"><strong>3.2 Spatial Autocorrelation</strong></a></li>
+  <li><a href="#spatial-autocorrelation" id="toc-spatial-autocorrelation" class="nav-link" data-scroll-target="#spatial-autocorrelation"><strong>3.1 Spatial Autocorrelation</strong></a></li>
+  <li><a href="#spatial" id="toc-spatial" class="nav-link" data-scroll-target="#spatial"><strong>3.2 Spatial</strong></a></li>
   </ul></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><strong>4 Conclusion</strong></a></li>
   </ul>
@@ -986,8 +986,8 @@ Geodetic CRS:  WGS 84</code></pre>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<section id="cluster-visualization" class="level2">
-<h2 class="anchored" data-anchor-id="cluster-visualization"><strong>3.1 Cluster Visualization</strong></h2>
+<section id="spatial-autocorrelation" class="level2">
+<h2 class="anchored" data-anchor-id="spatial-autocorrelation"><strong>3.1 Spatial Autocorrelation</strong></h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
@@ -1062,8 +1062,8 @@ Link number distribution:
 </div>
 </div>
 </section>
-<section id="spatial-autocorrelation" class="level2">
-<h2 class="anchored" data-anchor-id="spatial-autocorrelation"><strong>3.2 Spatial Autocorrelation</strong></h2>
+<section id="spatial" class="level2">
+<h2 class="anchored" data-anchor-id="spatial"><strong>3.2 Spatial</strong></h2>
 <p>In this section, we will demonstrate how to perform Moran’s I statistics testing by using&nbsp;<a href="https://r-spatial.github.io/spdep/reference/moran.test.html"><em>moran.test()</em></a>&nbsp;of&nbsp;<strong>spdep</strong>. Moran’s I is a test for spatial autocorrelation. It measures the overall spatial autocorrelation of the data, i.e.&nbsp;overall, how one object is similar or dissimilar to others surrounding it, evaluating whether the observation (in our case,&nbsp; revenue province) is clustered, dispersed, or random.</p>
 <p>The values of Moran’s I range from +1 meaning strong positive spatial autocorrelation (clustering) to 0 meaning no autocorrelation (a random pattern) to -1 indicating strong negative spatial autocorrelation (dispersion).</p>
 <div class="cell">
