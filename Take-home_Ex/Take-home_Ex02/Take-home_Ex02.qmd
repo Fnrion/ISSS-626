@@ -506,8 +506,40 @@ tm_shape(filtered_data_simplified) +
 The hotspot analysis identifies provinces where tourism revenue has been significantly higher or lower than expected, highlighting the spatial distribution of “hot” and “cold” areas.
 
 ::: callout-note
-	1.	**Moran’s I** indicates that there is a significant positive spatial autocorrelation in tourism revenue across Thailand’s provinces, meaning that provinces with similar revenue levels are clustered together geographically.
-	2.	**Local Moran’s I (LISA)** further identifies local clusters of provinces with high tourism revenue, as well as potential outliers where individual provinces behave differently from their neighbors.
-	3.	**Hotspot Analysis** reveals provinces that are hotspots or cold spots for tourism revenue, helping to pinpoint areas with significant increases or decreases in tourism activity over time.
+1.  **Moran’s I** indicates that there is a significant positive spatial autocorrelation in tourism revenue across Thailand’s provinces, meaning that provinces with similar revenue levels are clustered together geographically.
+2.  **Local Moran’s I (LISA)** further identifies local clusters of provinces with high tourism revenue, as well as potential outliers where individual provinces behave differently from their neighbors.
+3.  **Hotspot Analysis** reveals provinces that are hotspots or cold spots for tourism revenue, helping to pinpoint areas with significant increases or decreases in tourism activity over time.
 :::
+
+# **4 Conclusion**
+
+Our analysis of Thailand’s tourism economy from 2019 to 2023 has provided valuable insights into the spatial and temporal patterns of tourism revenue during the COVID-19 pandemic. Using spatial autocorrelation techniques such as **Moran’s I** and **Local Moran’s I (LISA)**, along with **Hotspot Analysis**, we identified significant clusters and trends across Thailand’s provinces.
+
+Overall, the analysis revealed **uneven distributions of tourism revenue** across Thailand during the study period. Provinces with **high tourism revenue** formed consistent **high-high clusters**, particularly around key tourism regions such as Bangkok and coastal areas. These regions have shown resilience, likely benefiting from their established infrastructure and popularity with both domestic and international tourists. In contrast, **low-low clusters** were observed in more rural and less economically developed provinces, which faced greater challenges in recovering from the pandemic’s impact.
+
+The hotspot analysis highlighted **emerging trends**: certain provinces experienced **significant increases in tourism revenue** over time, indicating hotspots of recovery and growth. On the other hand, some provinces have remained in a **cold spot** zone, with **consistently low tourism revenue**, likely reflecting a slower recovery or greater reliance on international tourism, which was heavily impacted during the pandemic.
+
+**Future Work**
+
+Several directions could be explored to enhance the depth and scope of this analysis:
+
+-   **Consider Other Tourism Indicators**: While this analysis focused on tourism revenue, incorporating other indicators such as tourist arrivals, hotel occupancy rates, or tourism employment could provide a more comprehensive understanding of the impacts of COVID-19.
+
+-   **Investigate Province-Level Socioeconomic Factors**: Including variables such as population density, income levels, and economic dependency on tourism would help explain the uneven recovery of different provinces and identify areas needing targeted intervention.
+
+-   **Examine the Role of Domestic vs. International Tourists**: Differentiating between domestic and international tourism recovery could reveal which provinces rely more heavily on international visitors and have been slower to recover due to global travel restrictions.
+
+-   **Temporal Granularity**: Future analyses could explore more granular temporal data (e.g., monthly or quarterly) to detect short-term trends and identify periods of rapid change in tourism activity as COVID-19 restrictions were lifted.
+
+-   **Incorporate External Factors**: Further analysis could include the impact of government policies, travel restrictions, and vaccination rates on tourism recovery, providing a richer context for understanding the spatio-temporal patterns observed.
+
+By expanding on these areas, future work could provide a more nuanced understanding of the pandemic’s impact on Thailand’s tourism economy, offering actionable insights for policymakers and stakeholders in the tourism sector.
+
+**Summary of Key Insights:**
+
+-   **High-High Clusters**: Provinces like Bangkok and popular coastal areas demonstrated resilience with consistently high tourism revenue.
+
+-   **Low-Low Clusters**: Rural and less developed provinces faced more significant challenges, showing consistently low tourism revenue.
+
+-   **Hotspots**: Certain provinces showed emerging recovery trends, while others remained cold spots, reflecting uneven recovery across the country.
 

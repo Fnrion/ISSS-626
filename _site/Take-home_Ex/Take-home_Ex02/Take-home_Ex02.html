@@ -325,6 +325,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#cluster-visualization" id="toc-cluster-visualization" class="nav-link" data-scroll-target="#cluster-visualization"><strong>3.1 Cluster Visualization</strong></a></li>
   <li><a href="#spatial-autocorrelation" id="toc-spatial-autocorrelation" class="nav-link" data-scroll-target="#spatial-autocorrelation"><strong>3.2 Spatial Autocorrelation</strong></a></li>
   </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><strong>4 Conclusion</strong></a></li>
   </ul>
 </nav>
     </div>
@@ -1226,14 +1227,38 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<pre><code>1.  **Moran’s I** indicates that there is a significant positive spatial autocorrelation in tourism revenue across Thailand’s provinces, meaning that provinces with similar revenue levels are clustered together geographically.
-2.  **Local Moran’s I (LISA)** further identifies local clusters of provinces with high tourism revenue, as well as potential outliers where individual provinces behave differently from their neighbors.
-3.  **Hotspot Analysis** reveals provinces that are hotspots or cold spots for tourism revenue, helping to pinpoint areas with significant increases or decreases in tourism activity over time.</code></pre>
+<ol type="1">
+<li><strong>Moran’s I</strong> indicates that there is a significant positive spatial autocorrelation in tourism revenue across Thailand’s provinces, meaning that provinces with similar revenue levels are clustered together geographically.</li>
+<li><strong>Local Moran’s I (LISA)</strong> further identifies local clusters of provinces with high tourism revenue, as well as potential outliers where individual provinces behave differently from their neighbors.</li>
+<li><strong>Hotspot Analysis</strong> reveals provinces that are hotspots or cold spots for tourism revenue, helping to pinpoint areas with significant increases or decreases in tourism activity over time.</li>
+</ol>
 </div>
 </div>
-
-
 </section>
+</section>
+<section id="conclusion" class="level1">
+<h1><strong>4 Conclusion</strong></h1>
+<p>Our analysis of Thailand’s tourism economy from 2019 to 2023 has provided valuable insights into the spatial and temporal patterns of tourism revenue during the COVID-19 pandemic. Using spatial autocorrelation techniques such as <strong>Moran’s I</strong> and <strong>Local Moran’s I (LISA)</strong>, along with <strong>Hotspot Analysis</strong>, we identified significant clusters and trends across Thailand’s provinces.</p>
+<p>Overall, the analysis revealed <strong>uneven distributions of tourism revenue</strong> across Thailand during the study period. Provinces with <strong>high tourism revenue</strong> formed consistent <strong>high-high clusters</strong>, particularly around key tourism regions such as Bangkok and coastal areas. These regions have shown resilience, likely benefiting from their established infrastructure and popularity with both domestic and international tourists. In contrast, <strong>low-low clusters</strong> were observed in more rural and less economically developed provinces, which faced greater challenges in recovering from the pandemic’s impact.</p>
+<p>The hotspot analysis highlighted <strong>emerging trends</strong>: certain provinces experienced <strong>significant increases in tourism revenue</strong> over time, indicating hotspots of recovery and growth. On the other hand, some provinces have remained in a <strong>cold spot</strong> zone, with <strong>consistently low tourism revenue</strong>, likely reflecting a slower recovery or greater reliance on international tourism, which was heavily impacted during the pandemic.</p>
+<p><strong>Future Work</strong></p>
+<p>Several directions could be explored to enhance the depth and scope of this analysis:</p>
+<ul>
+<li><p><strong>Consider Other Tourism Indicators</strong>: While this analysis focused on tourism revenue, incorporating other indicators such as tourist arrivals, hotel occupancy rates, or tourism employment could provide a more comprehensive understanding of the impacts of COVID-19.</p></li>
+<li><p><strong>Investigate Province-Level Socioeconomic Factors</strong>: Including variables such as population density, income levels, and economic dependency on tourism would help explain the uneven recovery of different provinces and identify areas needing targeted intervention.</p></li>
+<li><p><strong>Examine the Role of Domestic vs.&nbsp;International Tourists</strong>: Differentiating between domestic and international tourism recovery could reveal which provinces rely more heavily on international visitors and have been slower to recover due to global travel restrictions.</p></li>
+<li><p><strong>Temporal Granularity</strong>: Future analyses could explore more granular temporal data (e.g., monthly or quarterly) to detect short-term trends and identify periods of rapid change in tourism activity as COVID-19 restrictions were lifted.</p></li>
+<li><p><strong>Incorporate External Factors</strong>: Further analysis could include the impact of government policies, travel restrictions, and vaccination rates on tourism recovery, providing a richer context for understanding the spatio-temporal patterns observed.</p></li>
+</ul>
+<p>By expanding on these areas, future work could provide a more nuanced understanding of the pandemic’s impact on Thailand’s tourism economy, offering actionable insights for policymakers and stakeholders in the tourism sector.</p>
+<p><strong>Summary of Key Insights:</strong></p>
+<ul>
+<li><p><strong>High-High Clusters</strong>: Provinces like Bangkok and popular coastal areas demonstrated resilience with consistently high tourism revenue.</p></li>
+<li><p><strong>Low-Low Clusters</strong>: Rural and less developed provinces faced more significant challenges, showing consistently low tourism revenue.</p></li>
+<li><p><strong>Hotspots</strong>: Certain provinces showed emerging recovery trends, while others remained cold spots, reflecting uneven recovery across the country.</p></li>
+</ul>
+
+
 </section>
 
 </main> <!-- /main -->
