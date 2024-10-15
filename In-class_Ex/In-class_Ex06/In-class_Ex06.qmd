@@ -29,7 +29,6 @@ GDPPC <- read_csv("data/aspatial/Hunan_GDPPC.csv")
 head(GDPPC, 10)
 ```
 
-
 ```{r}
 GDPPC_st <- spacetime(GDPPC, hunan,
                       .loc_col = "County",
@@ -50,6 +49,7 @@ GDPPC_nb <- GDPPC_st %>%
   set_nbs("nb") %>%
   set_wts("wt")
 ```
+
 ```{r}
 gi_stars <- GDPPC_nb %>%
   group_by(Year) %>%

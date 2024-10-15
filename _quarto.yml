@@ -92,7 +92,7 @@ format:
       light: cosmo
       dark: morph
     toc: true
-    fontsize: 1.1em
+    fontsize: 0.9em
     linestretch: 1.6
     backgroundcolor: Ivory
     light: darkly

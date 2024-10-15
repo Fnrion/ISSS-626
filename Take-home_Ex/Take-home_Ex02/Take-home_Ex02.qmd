@@ -63,14 +63,14 @@ The following packages will be used for this exercise:
 pacman::p_load(sf, spNetwork, tmap, tidyverse, dplyr,
                spatstat, knitr, sfdep, spdep, ClustGeo,
                ggpubr, cluster, factoextra, NbClust,
-               heatmaply, corrplot, psych, GGally)
+               heatmaply, corrplot, psych, GGally, spacetime)
 
 package_info <- data.frame(
   Package = c(
     "sf", "spNetwork", "tmap", "tidyverse", "dplyr", 
     "spatstat", "knitr", "sfdep", "spdep", "ClustGeo", 
     "ggpubr", "cluster", "factoextra", "NbClust", 
-    "heatmaply", "corrplot", "psych", "GGally"
+    "heatmaply", "corrplot", "psych", "GGally", "Spacetime"
   ),
   Description = c(
     "For importing, managing, and handling geospatial data",
@@ -90,7 +90,8 @@ package_info <- data.frame(
     "For creating interactive heatmaps and hierarchical clustering visualizations",
     "For visualizing correlation matrices using various methods",
     "For performing descriptive statistics, factor analysis, and psychometrics",
-    "For visualizing correlations, pair plots, and creating enhanced data analysis plots"
+    "For visualizing correlations, pair plots, and creating enhanced data analysis plots",
+    "For linking a flat data set containing spatio-temporal information with the related geometry"
   )
 )
 
@@ -170,8 +171,6 @@ Now, we have different values based on variable! Let's go to solving these data 
 ```{r}
 tourism_adm1 <- filtered_tourism %>%
   rename(adm1 = province_eng) %>%
-  mutate(Year = year(date),
-         Month = month(date)) %>%
   select(adm1, 
          ratio_tourist_stay, 
          no_tourist_stay, 
@@ -181,9 +180,12 @@ tourism_adm1 <- filtered_tourism %>%
          revenue_all, 
          revenue_thai, 
          revenue_foreign, 
-         Year, 
-         Month)
+         date)
   
+```
+
+```{r}
+head(glimpse(tourism_adm1),5)
 ```
 
 ## Geospatial
@@ -205,23 +207,307 @@ bd_clean <- bd %>%
             Shape_Leng = sum(Shape_Leng),
             Shape_Area = sum(Shape_Area)) %>%
   rename(adm1 = ADM1_EN)
+
 ```
 
 The imported shape file is simple features object of sf. From the output, we can see that there are 928 features and 19 fields, and confirm that the datum WGS 84 is correct. Moreover, based on the province level, we *summarise()* the geometry.
 
 ```{r}
-plot(st_geometry(bd_clean))
+# Calculate centroids for each province
+bd_centroid <- st_centroid(bd_clean)
+
+basemap <- tm_shape(bd_clean) +
+  tm_polygons() +
+  tm_shape(bd_centroid) +
+  tm_text("adm1", size = 0.2)
+tmap_mode("plot")
+basemap
 ```
 ::::
 
+Since we have prepared the aspatial data and geospatial data, we will merge them together to help us further visualization
+
+```{r}
+merged_data <- left_join(tourism_adm1, bd_clean, by = "adm1")
+```
+
+After merging using the *left_join()*, we can see there are some NA in the shape_lengh and Shape_area, what's more, with a further check, we find that the NA is due to a name mismatch like *Lop Buri* in **bd_clean and** *Lopburi* in **tourism_adm1**
+
+```{r}
+# Get unique names from both datasets
+bd_names <- unique(bd_clean$adm1)
+tourism_names <- unique(tourism_adm1$adm1)
+
+# Identify names in bd_clean not present in tourism_adm1
+mismatched_names <- setdiff(bd_names, tourism_names)
+mismatched_names
+```
+
+```{r}
+name_fixes <- c(
+  "Buri Ram" = "Buriram",
+  "Chai Nat" = "Chainat",
+  "Chon Buri" = "Chonburi",
+  "Lop Buri" = "Lopburi",
+  "Nong Bua Lam Phu" = "Nongbualamphu",
+  "Phangnga" = "Phang Nga",
+  "Prachin Buri" = "Prachinburi",
+  "Si Sa Ket" = "Sisaket"
+)
+
+# Apply the fixes to the 'adm1' column in bd_clean
+bd_clean$adm1 <- sapply(bd_clean$adm1, function(x) {
+  if (x %in% name_fixes) {
+    names(name_fixes)[which(name_fixes == x)]
+  } else {
+    x
+  }
+})
+
+# Perform the join again
+merged_data <- left_join(bd_clean, tourism_adm1, by = "adm1")
+
+# Remove rows with any NA values
+merged_data <- merged_data %>% drop_na()
+```
+
+And then we want a derived tourism economy indicator layer in spacetime s3 class of sfdep, moreover, try to keep the time series at month and year levels.
+
+```{r}
+# Check if merged_data is already an sf object, if not convert it
+if (!inherits(merged_data, "sf")) {
+  merged_data <- st_as_sf(merged_data)
+}
+
+# Extract spatial part (provinces and geometry)
+spatial_data <- st_geometry(merged_data) # this contains the geometry
+
+# Make sure "adm1" column corresponds to province names
+# Optional: Ensure there's no mismatch in province names
+
+# Convert 'date' column to Date type if it’s not already in that format
+merged_data$date <- as.Date(merged_data$date, format = "%Y-%m-%d")
+```
+
+```{r}
+# Extract the relevant time and spatial features
+time_data <- unique(merged_data$date)  # temporal part
+
+# Sort the time_data to ensure it is in increasing order
+time_data <- sort(time_data)
+```
+
+```{r}
+# Create a full combination of all spatial units (adm1) and time points (date)
+spatio_temporal_grid <- expand.grid(
+  adm1 = unique(merged_data$adm1),  # Ensure these are the correct spatial units
+  date = unique(merged_data$date)   # Ensure this is in correct date format
+)
+# Merge the full spatio-temporal grid with the actual data
+full_data <- left_join(spatio_temporal_grid, merged_data, by = c("adm1", "date"))
+
+# Check how many rows the full_data now has
+actual_rows <- nrow(full_data)
+print(paste("Actual rows after merging:", actual_rows))
+# Replace NA values with 0 (if that's appropriate for your analysis)
+full_data[is.na(full_data)] <- 0
+```
+
+```{r}
+# Extract unique spatial data for adm1 (provinces)
+spatial_data_unique <- merged_data %>%
+  group_by(adm1) %>%
+  summarise(geometry = first(geometry))  # Use the first geometry for each province
+# Convert the unique spatial data to sp format
+spatial_data_sp <- as(st_as_sf(spatial_data_unique), "Spatial")
+
+
+non_spatial_data <- as.data.frame(full_data)
+
+# Remove 'adm1' (or any other conflicting columns) from non_spatial_data
+non_spatial_data <- non_spatial_data %>%
+  select(-adm1)  # Remove the column to avoid conflict
+```
+
+Get the spatio-temporal object
+
+```{r}
+# Create the STFDF object with the correct non-spatial data
+stfdf <- STFDF(spatial_data_sp, time_data, data = non_spatial_data)
+
+# Optional: Print the summary of the created spatio-temporal object
+summary(stfdf)
+```
+
+```{r}
+saveRDS(stfdf, "data/rds/spacetime_data.rds")
+```
+
+```{r}
+# # Convert the S4 into S3
+# # Extract the slots from the STFDF object
+# spatial_data <- stfdf@sp      # Spatial data (spatial features)
+# temporal_data <- stfdf@time   # Temporal data (time points)
+# attribute_data <- stfdf@data  # Non-spatial attributes
+# 
+# # Combine the extracted components into a list (an S3 object)
+# s3_object <- list(
+#   spatial = spatial_data,
+#   time = temporal_data,
+#   attributes = attribute_data
+# )
+# 
+# # Check the structure of the new S3 object
+# str(s3_object)
+# Extract spatial data (provinces and their geometries)
+spatial_data <- stfdf@sp    # Extract spatial data (sf object)
+
+# Extract temporal data (dates or time points)
+temporal_data <- stfdf@time
+
+# Extract the tourism economy indicators (such as tourism revenue)
+tourism_data <- stfdf@data$revenue_all  # Replace with the relevant column name
+```
+
+```{r}
+# x <- purrr::map_dfr(1:10, ~merged_data_year) |>
+#   select(revenue_all) |>
+#   mutate(
+#     date = sort(rep(1:10, 3458)),
+#     # Add noise to selected columns using random numbers
+#     no_tourist_all = no_tourist_all * runif(3458, min = 0.8, max = 1.2),
+#     revenue_all = revenue_all * runif(3458, min = 0.8, max = 1.2)
+#   )
+# x
+# Combine spatial and temporal data into an S3-compatible structure (data frame)
+```
+
+```{r}
+# spt <- as_spacetime(x, "no_tourist_all", "revenue_all" , "time_period")
+```
+
 # **3 Geospatial Analysis**
 
-## **3.1 if the key indicators of tourism economy of Thailand are independent from space and space and time.**
+```{r}
+# Aggregate data by year instead of month
+merged_data <- merged_data %>%
+  mutate(year = format(date, "%Y"))  # Extract year
 
-# **4 Geovisualisation & Geocommunication**
+necessary_columns <- c("adm1", "geometry", "Shape_Leng", "Shape_Area", "revenue_all", "year")
 
-# **5 Reproducibility**
+filtered_data <- merged_data[, necessary_columns]
+```
 
-# **6 Bonus**
+```{r}
+# Group by province (adm1) and year, then sum the revenue for each year
+filtered_data <- filtered_data %>%
+  group_by(adm1, year) %>%
+  summarise(revenue_all = sum(revenue_all, na.rm = TRUE))
 
-# **7 Reference**
+```
+
+```{r}
+filtered_data_2023 <- filtered_data %>%
+  filter(year == 2023)
+```
+
+## **3.1 Cluster Visualization**
+
+```{r}
+wm_q <- poly2nb(filtered_data_2023, queen=TRUE, snap = 1)
+summary(wm_q)
+```
+
+The summary report above shows that there are 69 area units in Thailand The most connected area unit has 9 neighbours. There are two area units with only one heighbours.
+
+```{r}
+longitude <- map_dbl(filtered_data_2023$geometry, ~st_centroid(.x)[[1]])
+```
+
+```{r}
+latitude <- map_dbl(filtered_data_2023$geometry, ~st_centroid(.x)[[2]])
+```
+
+```{r}
+coords <- cbind(longitude, latitude)
+```
+
+```{r}
+head(coords)
+```
+
+```{r}
+plot(filtered_data_2023$geometry, border="lightgrey")
+plot(wm_q, coords, pch = 19, cex = 0.2, add = TRUE, col = "red")
+```
+
+## **3.2 Spatial Autocorrelation**
+
+We will first use Moran’s I to check whether similar values cluster geographically
+
+```{r}
+# Check the CRS (Coordinate Reference System)
+st_crs(filtered_data)
+```
+
+```{r}
+# Simplify geometries
+filtered_data_simplified <- st_simplify(filtered_data, dTolerance = 1)  # Adjust tolerance as needed
+```
+
+```{r}
+# Apply poly2nb() on simplified single polygons
+nb <- poly2nb(filtered_data_simplified)
+```
+
+```{r}
+# Convert the neighbors list to a weights list
+lw <- nb2listw(nb, style = "W", zero.policy = TRUE)
+```
+
+```{r}
+# Perform Moran's I test for revenue_all
+moran_test <- moran.test(filtered_data_simplified$revenue_all, lw)
+print(moran_test)
+```
+
+The Moran’s I statistic is 0.0801, and the p-value is very small, which means there is significant positive spatial autocorrelation. This implies that provinces with similar tourism revenues tend to cluster together spatially.
+
+```{r}
+# Perform Local Moran's I (LISA)
+local_moran <- localmoran(filtered_data_simplified$revenue_all, lw)
+
+# Add the LISA results to the dataset
+filtered_data_simplified$lisa <- local_moran[, "Ii"]
+```
+
+```{r}
+# Visualize LISA results
+tm_shape(filtered_data_simplified) +
+  tm_polygons("lisa", palette = "RdYlBu", title = "Local Moran's I - LISA") +
+  tm_layout(title = "LISA for Tourism Revenue")
+```
+
+The LISA results show local clusters of provinces with high or low tourism revenue and detect any outliers where a province is significantly different from its neighbors.
+
+```{r}
+# Perform Getis-Ord Gi* statistic for revenue_all
+hotspot_analysis <- localG(filtered_data_simplified$revenue_all, lw)
+
+# Add hotspot results to the spatial data
+filtered_data_simplified$hotspots <- hotspot_analysis
+
+# Visualize the hotspots
+tm_shape(filtered_data_simplified) +
+  tm_polygons("hotspots", palette = "RdYlBu", title = "Hotspots") +
+  tm_layout(title = "Hotspot Analysis for Tourism Revenue")
+```
+
+The hotspot analysis identifies provinces where tourism revenue has been significantly higher or lower than expected, highlighting the spatial distribution of “hot” and “cold” areas.
+
+::: callout-note
+	1.	**Moran’s I** indicates that there is a significant positive spatial autocorrelation in tourism revenue across Thailand’s provinces, meaning that provinces with similar revenue levels are clustered together geographically.
+	2.	**Local Moran’s I (LISA)** further identifies local clusters of provinces with high tourism revenue, as well as potential outliers where individual provinces behave differently from their neighbors.
+	3.	**Hotspot Analysis** reveals provinces that are hotspots or cold spots for tourism revenue, helping to pinpoint areas with significant increases or decreases in tourism activity over time.
+:::
+
