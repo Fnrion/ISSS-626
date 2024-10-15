@@ -440,7 +440,7 @@ plot(filtered_data_2023$geometry, border="lightgrey")
 plot(wm_q, coords, pch = 19, cex = 0.2, add = TRUE, col = "red")
 ```
 
-## **3.2 Spatial** 
+## **3.2 Spatial Test**
 
 In this section, we will demonstrate how to perform Moran’s I statistics testing by using [*moran.test()*](https://r-spatial.github.io/spdep/reference/moran.test.html) of **spdep**. Moran’s I is a test for spatial autocorrelation. It measures the overall spatial autocorrelation of the data, i.e. overall, how one object is similar or dissimilar to others surrounding it, evaluating whether the observation (in our case,  revenue province) is clustered, dispersed, or random.
 
