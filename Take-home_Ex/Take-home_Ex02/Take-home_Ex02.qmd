@@ -264,7 +264,6 @@ bd_clean$adm1 <- sapply(bd_clean$adm1, function(x) {
   }
 })
 
-# Perform the join again
 merged_data <- left_join(bd_clean, tourism_adm1, by = "adm1")
 
 # Remove rows with any NA values
@@ -456,7 +455,6 @@ filtered_data_simplified <- st_simplify(filtered_data, dTolerance = 1)  # Adjust
 ```
 
 ```{r}
-# Apply poly2nb() on simplified single polygons
 nb <- poly2nb(filtered_data_simplified)
 ```
 
@@ -466,7 +464,6 @@ lw <- nb2listw(nb, style = "W", zero.policy = TRUE)
 ```
 
 ```{r}
-# Perform Moran's I test for revenue_all
 moran_test <- moran.test(filtered_data_simplified$revenue_all, lw)
 print(moran_test)
 ```
@@ -474,7 +471,6 @@ print(moran_test)
 The Moran’s I statistic is 0.0801, and the p-value is very small, which means there is significant positive spatial autocorrelation. This implies that provinces with similar tourism revenues tend to cluster together spatially.
 
 ```{r}
-# Perform Local Moran's I (LISA)
 local_moran <- localmoran(filtered_data_simplified$revenue_all, lw)
 
 # Add the LISA results to the dataset
@@ -482,7 +478,6 @@ filtered_data_simplified$lisa <- local_moran[, "Ii"]
 ```
 
 ```{r}
-# Visualize LISA results
 tm_shape(filtered_data_simplified) +
   tm_polygons("lisa", palette = "RdYlBu", title = "Local Moran's I - LISA") +
   tm_layout(title = "LISA for Tourism Revenue")
@@ -491,13 +486,10 @@ tm_shape(filtered_data_simplified) +
 The LISA results show local clusters of provinces with high or low tourism revenue and detect any outliers where a province is significantly different from its neighbors.
 
 ```{r}
-# Perform Getis-Ord Gi* statistic for revenue_all
 hotspot_analysis <- localG(filtered_data_simplified$revenue_all, lw)
 
-# Add hotspot results to the spatial data
 filtered_data_simplified$hotspots <- hotspot_analysis
 
-# Visualize the hotspots
 tm_shape(filtered_data_simplified) +
   tm_polygons("hotspots", palette = "RdYlBu", title = "Hotspots") +
   tm_layout(title = "Hotspot Analysis for Tourism Revenue")
