@@ -534,4 +534,3 @@ By expanding on these areas, future work could provide a more nuanced understand
 -   **Low-Low Clusters**: Rural and less developed provinces faced more significant challenges, showing consistently low tourism revenue.
 
 -   **Hotspots**: Certain provinces showed emerging recovery trends, while others remained cold spots, reflecting uneven recovery across the country.
-
