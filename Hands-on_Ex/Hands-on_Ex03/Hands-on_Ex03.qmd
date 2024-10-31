@@ -1,5 +1,5 @@
 ---
-title: "Network Constrained Spatial Point Patterns Analysis"
+title: "3 Network Constrained Spatial Point Patterns Analysis"
 author: "Zou Jiaxun"
 date: "Sep 2, 2024"
 data-modified: "last-modified"
@@ -15,7 +15,7 @@ format:
     code-summary: "Click to view code"
 ---
 
-## **7.1 Overview**
+## **3.1 Overview**
 
 **Network constrained Spatial Point Patterns Analysis (NetSPAA)** is a collection of spatial point patterns analysis methods special developed for analysing spatial point event occurs on or alongside network. The spatial point event can be locations of traffic accident or childcare centre for example. The network, on the other hand can be a road network or river network.
 
@@ -25,7 +25,7 @@ In this hands-on exercise, we are going to gain hands-on experience on using app
 
 -   to perform network G-function and k-function analysis
 
-## **7.2 The Data**
+## **3.2 The Data**
 
 In this study, we will analyse the spatial distribution of childcare centre in [Punggol planning area](https://en.wikipedia.org/wiki/Punggol). For the purpose of this study, two geospatial data sets will be used. They are:
 
@@ -35,7 +35,7 @@ In this study, we will analyse the spatial distribution of childcare centre in 
 
 Both data sets are in ESRI shapefile format.
 
-## **7.3 Installing and launching the R packages**
+## **3.3 Installing and launching the R packages**
 
 In this hands-on exercise, four R packages will be used, they are:
 
@@ -51,7 +51,7 @@ Use the code chunk below to install and launch the four R packages.
 pacman::p_load(sf, spNetwork, tmap, tidyverse)
 ```
 
-## **7.4 Data Import and Preparation**
+## **3.4 Data Import and Preparation**
 
 The code chunk below uses `st_read()` of **sf** package to important Punggol_St and Punggol_CC geospatial data sets into RStudio as sf data frames.
 
@@ -83,7 +83,7 @@ network
 
 When I exploring spNetwork’s functions, it came to my attention that spNetwork is expecting the geospatial data contains complete CRS information.
 
-## **7.5 Visualising the Geospatial Data**
+## **3.5 Visualising the Geospatial Data**
 
 Before we jump into the analysis, it is a good practice to visualise the geospatial data. There are at least two ways to visualise the geospatial data. One way is by using *plot()* of Base R as shown in the code chunk below.
 
@@ -108,11 +108,11 @@ tm_shape(childcare) +
 tmap_mode('plot')
 ```
 
-## **7.6 Network KDE (NKDE) Analysis**
+## **3.6 Network KDE (NKDE) Analysis**
 
 In this section, we will perform NKDE analysis by using appropriate functions provided in **spNetwork** package.
 
-### **7.6.1 Preparing the lixels objects**
+### **3.6.1 Preparing the lixels objects**
 
 Before computing NKDE, the SpatialLines object need to be cut into lixels with a specified minimal distance. This task can be performed by using with [lixelize_lines()](https://jeremygelb.github.io/spNetwork/reference/lixelize_lines.html) of **spNetwork** as shown in the code chunk below.
 
@@ -132,7 +132,7 @@ After cut, if the length of the final lixel is shorter than the minimum distance
 
 **Note:** There is another function called *lixelize_lines.mc()* which provide multicore support.
 
-### **7.6.2 Generating line centre points**
+### **3.6.2 Generating line centre points**
 
 Next, *lines_center()* of **spNetwork** will be used to generate a SpatialPointsDataFrame (i.e. samples) with line centre points as shown in the code chunk below.
 
@@ -142,7 +142,7 @@ samples <- lines_center(lixels)
 
 The points are located at center of the line based on the length of the line.
 
-### **7.6.3 Performing NKDE**
+### **3.6.3 Performing NKDE**
 
 We are ready to computer the NKDE by using the code chunk below.
 
@@ -196,7 +196,7 @@ The output of *kfunctions()* is a list with the following values:
 
 For example, we can visualise the ggplot2 object of k-function by using the code chunk below.
 
-#### 7.6.3.1 Visualising NKDE
+#### 3.6.3.1 Visualising NKDE
 
 Before we can visualise the NKDE values, code chunk below will be used to insert the computed density values (i.e. densities) into *samples* and *lixels* objects as *density* field.
 
@@ -226,7 +226,7 @@ tmap_mode('plot')
 
 The interactive map above effectively reveals road segments (darker color) with relatively higher density of childcare centres than road segments with relatively lower density of childcare centres (lighter color)
 
-## **7.7 Network Constrained G- and K-Function Analysis**
+## **3.7 Network Constrained G- and K-Function Analysis**
 
 In this section, we are going to perform complete spatial randomness (CSR) test by using *kfunctions()* of **spNetwork** package. The null hypothesis is defined as:
 
@@ -289,7 +289,7 @@ kfun_childcare$plotk
 
 The blue line is the empirical network K-function of the childcare centres in Punggol planning area. The gray envelop represents the results of the 50 simulations in the interval 2.5% - 97.5%. Because the blue line between the distance of 250m-400m are below the gray area, we can infer that the childcare centres in Punggol planning area resemble regular pattern at the distance of 250m-400m.
 
-## **7.8 References**
+## **3.8 References**
 
 -   [spNetwork: Spatial Analysis on Network](https://cran.r-project.org/web/packages/spNetwork/index.html)
 
