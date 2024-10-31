@@ -172,16 +172,16 @@ distPair <- distPair %>%
 Lastly, the code chunk below is used to save the dataframe for future use.
 
 ```{r}
-write_rds(distPair, "data/rds/distPair.rds") 
-```
+# Writing the file
+write_rds(distPair, "data/rds/distPair.rds")
 
-```{r}
-distPair <- read_rds("data/rds/disPair.rds")
+# Reading the file
+distPair <- read_rds("data/rds/distPair.rds")
 ```
 
 ## **10.6 Preparing flow data**
 
-The code chunk below is used import *od_data* save in Chapter 15 into R environment.
+The code chunk below is used import *od_data* save in Chapter 10(a) into R environment.
 
 ```{r}
 od_data_fii <- read_rds("data/rds/od_data_fii.rds")
@@ -280,6 +280,18 @@ We will called the output data file *SIM_data*. it is in rds data file format.
 
 ```{r}
 write_rds(flow_data1, "data/rds/flow_data_6-9.rds")
+```
+
+## **10.8 Calibrating Spatial Interaction Models**
+
+In this section, we will learn how to calibrate Spatial Interaction Models by using Poisson Regression method.
+
+### **10.8.1 Importing the modelling data**
+
+Firstly, let us import the modelling data by using the code chunk below.
+
+```{r}
+SIM_data <- read_rds("data/rds/flow_data_6-9.rds")
 ```
 
 ### **10.8.2 Visualising the dependent variable**

@@ -121,13 +121,13 @@ Both data sets are in ESRI shapefile format.
 Two geospatial data will be used in this exercise, they are:
 
 ```{r}
-busstop <- st_read(dsn = "chap15/data/geospatial",
+busstop <- st_read(dsn = "data/geospatial",
                    layer = "BusStop") %>%
   st_transform(crs = 3414)
 ```
 
 ```{r}
-mpsz <- st_read(dsn = "chap15/data/geospatial",
+mpsz <- st_read(dsn = "data/geospatial",
                    layer = "MPSZ-2019") %>%
   st_transform(crs = 3414)
 ```

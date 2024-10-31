@@ -113,14 +113,13 @@ get_coords <- function(add_list){
 ```
 
 ```{r}
-coords <- get_coords(add_list)
+# coords <- get_coords(add_list)
 ```
 
 ```{r}
-write_rds(coords, "data/HDB/rds/coords.rds")
+# write_rds(coords, "data/HDB/rds/coords.rds")
 ```
 :::
-
 
 ```{r}
 
@@ -136,12 +135,8 @@ write_rds(coords, "data/HDB/rds/coords.rds")
 ```
 
 ```{r}
-coords <- st_coordinates(mdata)
-coords_train <- st_coordinates(train_data)
-coords_test <- st_coordinates(test_data)
+# coords <- st_coordinates(mdata)
+# coords_train <- st_coordinates(train_data)
+# coords_test <- st_coordinates(test_data)
 ```
 
-```{r}
-# train_data_nogeom <- train_data %>%
-#   st_drop_geometry()
-···
