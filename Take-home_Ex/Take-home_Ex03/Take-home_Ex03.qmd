@@ -43,6 +43,7 @@ To prepare and analyze spatial data for Geographically Weighted Regression (GWR)
 pacman::p_load(sf, spgwr, tmap, tidyverse, dplyr, 
                ggplot2, readxl, knitr)
 
+package_info <- data.frame(
   Package = c(
     "sf", "spgwr", "tmap", "tidyverse", "dplyr", 
     "ggplot2", "readxl", "knitr"
