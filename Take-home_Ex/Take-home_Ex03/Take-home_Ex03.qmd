@@ -1,0 +1,77 @@
+---
+title: "Take-home_Ex03"
+author: "Zou Jiaxun"
+date: "Nov 4, 2024"
+data-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+  cache: true
+format:
+  html:
+    code-fold: true
+    code-summary: "Click to view code"
+---
+# 1. Overview
+
+## 1.1 Background
+
+Financial inclusion plays a vital role in promoting economic stability and growth, especially in developing economies like Tanzania. Access to financial services empowers individuals, enabling them to save, borrow, insure, and invest, ultimately fostering resilience against economic shocks. Despite progress, challenges remain in ensuring that financial services reach all population segments, particularly those in rural and economically disadvantaged regions. Factors such as geographic location, socioeconomic status, and income sources contribute to disparities in financial access across Tanzania’s diverse regions.
+
+The **FinScope Tanzania 2023 survey** provides comprehensive data on financial service uptake and barriers faced by Tanzanian adults. This survey offers insights into various financial services, including banking, mobile money, insurance, and microfinance, as well as informal financial mechanisms. Given Tanzania’s diverse agro-economic zones and urban-rural divide, financial inclusion determinants are expected to vary significantly by location. To capture these spatial dynamics, this study employs **Geographically Weighted Regression (GWR)**, a statistical technique that models spatially varying relationships between variables. By applying GWR, this analysis aims to uncover regional patterns in financial inclusion, thereby identifying localized factors influencing access to financial services across Tanzania.
+
+## 1.2 Objectives
+
+The main objectives of this exercise are:
+
+1. **To assess the spatial variability of financial inclusion** across Tanzania, identifying how geographic location influences access to and usage of financial services.
+2. **To examine relationships between financial inclusion and socio-economic variables** such as income sources, urbanization level, and economic activity. This includes understanding the role of mobile money, banking, and informal financial services across different regions.
+3. **To apply and interpret GWR in analyzing financial inclusion** by generating regional coefficients that highlight spatial patterns in the data, helping to pinpoint areas where specific financial services are more or less accessible.
+4. **To produce visualizations of GWR outputs**, including maps of local coefficients and R-squared values, to clearly communicate findings on regional disparities in financial inclusion.
+
+By achieving these objectives, this analysis will contribute to a more nuanced understanding of financial inclusion in Tanzania, offering actionable insights for policymakers, financial service providers, and development organizations to address gaps in financial access.
+
+# 2. Data Wrangling
+
+## 2.1 Loading Packages
+
+To prepare and analyze spatial data for Geographically Weighted Regression (GWR), we will use the following packages, which offer tools for geospatial data handling, data manipulation, visualization, and statistical analysis.
+
+```{r}
+pacman::p_load(sf, spgwr, tmap, tidyverse, dplyr, 
+               ggplot2, readxl, knitr)
+
+package_info <- data.frame(
+  Package = c(
+    "sf", "spgwr", "tmap", "tidyverse", "dplyr", 
+    "ggplot2", "readxl", "knitr"
+  ),
+  Description = c(
+    "For importing, managing, and handling geospatial data, including shapefiles and CRS transformations.",
+    "For conducting Geographically Weighted Regression (GWR) analysis to examine spatially varying relationships.",
+    "For thematic mapping and creating visualizations to display spatial data and GWR results.",
+    "For data wrangling and analysis, providing a cohesive set of tools for data science tasks, including ggplot2 and tidyr.",
+    "For efficient data manipulation, including filtering, selecting, and summarizing data.",
+    "For creating additional custom and publication-ready visualizations.",
+    "For importing Excel files, useful for reading metadata or data dictionaries.",
+    "For dynamic report generation using LaTeX, HTML, and Markdown."
+  )
+)
+
+knitr::kable(package_info, col.names = c("Package", "Description"))
+```
+
+## 2.2 The Data
+
+We will use the FinScope Tanzania 2023 data and the geoBoundaries Tanzania district shapefile for this analysis. This section includes steps to import, clean, and prepare the data for Geographically Weighted Regression.
+
+### Aspatial Data
+
+- **Survey Data**: Import and clean the FinScope survey data, focusing on financial inclusion indicators, socioeconomic variables, and regional identifiers.
+
+```{r}
+dsn = 
+layer = 
+```

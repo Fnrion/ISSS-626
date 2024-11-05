@@ -69,8 +69,6 @@ Beside these two data sets, an additional attribute data file called pop.csv wil
 
 In spatial interaction, a distance matrix is a table that shows the distance between pairs of locations. For example, in the table below we can see an Euclidean distance of 3926.0025 between MESZ01 and RVSZ05, of 3939.1079 between MESZ01 and SRSZ01, and so on. By definition, an location’s distance from itself, which is shown in the main diagonal of the table, is 0.
 
-![](images/clipboard-355779241.png)
-
 In this section, we will learn how to compute a distance matrix by using URA Master Plan 2019 Planning Subzone boundary in which you saved as an rds file called *mpsz*.
 
 First, let us import *mpsz.rds* into R environemnt by using the code chunk below.
@@ -377,8 +375,6 @@ In this section, we will learn how to calibrate an unconstrained spatial interac
 
 The general formula of Unconstrained Spatial Interaction Model
 
-![](images/clipboard-3649580228.png)
-
 The code chunk used to calibrate to model is shown below:
 
 ```{r}
@@ -420,8 +416,6 @@ In this section, we will fit an origin constrained SIM by using the code3 chunk 
 
 The general formula of Origin Constrained Spatial Interaction Model
 
-![](images/clipboard-2031881913.png)
-
 ```{r}
 orcSIM <- glm(formula = TRIPS ~ 
                  ORIGIN_SZ +
@@ -445,8 +439,6 @@ In this section, we will fit a destination constrained SIM by using the code chu
 
 The general formula of Destination Constrained Spatial Interaction Model
 
-![](images/clipboard-590891243.png)
-
 ```{r}
 decSIM <- glm(formula = TRIPS ~ 
                 DESTIN_SZ + 
@@ -469,8 +461,6 @@ CalcRSquared(decSIM$data$TRIPS, decSIM$fitted.values)
 In this section, we will fit a doubly constrained SIM by using the code chunk below.
 
 The general formula of Doubly Constrained Spatial Interaction Model
-
-![](images/clipboard-1489139447.png)
 
 ```{r}
 dbcSIM <- glm(formula = TRIPS ~ 

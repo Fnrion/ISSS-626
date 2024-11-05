@@ -1,0 +1,32 @@
+---
+title: "In-class_Ex10"
+author: "Zou Jiaxun"
+date: "Nov 4, 2024"
+data-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+  cache: true
+format:
+  html:
+    code-fold: true
+    code-summary: "Click to view code"
+---
+
+## Origin_Age Group
+
+## 10(b) the gravity model
+
+glm for the formualr of log transformation
+
+## Tanzaniya
+district boundary (TK3: center of the island, check it first )
+sf_polygon <- prov_sf %>%
+  st_cast("POLYGON") %>%
+  mutate(area = st_area(.))
+  
+And reback it to the same number of mutipolygon
+
+There is no holes after the clean data map
