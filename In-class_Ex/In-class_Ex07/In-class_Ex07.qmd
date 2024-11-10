@@ -75,7 +75,7 @@ plot(condo_fw_mlr)
 ```
 
 ```{r}
-ggcoefstats(condo_mlr,
+ggcoefstats(condo.mlr,
             sort = "ascending")
 ```
 
@@ -153,11 +153,13 @@ gwr_fixed <- gwr.basic(formula = SELLING_PRICE ~ AREA_SQM +
                          PROX_SHOPPING_MALL + PROX_BUS_STOP + 
                          NO_Of_UNITS + FAMILY_FRIENDLY + FREEHOLD, 
                        data=condo_resale_sf, 
-                       bw=bw_fixed, 
+                       bw=bw.fixed, 
                        kernel = 'gaussian', 
                        longlat = FALSE)
+```
 
-gwr.fixed
+```{r}
+gwr_fixed
 ```
 
 ```{r}
@@ -187,14 +189,26 @@ gwr_adaptive <- gwr.basic(formula = SELLING_PRICE ~ AREA_SQM + AGE +
 ```
 
 ```{r}
+gwr_adaptive
+```
+
+```{r}
 gwr_adaptive_output <- as.data.frame(
-  gwr.fixed$SDF) %>%
+  gwr_adaptive$SDF) %>%
   select(-c(2:15))
 ```
 
 ```{r}
-fwr_sf_adaptive <- cbind(condo_resale_sf,
+gwr_sf_adaptive <- cbind(condo_resale_sf,
                          gwr_adaptive_output)
+```
+
+```{r}
+glimpse(gwr_sf_adaptive)
+```
+
+```{r}
+summary(gwr_adaptive$SDF$yhat)
 ```
 
 ```{r}
@@ -233,6 +247,34 @@ tmap_arrange(AREA_SQM_SE, AREA_SQM_TV,
              asp=1, ncol=2,
              sync = TRUE)
 
+tmap_mode("plot")
+```
+
+```{r}
+tmap_options(check.and.fix = TRUE)
+tmap_mode("view")
+AREA_SQM_SE <- tm_shape(mpsz)+
+  tm_polygons(alpha = 0.1) +
+tm_shape(gwr_sf_adaptive) +  
+  tm_dots(col = "AREA_SQM_SE",
+          border.col = "gray60",
+          border.lwd = 1) +
+  tm_view(set.zoom.limits = c(11,14))
+
+AREA_SQM_TV <- tm_shape(mpsz)+
+  tm_polygons(alpha = 0.1) +
+tm_shape(gwr_sf_adaptive) +  
+  tm_dots(col = "AREA_SQM_TV",
+          border.col = "gray60",
+          border.lwd = 1) +
+  tm_view(set.zoom.limits = c(11,14))
+
+tmap_arrange(AREA_SQM_SE, AREA_SQM_TV, 
+             asp=1, ncol=2,
+             sync = TRUE)
+```
+
+```{r}
 tmap_mode("plot")
 ```
 

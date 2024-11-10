@@ -23,3 +23,5 @@ dplyr
 stringr
 forcats
 lubridate
+SpatialAcc
+ggstatsplot

@@ -16,7 +16,9 @@ format:
 
 ::: {style="font-size: 1.50em"}
 ```{r}
-pacman::p_load(tidyverse, sf, httr, jsonlite, rvest)
+pacman::p_load(sf, spdep, GWmodel, SpatialML, 
+               tmap, rsample, Metrics, tidyverse,
+               knitr, kableExtra)
 ```
 
 ```{r}
@@ -139,4 +141,3 @@ get_coords <- function(add_list){
 # coords_train <- st_coordinates(train_data)
 # coords_test <- st_coordinates(test_data)
 ```
-

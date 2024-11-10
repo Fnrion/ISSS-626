@@ -1,0 +1,15 @@
+{
+  "hash": "06b280b6bd7261b39b07c4b26d938ce2",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"In-class_Ex10\"\nauthor: \"Zou Jiaxun\"\ndate: \"Nov 4, 2024\"\ndata-modified: \"last-modified\"\nexecute: \n  eval: true\n  echo: true\n  warning: false\n  freeze: true\n  cache: true\nformat:\n  html:\n    code-fold: true\n    code-summary: \"Click to view code\"\n---\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(tidyverse, sf, tmap, httr, performance)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nrealis_data <- read.csv(\"data/ResidentialTransaction20241110111743.csv\")\ncondo_resale <- realis_data %>%\n  mutate(`Sale.Date` = dmy(`Sale.Date`)) %>%\n  filter(`Type.of.Sale` == \"Resale\" &\n           `Property.Type` == \"Condominium\")\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\npostcode <- unique(condo_resale$`Postal.Code`)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nurl <- \"https://onemap.gov.sg/api/common/elastic/search\"\nfound <- data.frame()\nnot_found <- data.frame()\n\nfor (postcode in postcode){\n  query <- list('searchVal'=postcode, 'returnGeom'='Y', \n                'getAddrDetails'='Y', 'pageNum'='1')\n  res <- GET(url, query=query)\n  if ((content(res)$found)!=0){\n    found <- rbind(found, data.frame(content(res))[4:13])\n  } else {not_found = data.frame(postcode)\n  }\n}\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nfound <- found %>%\n  select(c(6:8)) %>%\n  rename(POSTAL = `results.POSTAL`,\n         XCOORD = `results.X`,\n         YCOORD = `results.Y`)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\ncondo_resale$Postal.Code <- as.character(condo_resale$Postal.Code)\nresult <- left_join(condo_resale, found, by = c(\"Postal.Code\" = \"POSTAL\"))\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\ncondo_resale_geocoded <- result %>%\n  filter(!is.na(XCOORD) & !is.na(YCOORD))\n\ncondo_resale_sf <- st_as_sf(condo_resale_geocoded, \n                            coords = c(\"XCOORD\", \"YCOORD\"),\n                            crs = 3414)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\noverlapping_points <- condo_resale_sf %>%\n  mutate(overlap = lengths(st_equals(., .)) > 1)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\ncondo_resale_sf <- condo_resale_sf %>%\n  st_jitter(amount = 2)\n```\n:::\n\n\n\n\n## Origin_Age Group\n\n## 10(b) the gravity model\n\nglm for the formualr of log transformation\n\n## Tanzaniya\n\ndistrict boundary (TK3: center of the island, check it first ) sf_polygon \\<- prov_sf %\\>% st_cast(\"POLYGON\") %\\>% mutate(area = st_area(.))\n\nAnd reback it to the same number of mutipolygon\n\nThere is no holes after the clean data map\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
