@@ -56,7 +56,7 @@ To prepare and analyze spatial data for Geographically Weighted Regression (GWR)
 
 ```{r}
 pacman::p_load(sf, spgwr, tmap, tidyverse, dplyr, 
-               ggplot2, GWmodel, readxl, knitr)
+               ggplot2, readxl, knitr, GWmodel)
 
 package_info <- data.frame(
   Package = c(
@@ -72,7 +72,7 @@ package_info <- data.frame(
     "For creating additional custom and publication-ready visualizations.",
     "For importing Excel files, useful for reading metadata or data dictionaries.",
     "For dynamic report generation using LaTeX, HTML, and Markdown.",
-    "For conducting Geographically Weighted Regression (GWR) analysis to examing the model"
+    "For conducting Geographically Weighted Regression (GWR) analysis to examining the model"
   )
 )
 
