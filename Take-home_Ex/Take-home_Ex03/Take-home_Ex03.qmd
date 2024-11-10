@@ -92,7 +92,7 @@ This section includes steps to import, clean, and prepare the data for Geographi
 ```{r}
 survey_data <- read.csv("data/FinScope Tanzania 2023_Individual Main Data_FINAL.csv")
 
-## summary(survey_data)
+# summary(survey_data)
 
 # Select relevant columns for analysis
 survey_data <- survey_data %>%
@@ -147,12 +147,12 @@ We’ll also add a new column for the area of each polygon, which could be usefu
 regions <- st_read("data/ADM1/geoBoundaries-TZA-ADM1.shp") %>%
   st_transform(crs = 32737)  # Using UTM Zone 37S for Tanzania
 
-# Step 1: Convert MULTIPOLYGON to individual POLYGON components and calculate area
+# Convert MULTIPOLYGON to individual POLYGON components and calculate area
 regions_polygons <- regions %>%
   st_cast("POLYGON") %>%
   mutate(area = st_area(.))
 
-# Step 2: Group by `shapeName` to ensure each region is represented as a single MULTIPOLYGON
+# Group by `shapeName` to ensure each region is represented as a single MULTIPOLYGON
 regions_cleaned <- regions_polygons %>%
   group_by(shapeName) %>% 
   summarize(geometry = st_union(geometry), .groups = 'drop')
@@ -171,7 +171,7 @@ Now, with the POLYGON geometries and area calculated, we can merge this geospati
 combined_data <- regions_cleaned %>%
   left_join(region_proportions, by = c("shapeName" = "reg_name"))
 
-# Check the combined dataset to confirm successful merge
+# Check the combined dataset
 summary(combined_data)
 
 str(combined_data)
@@ -236,9 +236,17 @@ map6 <- tm_shape(combined_data) +
               style = "quantile") +
   tm_layout(main.title = "Overall Formal Financial Inclusion by Region", main.title.size = 1)
 
-# Arrange maps in a 2x3 grid
 tmap_arrange(map1, map2, map3, map4, map5, map6, ncol = 3, nrow = 2)
 ```
+
+::: callout-note
+**Urban-Rural Divide:** There is a clear disparity in financial service uptake between urban and rural regions, with urbanized areas generally showing higher access to formal financial services.
+
+**Role of MFIs and SACCOs:** In areas where formal banking is limited, microfinance institutions and SACCOs provide crucial financial services, suggesting that these institutions are integral to financial inclusion strategies in rural and semi-urban areas.
+
+**Regional Variations in Financial Inclusion:** Each indicator shows distinct spatial patterns, emphasizing that financial inclusion in Tanzania is regionally diverse.
+This diversity likely reflects variations in socioeconomic conditions, regional policies, and accessibility of financial infrastructure.
+:::
 
 ## 3.2 Preparing for Geographically Weighted Regression (GWR)
 
@@ -263,7 +271,6 @@ gwr_model <- gwr.basic(prop_BANKED ~ prop_MFI + prop_INSURANCE + prop_SACCO,
 Check the summary of the GWR model to view the results, including coefficients, local R-squared values, and diagnostics.
 
 ```{r}
-# Print summary of GWR model results
 summary(gwr_model)
 ```
 
@@ -276,7 +283,6 @@ head(gwr_results)  # View first few rows to check the data structure
 ```
 
 Use tmap or ggplot2 to visualize the spatial distribution of the coefficients and R-squared values.
-This will help you identify spatial patterns in the relationships.
 
 ```{r}
 # Ensure column names in gwr_results match expected names
@@ -476,3 +482,71 @@ tm_shape(combined_data) +
 
 -   Blue areas indicate statistically significant positive relationships, showing where SACCO membership contributes more strongly to financial inclusion.
 :::
+
+## Spatial Pattern Identification
+
+Using Moran’s I statistic or other spatial autocorrelation tests on the residuals can help determine if there are spatial patterns in the model errors, suggesting additional factors that might need to be incorporated.
+
+```{r}
+# Create spatial weights matrix
+coords <- st_coordinates(st_centroid(combined_data))
+nb <- knn2nb(knearneigh(coords, k = 4)) # Adjust k as necessary
+listw <- nb2listw(nb, style = "W")
+
+# Calculate Moran's I for residuals
+moran_test <- moran.test(combined_data$residual, listw)
+moran_test
+```
+
+::: callout-note
+With a p-value of 0.1335, the test does not show statistically significant spatial autocorrelation in the residuals.
+This suggests that the GWR model has effectively accounted for spatial dependence in the data, leaving minimal spatial structure in the residuals.
+In other words, the spatial variation in financial inclusion has been reasonably well captured by the GWR model.
+:::
+
+## 4 Future Work
+
+While this analysis provides valuable insights into the spatial variability of financial inclusion in Tanzania, several additional steps could enhance the depth and utility of the findings:
+
+-   **Refinement of Variable Selection**: Future work could include refining the independent variables used in the Geographically Weighted Regression (GWR) model by incorporating additional socio-economic, demographic, and infrastructure-related factors.
+    For instance, variables like literacy rates, proximity to financial institutions, mobile network coverage, and GDP per capita might improve the model’s explanatory power.
+
+-   **Multi-Scale Geographically Weighted Regression (MGWR)**: Applying a Multi-Scale GWR (MGWR) could capture relationships at multiple spatial scales, allowing us to see how local versus regional dynamics affect financial inclusion.
+    This model extension would be particularly useful in differentiating between local drivers (such as SACCO usage) and more widespread influences (like mobile money penetration).
+
+-   **Temporal Analysis**: A longitudinal study incorporating data from previous years would provide insights into how financial inclusion patterns evolve over time.
+    This could reveal trends and help identify the impact of past policy changes or initiatives aimed at promoting financial access.
+
+-   **Community-Level Analysis**: Moving beyond district-level data to analyze community or ward-level patterns could provide a more granular view of financial inclusion disparities, especially in rural areas where financial service access may vary significantly within districts.
+
+-   **Advanced Visualization Techniques**: Leveraging interactive mapping tools or dashboards could make the findings more accessible to policymakers and stakeholders, facilitating a better understanding of spatial patterns in financial inclusion and aiding in decision-making processes.
+
+## 5 Summary
+
+This study explored the spatial distribution and determinants of financial inclusion across Tanzania using Geographically Weighted Regression (GWR).
+The ESDA maps highlighted significant regional disparities in access to financial services, with higher banking and insurance access in urban areas and greater reliance on MFIs and SACCOs in rural regions.
+The GWR analysis provided spatially varying coefficients, revealing how local factors affect financial inclusion differently across regions.
+
+Key findings indicate an urban-rural divide, with formal banking concentrated in urbanized regions while MFIs and SACCOs serve as crucial financial channels in more remote areas.
+Additionally, regional variations in the influence of variables like insurance and SACCO participation suggest that local socio-economic conditions play a significant role in shaping financial access.
+
+Further work could enhance this analysis by incorporating more variables, testing spatial lag models, and applying Multi-Scale GWR to capture dynamics at various spatial scales.
+Conducting temporal studies, assessing policy impacts, and exploring finer spatial resolutions would deepen our understanding of financial inclusion patterns, informing targeted interventions to promote inclusive financial access across Tanzania.
+
+## 6 Reference
+
+-   Wikipedia contributors.
+    (2023, November 10).
+    **Financial inclusion**.
+    Wikipedia, The Free Encyclopedia.
+    Retrieved from <https://en.wikipedia.org/wiki/Financial_inclusion>
+
+-   Kaliba, Aloyce R ; Bishagazi, Kaihula P ; Gongwe, Anne G (2023) **“Financial Inclusion in Tanzania Determinants, Barriers, and Impact”**, *The Journal of developing areas*, Vol.57 (2), pp.65-87.
+    SMU library e-journal.
+
+-   Jana S. Hamdan, Katharina Lehmann-Uschner & Lukas Menkhoff (2022) **Mobile Money, Financial Inclusion, and Unmet Opportunities: Evidence from Uganda**, The Journal of Development Studies, 58:4, 671-691.
+    SMU library e-journal.
+
+-   Nguyen, Nhan Thien, et.
+    al. (2021) **“The convergence of financial inclusion across provinces in Vietnam: A novel approach”** *PloS one*, Vol.16 (8).
+    SMU library e-journal.

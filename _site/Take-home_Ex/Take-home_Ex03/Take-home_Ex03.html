@@ -310,6 +310,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#preparing-for-geographically-weighted-regression-gwr" id="toc-preparing-for-geographically-weighted-regression-gwr" class="nav-link" data-scroll-target="#preparing-for-geographically-weighted-regression-gwr">3.2 Preparing for Geographically Weighted Regression (GWR)</a></li>
   <li><a href="#model-validation" id="toc-model-validation" class="nav-link" data-scroll-target="#model-validation">3.3 Model Validation</a></li>
   <li><a href="#interpretation-of-t-value" id="toc-interpretation-of-t-value" class="nav-link" data-scroll-target="#interpretation-of-t-value">3.4 Interpretation of T-value</a></li>
+  <li><a href="#spatial-pattern-identification" id="toc-spatial-pattern-identification" class="nav-link" data-scroll-target="#spatial-pattern-identification">Spatial Pattern Identification</a></li>
+  <li><a href="#future-work" id="toc-future-work" class="nav-link" data-scroll-target="#future-work">4 Future Work</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">5 Summary</a></li>
+  <li><a href="#reference" id="toc-reference" class="nav-link" data-scroll-target="#reference">6 Reference</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -465,7 +469,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <summary>Click to view code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/FinScope Tanzania 2023_Individual Main Data_FINAL.csv"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="do">## summary(survey_data)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(survey_data)</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Select relevant columns for analysis</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
@@ -592,12 +596,12 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Convert MULTIPOLYGON to individual POLYGON components and calculate area</span></span>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert MULTIPOLYGON to individual POLYGON components and calculate area</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>regions_polygons <span class="ot">&lt;-</span> regions <span class="sc">%&gt;%</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_cast</span>(<span class="st">"POLYGON"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">area =</span> <span class="fu">st_area</span>(.))</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Group by `shapeName` to ensure each region is represented as a single MULTIPOLYGON</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Group by `shapeName` to ensure each region is represented as a single MULTIPOLYGON</span></span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>regions_cleaned <span class="ot">&lt;-</span> regions_polygons <span class="sc">%&gt;%</span></span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(shapeName) <span class="sc">%&gt;%</span> </span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">geometry =</span> <span class="fu">st_union</span>(geometry), <span class="at">.groups =</span> <span class="st">'drop'</span>)</span>
@@ -627,7 +631,7 @@ Geodetic CRS:  WGS 84</code></pre>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>combined_data <span class="ot">&lt;-</span> regions_cleaned <span class="sc">%&gt;%</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(region_proportions, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"shapeName"</span> <span class="ot">=</span> <span class="st">"reg_name"</span>))</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the combined dataset to confirm successful merge</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the combined dataset</span></span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(combined_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
@@ -732,8 +736,7 @@ Geodetic CRS:  WGS 84</code></pre>
 <span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>              <span class="at">style =</span> <span class="st">"quantile"</span>) <span class="sc">+</span></span>
 <span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Overall Formal Financial Inclusion by Region"</span>, <span class="at">main.title.size =</span> <span class="dv">1</span>)</span>
 <span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange maps in a 2x3 grid</span></span>
-<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(map1, map2, map3, map4, map5, map6, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(map1, map2, map3, map4, map5, map6, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -741,6 +744,21 @@ Geodetic CRS:  WGS 84</code></pre>
 <p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Urban-Rural Divide:</strong> There is a clear disparity in financial service uptake between urban and rural regions, with urbanized areas generally showing higher access to formal financial services.</p>
+<p><strong>Role of MFIs and SACCOs:</strong> In areas where formal banking is limited, microfinance institutions and SACCOs provide crucial financial services, suggesting that these institutions are integral to financial inclusion strategies in rural and semi-urban areas.</p>
+<p><strong>Regional Variations in Financial Inclusion:</strong> Each indicator shows distinct spatial patterns, emphasizing that financial inclusion in Tanzania is regionally diverse. This diversity likely reflects variations in socioeconomic conditions, regional policies, and accessibility of financial infrastructure.</p>
 </div>
 </div>
 </section>
@@ -778,8 +796,7 @@ Adaptive bandwidth (number of nearest neighbours): 24 AICc value: -53.01621 </co
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print summary of GWR model results</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gwr_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gwr_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>              Length Class  Mode
@@ -831,7 +848,7 @@ Ftests         0     -none- list</code></pre>
 6    -0.5486589 0.8742013 POLYGON ((-196727 9888805, ...</code></pre>
 </div>
 </div>
-<p>Use tmap or ggplot2 to visualize the spatial distribution of the coefficients and R-squared values. This will help you identify spatial patterns in the relationships.</p>
+<p>Use tmap or ggplot2 to visualize the spatial distribution of the coefficients and R-squared values.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Click to view code</summary>
@@ -1121,6 +1138,75 @@ Note
 </div>
 </div>
 </div>
+</section>
+<section id="spatial-pattern-identification" class="level2">
+<h2 class="anchored" data-anchor-id="spatial-pattern-identification">Spatial Pattern Identification</h2>
+<p>Using Moran’s I statistic or other spatial autocorrelation tests on the residuals can help determine if there are spatial patterns in the model errors, suggesting additional factors that might need to be incorporated.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create spatial weights matrix</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>coords <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(<span class="fu">st_centroid</span>(combined_data))</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>nb <span class="ot">&lt;-</span> <span class="fu">knn2nb</span>(<span class="fu">knearneigh</span>(coords, <span class="at">k =</span> <span class="dv">4</span>)) <span class="co"># Adjust k as necessary</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>listw <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(nb, <span class="at">style =</span> <span class="st">"W"</span>)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate Moran's I for residuals</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>moran_test <span class="ot">&lt;-</span> <span class="fu">moran.test</span>(combined_data<span class="sc">$</span>residual, listw)</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>moran_test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Moran I test under randomisation
+
+data:  combined_data$residual  
+weights: listw    
+
+Moran I statistic standard deviate = 1.11, p-value = 0.1335
+alternative hypothesis: greater
+sample estimates:
+Moran I statistic       Expectation          Variance 
+       0.08998035       -0.04166667        0.01406662 </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>With a p-value of 0.1335, the test does not show statistically significant spatial autocorrelation in the residuals. This suggests that the GWR model has effectively accounted for spatial dependence in the data, leaving minimal spatial structure in the residuals. In other words, the spatial variation in financial inclusion has been reasonably well captured by the GWR model.</p>
+</div>
+</div>
+</section>
+<section id="future-work" class="level2">
+<h2 class="anchored" data-anchor-id="future-work">4 Future Work</h2>
+<p>While this analysis provides valuable insights into the spatial variability of financial inclusion in Tanzania, several additional steps could enhance the depth and utility of the findings:</p>
+<ul>
+<li><p><strong>Refinement of Variable Selection</strong>: Future work could include refining the independent variables used in the Geographically Weighted Regression (GWR) model by incorporating additional socio-economic, demographic, and infrastructure-related factors. For instance, variables like literacy rates, proximity to financial institutions, mobile network coverage, and GDP per capita might improve the model’s explanatory power.</p></li>
+<li><p><strong>Multi-Scale Geographically Weighted Regression (MGWR)</strong>: Applying a Multi-Scale GWR (MGWR) could capture relationships at multiple spatial scales, allowing us to see how local versus regional dynamics affect financial inclusion. This model extension would be particularly useful in differentiating between local drivers (such as SACCO usage) and more widespread influences (like mobile money penetration).</p></li>
+<li><p><strong>Temporal Analysis</strong>: A longitudinal study incorporating data from previous years would provide insights into how financial inclusion patterns evolve over time. This could reveal trends and help identify the impact of past policy changes or initiatives aimed at promoting financial access.</p></li>
+<li><p><strong>Community-Level Analysis</strong>: Moving beyond district-level data to analyze community or ward-level patterns could provide a more granular view of financial inclusion disparities, especially in rural areas where financial service access may vary significantly within districts.</p></li>
+<li><p><strong>Advanced Visualization Techniques</strong>: Leveraging interactive mapping tools or dashboards could make the findings more accessible to policymakers and stakeholders, facilitating a better understanding of spatial patterns in financial inclusion and aiding in decision-making processes.</p></li>
+</ul>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">5 Summary</h2>
+<p>This study explored the spatial distribution and determinants of financial inclusion across Tanzania using Geographically Weighted Regression (GWR). The ESDA maps highlighted significant regional disparities in access to financial services, with higher banking and insurance access in urban areas and greater reliance on MFIs and SACCOs in rural regions. The GWR analysis provided spatially varying coefficients, revealing how local factors affect financial inclusion differently across regions.</p>
+<p>Key findings indicate an urban-rural divide, with formal banking concentrated in urbanized regions while MFIs and SACCOs serve as crucial financial channels in more remote areas. Additionally, regional variations in the influence of variables like insurance and SACCO participation suggest that local socio-economic conditions play a significant role in shaping financial access.</p>
+<p>Further work could enhance this analysis by incorporating more variables, testing spatial lag models, and applying Multi-Scale GWR to capture dynamics at various spatial scales. Conducting temporal studies, assessing policy impacts, and exploring finer spatial resolutions would deepen our understanding of financial inclusion patterns, informing targeted interventions to promote inclusive financial access across Tanzania.</p>
+</section>
+<section id="reference" class="level2">
+<h2 class="anchored" data-anchor-id="reference">6 Reference</h2>
+<ul>
+<li><p>Wikipedia contributors. (2023, November 10). <strong>Financial inclusion</strong>. Wikipedia, The Free Encyclopedia. Retrieved from <a href="https://en.wikipedia.org/wiki/Financial_inclusion" class="uri">https://en.wikipedia.org/wiki/Financial_inclusion</a></p></li>
+<li><p>Kaliba, Aloyce R ; Bishagazi, Kaihula P ; Gongwe, Anne G (2023)&nbsp;<strong>“Financial Inclusion in Tanzania Determinants, Barriers, and Impact”</strong>,&nbsp;<em>The Journal of developing areas</em>, Vol.57 (2), pp.65-87. SMU library e-journal.</p></li>
+<li><p>Jana S. Hamdan, Katharina Lehmann-Uschner &amp; Lukas Menkhoff (2022)&nbsp;<strong>Mobile Money, Financial Inclusion, and Unmet Opportunities: Evidence from Uganda</strong>, The Journal of Development Studies, 58:4, 671-691. SMU library e-journal.</p></li>
+<li><p>Nguyen, Nhan Thien, et. al.&nbsp;(2021)&nbsp;<strong>“The convergence of financial inclusion across provinces in Vietnam: A novel approach”</strong>&nbsp;<em>PloS one</em>, Vol.16 (8). SMU library e-journal.</p></li>
+</ul>
 
 
 </section>
