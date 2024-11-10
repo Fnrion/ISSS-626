@@ -13,27 +13,42 @@ format:
   html:
     code-fold: true
     code-summary: "Click to view code"
+editor: 
+  markdown: 
+    wrap: sentence
 ---
-# 1. Overview
+
+# 1 Overview
 
 ## 1.1 Background
 
-Financial inclusion plays a vital role in promoting economic stability and growth, especially in developing economies like Tanzania. Access to financial services empowers individuals, enabling them to save, borrow, insure, and invest, ultimately fostering resilience against economic shocks. Despite progress, challenges remain in ensuring that financial services reach all population segments, particularly those in rural and economically disadvantaged regions. Factors such as geographic location, socioeconomic status, and income sources contribute to disparities in financial access across Tanzania’s diverse regions.
+Financial inclusion plays a vital role in promoting economic stability and growth, especially in developing economies like Tanzania.
+Access to financial services empowers individuals, enabling them to save, borrow, insure, and invest, ultimately fostering resilience against economic shocks.
+Despite progress, challenges remain in ensuring that financial services reach all population segments, particularly those in rural and economically disadvantaged regions.
+Factors such as geographic location, socioeconomic status, and income sources contribute to disparities in financial access across Tanzania’s diverse regions.
 
-The **FinScope Tanzania 2023 survey** provides comprehensive data on financial service uptake and barriers faced by Tanzanian adults. This survey offers insights into various financial services, including banking, mobile money, insurance, and microfinance, as well as informal financial mechanisms. Given Tanzania’s diverse agro-economic zones and urban-rural divide, financial inclusion determinants are expected to vary significantly by location. To capture these spatial dynamics, this study employs **Geographically Weighted Regression (GWR)**, a statistical technique that models spatially varying relationships between variables. By applying GWR, this analysis aims to uncover regional patterns in financial inclusion, thereby identifying localized factors influencing access to financial services across Tanzania.
+The **FinScope Tanzania 2023 survey** provides comprehensive data on financial service uptake and barriers faced by Tanzanian adults.
+This survey offers insights into various financial services, including banking, mobile money, insurance, and microfinance, as well as informal financial mechanisms.
+Given Tanzania’s diverse agro-economic zones and urban-rural divide, financial inclusion determinants are expected to vary significantly by location.
+To capture these spatial dynamics, this study employs **Geographically Weighted Regression (GWR)**, a statistical technique that models spatially varying relationships between variables.
+By applying GWR, this analysis aims to uncover regional patterns in financial inclusion, thereby identifying localized factors influencing access to financial services across Tanzania.
 
 ## 1.2 Objectives
 
 The main objectives of this exercise are:
 
-1. **To assess the spatial variability of financial inclusion** across Tanzania, identifying how geographic location influences access to and usage of financial services.
-2. **To examine relationships between financial inclusion and socio-economic variables** such as income sources, urbanization level, and economic activity. This includes understanding the role of mobile money, banking, and informal financial services across different regions.
-3. **To apply and interpret GWR in analyzing financial inclusion** by generating regional coefficients that highlight spatial patterns in the data, helping to pinpoint areas where specific financial services are more or less accessible.
-4. **To produce visualizations of GWR outputs**, including maps of local coefficients and R-squared values, to clearly communicate findings on regional disparities in financial inclusion.
+-   **To assess the spatial variability of financial inclusion** across Tanzania, identifying how geographic location influences access to and usage of financial services.
+
+-   **To examine relationships between financial inclusion and socio-economic variables** such as income sources, urbanization level, and economic activity.
+    This includes understanding the role of mobile money, banking, and informal financial services across different regions.
+
+-   **To apply and interpret GWR in analyzing financial inclusion** by generating regional coefficients that highlight spatial patterns in the data, helping to pinpoint areas where specific financial services are more or less accessible.
+
+-   **To produce visualizations of GWR outputs**, including maps of local coefficients and R-squared values, to clearly communicate findings on regional disparities in financial inclusion.
 
 By achieving these objectives, this analysis will contribute to a more nuanced understanding of financial inclusion in Tanzania, offering actionable insights for policymakers, financial service providers, and development organizations to address gaps in financial access.
 
-# 2. Data Wrangling
+# 2 Data Wrangling
 
 ## 2.1 Loading Packages
 
@@ -41,12 +56,12 @@ To prepare and analyze spatial data for Geographically Weighted Regression (GWR)
 
 ```{r}
 pacman::p_load(sf, spgwr, tmap, tidyverse, dplyr, 
-               ggplot2, readxl, knitr)
+               ggplot2, GWmodel, readxl, knitr)
 
 package_info <- data.frame(
   Package = c(
     "sf", "spgwr", "tmap", "tidyverse", "dplyr", 
-    "ggplot2", "readxl", "knitr"
+    "ggplot2", "readxl", "knitr", "GWmodel"
   ),
   Description = c(
     "For importing, managing, and handling geospatial data, including shapefiles and CRS transformations.",
@@ -56,22 +71,408 @@ package_info <- data.frame(
     "For efficient data manipulation, including filtering, selecting, and summarizing data.",
     "For creating additional custom and publication-ready visualizations.",
     "For importing Excel files, useful for reading metadata or data dictionaries.",
-    "For dynamic report generation using LaTeX, HTML, and Markdown."
+    "For dynamic report generation using LaTeX, HTML, and Markdown.",
+    "For conducting Geographically Weighted Regression (GWR) analysis to examing the model"
   )
 )
 
 knitr::kable(package_info, col.names = c("Package", "Description"))
 ```
 
-## 2.2 The Data
+## 2.2 Data Preparation
 
-We will use the FinScope Tanzania 2023 data and the geoBoundaries Tanzania district shapefile for this analysis. This section includes steps to import, clean, and prepare the data for Geographically Weighted Regression.
+We will use the FinScope Tanzania 2023 data and the geoBoundaries Tanzania district shapefile for this analysis.
+This section includes steps to import, clean, and prepare the data for Geographically Weighted Regression.
 
-### Aspatial Data
+::: panel-tabset
+## Aspatial Data
 
-- **Survey Data**: Import and clean the FinScope survey data, focusing on financial inclusion indicators, socioeconomic variables, and regional identifiers.
+**Survey Data**: Import and clean the FinScope survey data, focusing on financial inclusion indicators, socioeconomic variables, and regional identifiers.
 
 ```{r}
-dsn = 
-layer = 
+survey_data <- read.csv("data/FinScope Tanzania 2023_Individual Main Data_FINAL.csv")
+
+## summary(survey_data)
+
+# Select relevant columns for analysis
+survey_data <- survey_data %>%
+  select(reg_name, RU, MZ, MM, BANKED, MFI, PENSION, INSURANCE, SACCO, 
+         OTHER_FORMAL, OVERALL_FORMAL, IncomeMain, BusO, 
+         DEDICATED_FARMER, SMALLHOLDER_FARMER, population_wt, fasx, INFORMAL)
+
+# Check the cleaned data
+head(survey_data)
 ```
+
+```{r}
+binary_vars <- c("BANKED", "MFI", "INSURANCE", "SACCO", "OTHER_FORMAL", "OVERALL_FORMAL")
+
+survey_data <- survey_data %>%
+  mutate(
+    BANKED = ifelse(is.na(BANKED), 0, ifelse(BANKED == "Banked", 1, 0)),
+    MFI = ifelse(is.na(MFI), 0, ifelse(MFI == "MFI", 1, 0)),
+    INSURANCE = ifelse(is.na(INSURANCE), 0, ifelse(INSURANCE == "INSURANCE", 1, 0)),
+    SACCO = ifelse(is.na(SACCO), 0, ifelse(SACCO == "SACCO", 1, 0)),
+    OTHER_FORMAL = ifelse(is.na(OTHER_FORMAL), 0, ifelse(OTHER_FORMAL == "OTHER_FORMAL", 1, 0)),
+    OVERALL_FORMAL = ifelse(is.na(OVERALL_FORMAL), 0, ifelse(OVERALL_FORMAL == "OVERALL_FORMAL", 1, 0))
+  )
+
+# Check structure to verify transformations
+str(survey_data[, c("BANKED", "MFI", "INSURANCE", "SACCO", "OTHER_FORMAL", "OVERALL_FORMAL")])
+
+# Calculate proportions by region
+region_proportions <- survey_data %>%
+  group_by(reg_name) %>%
+  summarise(across(all_of(binary_vars), ~ mean(as.numeric(.), na.rm = TRUE), .names = "prop_{col}"))
+
+print(region_proportions)
+```
+
+```{r}
+# Save csv
+write.csv(survey_data, "data/csv/survey_data.csv", row.names = FALSE)
+write.csv(region_proportions, "data/csv/region_proportions", row.names = FALSE)
+```
+
+## Geospatial Data
+
+We’ll use the district boundary shapefile (geoBoundaries-TZA-ADM2.shp) to perform spatial analysis.
+This shapefile represents Tanzania’s districts and will be joined with the survey data.
+
+Since the district boundaries shapefile has `MULTIPOLYGON` geometries, we will convert them to `POLYGON` geometries to ensure compatibility with our analysis.
+We’ll also add a new column for the area of each polygon, which could be useful for weighting or further spatial analysis.
+
+```{r}
+# Load and transform the ADM1 shapefile
+regions <- st_read("data/ADM1/geoBoundaries-TZA-ADM1.shp") %>%
+  st_transform(crs = 32737)  # Using UTM Zone 37S for Tanzania
+
+# Step 1: Convert MULTIPOLYGON to individual POLYGON components and calculate area
+regions_polygons <- regions %>%
+  st_cast("POLYGON") %>%
+  mutate(area = st_area(.))
+
+# Step 2: Group by `shapeName` to ensure each region is represented as a single MULTIPOLYGON
+regions_cleaned <- regions_polygons %>%
+  group_by(shapeName) %>% 
+  summarize(geometry = st_union(geometry), .groups = 'drop')
+
+# Check the result by plotting
+plot(st_geometry(regions_cleaned))
+```
+:::
+
+## Merging Survey and Geospatial Data
+
+Now, with the POLYGON geometries and area calculated, we can merge this geospatial data with the survey data to create a combined dataset for the GWR analysis.
+
+```{r}
+# Merge the survey data with the cleaned region shapefile using `shapeName` and `reg_name`
+combined_data <- regions_cleaned %>%
+  left_join(region_proportions, by = c("shapeName" = "reg_name"))
+
+# Check the combined dataset to confirm successful merge
+summary(combined_data)
+
+str(combined_data)
+```
+
+Remove rows with NA values in the relevant columns
+
+```{r}
+combined_data <- combined_data %>%
+  drop_na(prop_BANKED, prop_MFI, prop_INSURANCE, prop_SACCO)
+```
+
+# 3 Geospatial Analysis with GWR
+
+## 3.1 Exploratory Spatial Data Analysis (ESDA)
+
+Create choropleth maps to visualize the distribution of each financial inclusion indicator across regions.
+
+```{r}
+tmap_mode("plot") 
+
+# Define each map individually
+map1 <- tm_shape(combined_data) +
+  tm_polygons("prop_BANKED", 
+              title = "Proportion of Banked Population",
+              palette = "Blues", 
+              style = "quantile") +
+  tm_layout(main.title = "Banked Population by Region", main.title.size = 1)
+
+map2 <- tm_shape(combined_data) +
+  tm_polygons("prop_MFI", 
+              title = "Proportion of MFI Users",
+              palette = "Purples", 
+              style = "quantile") +
+  tm_layout(main.title = "MFI Users by Region", main.title.size = 1)
+
+map3 <- tm_shape(combined_data) +
+  tm_polygons("prop_INSURANCE", 
+              title = "Proportion of Insurance Users",
+              palette = "Greens", 
+              style = "quantile") +
+  tm_layout(main.title = "Insurance Users by Region", main.title.size = 1)
+
+map4 <- tm_shape(combined_data) +
+  tm_polygons("prop_SACCO", 
+              title = "Proportion of SACCO Users",
+              palette = "Oranges", 
+              style = "quantile") +
+  tm_layout(main.title = "SACCO Users by Region", main.title.size = 1)
+
+map5 <- tm_shape(combined_data) +
+  tm_polygons("prop_OTHER_FORMAL", 
+              title = "Proportion of Other Formal Financial Users",
+              palette = "Reds", 
+              style = "quantile") +
+  tm_layout(main.title = "Other Formal Financial Users by Region", main.title.size = 1)
+
+map6 <- tm_shape(combined_data) +
+  tm_polygons("prop_OVERALL_FORMAL", 
+              title = "Proportion of Overall Formal Financial Inclusion",
+              palette = "YlGnBu", 
+              style = "quantile") +
+  tm_layout(main.title = "Overall Formal Financial Inclusion by Region", main.title.size = 1)
+
+# Arrange maps in a 2x3 grid
+tmap_arrange(map1, map2, map3, map4, map5, map6, ncol = 3, nrow = 2)
+```
+
+## 3.2 Preparing for Geographically Weighted Regression (GWR)
+
+Use GWR to explore the spatial variability in financial inclusion, the prop\_\* columns can be used as dependent or independent variables in model.
+
+```{r}
+# Set up coordinates and calculate bandwidth
+coords <- st_coordinates(st_centroid(combined_data))
+gwr_bandwidth <- bw.gwr(prop_BANKED ~ prop_MFI + prop_INSURANCE + prop_SACCO, 
+                        data = combined_data, 
+                        approach = "AICc", 
+                        kernel = "bisquare", 
+                        adaptive = TRUE)
+# Run GWR model without specifying `coords`, as they are embedded in `combined_data`
+gwr_model <- gwr.basic(prop_BANKED ~ prop_MFI + prop_INSURANCE + prop_SACCO, 
+                       data = combined_data, 
+                       bw = gwr_bandwidth, 
+                       kernel = "bisquare", 
+                       adaptive = TRUE)
+```
+
+Check the summary of the GWR model to view the results, including coefficients, local R-squared values, and diagnostics.
+
+```{r}
+# Print summary of GWR model results
+summary(gwr_model)
+```
+
+The coefficients and local R-squared values can help to understand the spatial variation in the relationship between prop_BANKED and your predictors.
+
+```{r}
+# Extract coefficient estimates and local R-squared values
+gwr_results <- as.data.frame(gwr_model$SDF)  # Convert Spatial Data Frame to regular Data Frame
+head(gwr_results)  # View first few rows to check the data structure
+```
+
+Use tmap or ggplot2 to visualize the spatial distribution of the coefficients and R-squared values.
+This will help you identify spatial patterns in the relationships.
+
+```{r}
+# Ensure column names in gwr_results match expected names
+combined_data$prop_MFI_coef <- gwr_results$prop_MFI
+combined_data$prop_INSURANCE_coef <- gwr_results$prop_INSURANCE
+combined_data$prop_SACCO_coef <- gwr_results$prop_SACCO
+combined_data$Local_R2 <- gwr_results$Local_R2
+```
+
+**Map the coefficients for each predictor**
+
+::: panel-tabset
+## Map for prop_MFI coefficient
+
+```{r}
+tm_shape(combined_data) +
+  tm_polygons("prop_MFI_coef", 
+              title = "GWR Coefficient for MFI Proportion",
+              palette = "RdBu", 
+              style = "quantile") +
+  tm_layout(main.title = "Spatial Variation of GWR Coefficient for MFI Proportion", main.title.size = 1)
+```
+
+**Interpretation**: This map shows the spatial variation in the relationship between the proportion of people using microfinance institutions (MFI) and the proportion of people who are banked.
+
+**Observation**: Regions with higher positive coefficients (blue areas) suggest that, in these areas, higher MFI participation is more strongly associated with banking inclusion.
+This could indicate that in these regions, microfinance institutions may serve as a stepping stone toward formal banking.
+
+**Implication**: Policymakers in these blue regions might consider strengthening connections between MFIs and traditional banks to further support financial inclusion.
+
+## Map for prop_INSURANCE coefficient
+
+```{r}
+tm_shape(combined_data) +
+  tm_polygons("prop_INSURANCE_coef", 
+              title = "GWR Coefficient for Insurance Proportion",
+              palette = "RdBu", 
+              style = "quantile") +
+  tm_layout(main.title = "Spatial Variation of GWR Coefficient for Insurance Proportion", main.title.size = 1)
+```
+
+**Interpretation**: This map visualizes the influence of the proportion of people with insurance on the banking inclusion proportion.
+
+**Observation**: The red regions indicate areas where insurance is less strongly associated with banking inclusion, whereas the blue regions show stronger positive relationships.
+
+**Implication**: In areas where the association is weaker (red areas), it may be beneficial to examine barriers to integrating insurance with banking products.
+Conversely, regions with stronger associations (blue areas) could focus on promoting joint insurance and banking products to further financial inclusion.
+
+## Map for prop_SACCO coefficient
+
+```{r}
+tm_shape(combined_data) +
+  tm_polygons("prop_SACCO_coef", 
+              title = "GWR Coefficient for SACCO Proportion",
+              palette = "RdBu", 
+              style = "quantile") +
+  tm_layout(main.title = "Spatial Variation of GWR Coefficient for SACCO Proportion", main.title.size = 1)
+```
+
+**Interpretation**: This map indicates the relationship between the proportion of people involved in Savings and Credit Cooperative Organizations (SACCOs) and banking inclusion.
+
+**Observation**: Red regions indicate areas where SACCO participation negatively impacts banking inclusion, while lighter areas show weaker relationships.
+The negative values could imply that in certain regions, SACCOs might be seen as substitutes for formal banking services rather than complements.
+
+**Implication**: In areas where SACCO participation negatively impacts banking inclusion, there might be opportunities to create pathways or partnerships between SACCOs and formal banks to encourage individuals to access a broader range of financial services.
+
+## Map for Local R-squared values
+
+```{r}
+tm_shape(combined_data) +
+  tm_polygons("Local_R2", 
+              title = "Local R-squared",
+              palette = "Greens", 
+              style = "quantile") +
+  tm_layout(main.title = "Local R-squared of GWR Model", main.title.size = 1)
+```
+
+**Interpretation**: This map shows the local R-squared values from the GWR model, indicating how well the model explains the variability in banking inclusion in different regions.
+
+**Observation**: Regions with higher R-squared values (darker green areas) have a better model fit, suggesting that the selected independent variables explain the variation in banking inclusion well in these areas.
+Lower R-squared areas may require additional explanatory factors.
+
+**Implication**: For regions with lower R-squared values, further analysis could explore additional variables or factors influencing banking inclusion, as the current model might be missing local contextual factors in these areas.
+:::
+
+## 3.3 Model Validation
+
+We’ve already mapped local R-squared values, which give insight into how well the model fits in each region.
+Now, we can examine summary statistics or visualize these values to identify areas with stronger or weaker fits.
+
+```{r}
+# Summary of Local R-squared values
+summary(gwr_results$Local_R2)
+
+# Histogram of Local R-squared values
+library(ggplot2)
+ggplot(gwr_results, aes(x = Local_R2)) +
+  geom_histogram(binwidth = 0.05, fill = "skyblue", color = "black") +
+  labs(title = "Distribution of Local R-squared Values", x = "Local R-squared", y = "Frequency") +
+  theme_minimal()
+```
+
+::: callout-note
+**Mean Local R-squared:** 0.712, indicating that on average, the model explains about 71.2% of the variance in financial inclusion factors at the local level.
+
+**Median Local R-squared:** 0.7015, with the first and third quartiles at 0.6427 and 0.7822, respectively.
+This indicates that half of the regions have a Local R-squared between approximately 0.64 and 0.78.
+:::
+
+Residuals analysis from the GWR model can help assess where the model may underestimate or overestimate banking inclusion.
+Mapping residuals provides insight into potential spatial patterns in model misfit.
+
+```{r}
+# Residual summary
+summary(gwr_results$residual)
+
+# Adding residuals to combined_data for mapping
+combined_data$residual <- gwr_results$residual
+
+# Map residuals
+library(tmap)
+tm_shape(combined_data) +
+  tm_polygons("residual", title = "GWR Model Residuals", palette = "RdBu", style = "quantile") +
+  tm_layout(main.title = "Spatial Distribution of GWR Residuals", main.title.size = 1)
+```
+
+::: callout-note
+**Red-shaded regions**: These are areas where the GWR model’s predictions are higher than observed values, indicating potential overestimation.
+This may suggest that the model attributes higher financial inclusion here than what exists, possibly due to a lack of local adjustment in these areas.
+
+**Blue-shaded regions**: These areas have positive residuals, meaning the GWR model underestimates financial inclusion here.
+This underestimation may indicate unobserved local factors that enhance financial inclusion more than expected by the model’s structure.
+:::
+
+## 3.4 Interpretation of T-value
+
+We’ll look at the statistical significance of the coefficients for each predictor variable (prop_MFI, prop_INSURANCE, prop_SACCO) to understand where each factor has the strongest or weakest effect on banking inclusion.
+
+```{r}
+# Check if T-values for each coefficient exist in gwr_results and add them to combined_data
+
+t_value_columns <- c("prop_MFI_TV", "prop_INSURANCE_TV", "prop_SACCO_TV")
+
+# Loop through each T-value column and add to combined_data if it exists in gwr_results
+for (col_name in t_value_columns) {
+  if (col_name %in% colnames(gwr_results)) {
+    combined_data[[col_name]] <- gwr_results[[col_name]]
+  } else {
+    warning(paste("The column", col_name, "does not exist in gwr_results"))
+  }
+}
+```
+
+::: panel-tabset
+Define breaks for significance levels
+
+```{r}
+t_value_breaks <- c(-2, -1.96, 0, 1.96, 2)
+```
+
+## T-values for prop_MFI
+
+```{r}
+tm_shape(combined_data) +
+  tm_polygons("prop_MFI_TV", title = "T-value for MFI Proportion", 
+              palette = "RdBu", style = "fixed", breaks = t_value_breaks) +
+  tm_layout(main.title = "Statistical Significance of MFI Coefficient", main.title.size = 1)
+```
+
+-   This map shows the significance of the MFI coefficient, with areas where the relationship is statistically significant highlighted in darker colors.
+
+-   Regions in light colors may indicate non-significant relationships, where MFI involvement has a negligible effect on financial inclusion.
+
+## T-values for prop_INSURANCE
+
+```{r}
+tm_shape(combined_data) +
+  tm_polygons("prop_INSURANCE_TV", title = "T-value for Insurance Proportion", 
+              palette = "RdBu", style = "fixed", breaks = t_value_breaks) +
+  tm_layout(main.title = "Statistical Significance of Insurance Coefficient", main.title.size = 1)
+```
+
+-   The T-value map for insurance displays the statistical significance of the relationship between insurance coverage and financial inclusion.
+
+-   Areas in darker shades indicate statistically significant relationships, while lighter shades show regions where the effect of insurance on financial inclusion is not significant.
+
+## T-values for prop_SACCO
+
+```{r}
+tm_shape(combined_data) +
+  tm_polygons("prop_SACCO_TV", title = "T-value for SACCO Proportion", 
+              palette = "RdBu", style = "fixed", breaks = t_value_breaks) +
+  tm_layout(main.title = "Statistical Significance of SACCO Coefficient", main.title.size = 1)
+```
+
+-   The SACCO T-value map similarly highlights the significance of the SACCO coefficient across regions.
+
+-   Blue areas indicate statistically significant positive relationships, showing where SACCO membership contributes more strongly to financial inclusion.
+:::

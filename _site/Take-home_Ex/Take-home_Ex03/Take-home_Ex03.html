@@ -249,7 +249,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Take-home Exercise 2</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../Take-Home_Ex/Take-home_Ex03/Take-home_Ex0.html">
+    <a class="dropdown-item" href="../../Take-Home_Ex/Take-home_Ex03/Take-home_Ex03.html">
  <span class="dropdown-text">Take-home Exercise 3</span></a>
   </li>  
     </ul>
@@ -293,18 +293,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">1. Overview</a>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">1 Overview</a>
   <ul class="collapse">
   <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">1.1 Background</a></li>
   <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives">1.2 Objectives</a></li>
   </ul></li>
-  <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">2. Data Wrangling</a>
+  <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">2 Data Wrangling</a>
   <ul class="collapse">
   <li><a href="#loading-packages" id="toc-loading-packages" class="nav-link" data-scroll-target="#loading-packages">2.1 Loading Packages</a></li>
-  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">2.2 The Data</a>
-  <ul class="collapse">
-  <li><a href="#aspatial-data" id="toc-aspatial-data" class="nav-link" data-scroll-target="#aspatial-data">Aspatial Data</a></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">2.2 Data Preparation</a></li>
+  <li><a href="#merging-survey-and-geospatial-data" id="toc-merging-survey-and-geospatial-data" class="nav-link" data-scroll-target="#merging-survey-and-geospatial-data">Merging Survey and Geospatial Data</a></li>
   </ul></li>
+  <li><a href="#geospatial-analysis-with-gwr" id="toc-geospatial-analysis-with-gwr" class="nav-link" data-scroll-target="#geospatial-analysis-with-gwr">3 Geospatial Analysis with GWR</a>
+  <ul class="collapse">
+  <li><a href="#exploratory-spatial-data-analysis-esda" id="toc-exploratory-spatial-data-analysis-esda" class="nav-link" data-scroll-target="#exploratory-spatial-data-analysis-esda">3.1 Exploratory Spatial Data Analysis (ESDA)</a></li>
+  <li><a href="#preparing-for-geographically-weighted-regression-gwr" id="toc-preparing-for-geographically-weighted-regression-gwr" class="nav-link" data-scroll-target="#preparing-for-geographically-weighted-regression-gwr">3.2 Preparing for Geographically Weighted Regression (GWR)</a></li>
+  <li><a href="#model-validation" id="toc-model-validation" class="nav-link" data-scroll-target="#model-validation">3.3 Model Validation</a></li>
+  <li><a href="#interpretation-of-t-value" id="toc-interpretation-of-t-value" class="nav-link" data-scroll-target="#interpretation-of-t-value">3.4 Interpretation of T-value</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -344,7 +349,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <section id="overview" class="level1">
-<h1>1. Overview</h1>
+<h1>1 Overview</h1>
 <section id="background" class="level2">
 <h2 class="anchored" data-anchor-id="background">1.1 Background</h2>
 <p>Financial inclusion plays a vital role in promoting economic stability and growth, especially in developing economies like Tanzania. Access to financial services empowers individuals, enabling them to save, borrow, insure, and invest, ultimately fostering resilience against economic shocks. Despite progress, challenges remain in ensuring that financial services reach all population segments, particularly those in rural and economically disadvantaged regions. Factors such as geographic location, socioeconomic status, and income sources contribute to disparities in financial access across Tanzania’s diverse regions.</p>
@@ -353,17 +358,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="objectives" class="level2">
 <h2 class="anchored" data-anchor-id="objectives">1.2 Objectives</h2>
 <p>The main objectives of this exercise are:</p>
-<ol type="1">
-<li><strong>To assess the spatial variability of financial inclusion</strong> across Tanzania, identifying how geographic location influences access to and usage of financial services.</li>
-<li><strong>To examine relationships between financial inclusion and socio-economic variables</strong> such as income sources, urbanization level, and economic activity. This includes understanding the role of mobile money, banking, and informal financial services across different regions.</li>
-<li><strong>To apply and interpret GWR in analyzing financial inclusion</strong> by generating regional coefficients that highlight spatial patterns in the data, helping to pinpoint areas where specific financial services are more or less accessible.</li>
-<li><strong>To produce visualizations of GWR outputs</strong>, including maps of local coefficients and R-squared values, to clearly communicate findings on regional disparities in financial inclusion.</li>
-</ol>
+<ul>
+<li><p><strong>To assess the spatial variability of financial inclusion</strong> across Tanzania, identifying how geographic location influences access to and usage of financial services.</p></li>
+<li><p><strong>To examine relationships between financial inclusion and socio-economic variables</strong> such as income sources, urbanization level, and economic activity. This includes understanding the role of mobile money, banking, and informal financial services across different regions.</p></li>
+<li><p><strong>To apply and interpret GWR in analyzing financial inclusion</strong> by generating regional coefficients that highlight spatial patterns in the data, helping to pinpoint areas where specific financial services are more or less accessible.</p></li>
+<li><p><strong>To produce visualizations of GWR outputs</strong>, including maps of local coefficients and R-squared values, to clearly communicate findings on regional disparities in financial inclusion.</p></li>
+</ul>
 <p>By achieving these objectives, this analysis will contribute to a more nuanced understanding of financial inclusion in Tanzania, offering actionable insights for policymakers, financial service providers, and development organizations to address gaps in financial access.</p>
 </section>
 </section>
 <section id="data-wrangling" class="level1">
-<h1>2. Data Wrangling</h1>
+<h1>2 Data Wrangling</h1>
 <section id="loading-packages" class="level2">
 <h2 class="anchored" data-anchor-id="loading-packages">2.1 Loading Packages</h2>
 <p>To prepare and analyze spatial data for Geographically Weighted Regression (GWR), we will use the following packages, which offer tools for geospatial data handling, data manipulation, visualization, and statistical analysis.</p>
@@ -371,33 +376,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details class="code-fold">
 <summary>Click to view code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, spgwr, tmap, tidyverse, dplyr, </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               ggplot2, readxl, knitr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-The downloaded binary packages are in
-    /var/folders/k6/m28nhmy16gq06mch2hprzgfw0000gn/T//RtmpSCWwEv/downloaded_packages</code></pre>
-</div>
-<details class="code-fold">
-<summary>Click to view code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>package_info <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Package =</span> <span class="fu">c</span>(</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sf"</span>, <span class="st">"spgwr"</span>, <span class="st">"tmap"</span>, <span class="st">"tidyverse"</span>, <span class="st">"dplyr"</span>, </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ggplot2"</span>, <span class="st">"readxl"</span>, <span class="st">"knitr"</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Description =</span> <span class="fu">c</span>(</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"For importing, managing, and handling geospatial data, including shapefiles and CRS transformations."</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"For conducting Geographically Weighted Regression (GWR) analysis to examine spatially varying relationships."</span>,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"For thematic mapping and creating visualizations to display spatial data and GWR results."</span>,</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"For data wrangling and analysis, providing a cohesive set of tools for data science tasks, including ggplot2 and tidyr."</span>,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"For efficient data manipulation, including filtering, selecting, and summarizing data."</span>,</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"For creating additional custom and publication-ready visualizations."</span>,</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"For importing Excel files, useful for reading metadata or data dictionaries."</span>,</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"For dynamic report generation using LaTeX, HTML, and Markdown."</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(package_info, <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Package"</span>, <span class="st">"Description"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               ggplot2, GWmodel, readxl, knitr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>package_info <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Package =</span> <span class="fu">c</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sf"</span>, <span class="st">"spgwr"</span>, <span class="st">"tmap"</span>, <span class="st">"tidyverse"</span>, <span class="st">"dplyr"</span>, </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ggplot2"</span>, <span class="st">"readxl"</span>, <span class="st">"knitr"</span>, <span class="st">"GWmodel"</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Description =</span> <span class="fu">c</span>(</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"For importing, managing, and handling geospatial data, including shapefiles and CRS transformations."</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"For conducting Geographically Weighted Regression (GWR) analysis to examine spatially varying relationships."</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"For thematic mapping and creating visualizations to display spatial data and GWR results."</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"For data wrangling and analysis, providing a cohesive set of tools for data science tasks, including ggplot2 and tidyr."</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"For efficient data manipulation, including filtering, selecting, and summarizing data."</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"For creating additional custom and publication-ready visualizations."</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"For importing Excel files, useful for reading metadata or data dictionaries."</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"For dynamic report generation using LaTeX, HTML, and Markdown."</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"For conducting Geographically Weighted Regression (GWR) analysis to examing the model"</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(package_info, <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Package"</span>, <span class="st">"Description"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
@@ -444,22 +443,686 @@ The downloaded binary packages are in
 <td style="text-align: left;">knitr</td>
 <td style="text-align: left;">For dynamic report generation using LaTeX, HTML, and Markdown.</td>
 </tr>
+<tr class="odd">
+<td style="text-align: left;">GWmodel</td>
+<td style="text-align: left;">For conducting Geographically Weighted Regression (GWR) analysis to examing the model</td>
+</tr>
 </tbody>
 </table>
 </div>
 </div>
 </section>
-<section id="the-data" class="level2">
-<h2 class="anchored" data-anchor-id="the-data">2.2 The Data</h2>
+<section id="data-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="data-preparation">2.2 Data Preparation</h2>
 <p>We will use the FinScope Tanzania 2023 data and the geoBoundaries Tanzania district shapefile for this analysis. This section includes steps to import, clean, and prepare the data for Geographically Weighted Regression.</p>
-<section id="aspatial-data" class="level3">
-<h3 class="anchored" data-anchor-id="aspatial-data">Aspatial Data</h3>
-<ul>
-<li><strong>Survey Data</strong>: Import and clean the FinScope survey data, focusing on financial inclusion indicators, socioeconomic variables, and regional identifiers.</li>
-</ul>
-
-
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Aspatial Data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Geospatial Data</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p><strong>Survey Data</strong>: Import and clean the FinScope survey data, focusing on financial inclusion indicators, socioeconomic variables, and regional identifiers.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/FinScope Tanzania 2023_Individual Main Data_FINAL.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="do">## summary(survey_data)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Select relevant columns for analysis</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(reg_name, RU, MZ, MM, BANKED, MFI, PENSION, INSURANCE, SACCO, </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>         OTHER_FORMAL, OVERALL_FORMAL, IncomeMain, BusO, </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>         DEDICATED_FARMER, SMALLHOLDER_FARMER, population_wt, fasx, INFORMAL)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the cleaned data</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(survey_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       reg_name            RU       MZ     MM     BANKED     MFI     PENSION
+1        Mwanza         Rural Mainland     MM Not Banked Not MFI Not PENSION
+2        Kagera         Rural Mainland Not MM Not Banked Not MFI Not PENSION
+3         Mbeya   Other urban Mainland     MM Not Banked Not MFI Not PENSION
+4        Dodoma   Other urban Mainland     MM Not Banked Not MFI Not PENSION
+5 Dar es Salaam Dar es Salaam Mainland     MM Not Banked Not MFI Not PENSION
+6       Singida   Other urban Mainland     MM Not Banked Not MFI Not PENSION
+  INSURANCE     SACCO OTHER_FORMAL OVERALL_FORMAL                 IncomeMain
+1         0 Not SACCO OTHER_FORMAL OVERALL_FORMAL        Farmers and fishers
+2         0 Not SACCO OTHER_FORMAL OVERALL_FORMAL        Farmers and fishers
+3 INSURANCE Not SACCO OTHER_FORMAL OVERALL_FORMAL    Piece work/casual labor
+4         0 Not SACCO OTHER_FORMAL OVERALL_FORMAL Traders - non-agricultural
+5         0 Not SACCO OTHER_FORMAL OVERALL_FORMAL        Farmers and fishers
+6         0 Not SACCO OTHER_FORMAL OVERALL_FORMAL    Piece work/casual labor
+             BusO     DEDICATED_FARMER     SMALLHOLDER_FARMER population_wt
+1             nor Not Dedicated farmer Not Smallholder farmer      3191.110
+2             nor Not Dedicated farmer Not Smallholder farmer      3675.482
+3             nor Not Dedicated farmer Not Smallholder farmer      2043.709
+4 Business owners Not Dedicated farmer Not Smallholder farmer      4003.168
+5             nor Not Dedicated farmer Not Smallholder farmer      2618.941
+6             nor Not Dedicated farmer Not Smallholder farmer      4680.350
+                   fasx                                       INFORMAL
+1 Other formal non-bank INFORMAL incl SACCO AND CMG RISK CONTRIBUTIONS
+2 Other formal non-bank INFORMAL incl SACCO AND CMG RISK CONTRIBUTIONS
+3 Other formal non-bank INFORMAL incl SACCO AND CMG RISK CONTRIBUTIONS
+4 Other formal non-bank INFORMAL incl SACCO AND CMG RISK CONTRIBUTIONS
+5 Other formal non-bank INFORMAL incl SACCO AND CMG RISK CONTRIBUTIONS
+6 Other formal non-bank                                   Not INFORMAL</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>binary_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"BANKED"</span>, <span class="st">"MFI"</span>, <span class="st">"INSURANCE"</span>, <span class="st">"SACCO"</span>, <span class="st">"OTHER_FORMAL"</span>, <span class="st">"OVERALL_FORMAL"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>survey_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">BANKED =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(BANKED), <span class="dv">0</span>, <span class="fu">ifelse</span>(BANKED <span class="sc">==</span> <span class="st">"Banked"</span>, <span class="dv">1</span>, <span class="dv">0</span>)),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">MFI =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(MFI), <span class="dv">0</span>, <span class="fu">ifelse</span>(MFI <span class="sc">==</span> <span class="st">"MFI"</span>, <span class="dv">1</span>, <span class="dv">0</span>)),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">INSURANCE =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(INSURANCE), <span class="dv">0</span>, <span class="fu">ifelse</span>(INSURANCE <span class="sc">==</span> <span class="st">"INSURANCE"</span>, <span class="dv">1</span>, <span class="dv">0</span>)),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">SACCO =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(SACCO), <span class="dv">0</span>, <span class="fu">ifelse</span>(SACCO <span class="sc">==</span> <span class="st">"SACCO"</span>, <span class="dv">1</span>, <span class="dv">0</span>)),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">OTHER_FORMAL =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(OTHER_FORMAL), <span class="dv">0</span>, <span class="fu">ifelse</span>(OTHER_FORMAL <span class="sc">==</span> <span class="st">"OTHER_FORMAL"</span>, <span class="dv">1</span>, <span class="dv">0</span>)),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">OVERALL_FORMAL =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(OVERALL_FORMAL), <span class="dv">0</span>, <span class="fu">ifelse</span>(OVERALL_FORMAL <span class="sc">==</span> <span class="st">"OVERALL_FORMAL"</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Check structure to verify transformations</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(survey_data[, <span class="fu">c</span>(<span class="st">"BANKED"</span>, <span class="st">"MFI"</span>, <span class="st">"INSURANCE"</span>, <span class="st">"SACCO"</span>, <span class="st">"OTHER_FORMAL"</span>, <span class="st">"OVERALL_FORMAL"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   9915 obs. of  6 variables:
+ $ BANKED        : num  0 0 0 0 0 0 0 0 1 0 ...
+ $ MFI           : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ INSURANCE     : num  0 0 1 0 0 0 0 0 0 0 ...
+ $ SACCO         : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ OTHER_FORMAL  : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ OVERALL_FORMAL: num  1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+</div>
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate proportions by region</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>region_proportions <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(reg_name) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">all_of</span>(binary_vars), <span class="sc">~</span> <span class="fu">mean</span>(<span class="fu">as.numeric</span>(.), <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.names =</span> <span class="st">"prop_{col}"</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(region_proportions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 31 × 7
+   reg_name     prop_BANKED prop_MFI prop_INSURANCE prop_SACCO prop_OTHER_FORMAL
+   &lt;chr&gt;              &lt;dbl&gt;    &lt;dbl&gt;          &lt;dbl&gt;      &lt;dbl&gt;             &lt;dbl&gt;
+ 1 Arusha             0.298   0.105          0.137     0.00317             0.784
+ 2 Dar es Sala…       0.437   0.159          0.215     0.0142              0.943
+ 3 Dodoma             0.198   0.0951         0.180     0.0121              0.773
+ 4 Geita              0.152   0.0365         0.0590    0.00281             0.753
+ 5 Iringa             0.222   0.0711         0.138     0.00444             0.724
+ 6 Kagera             0.132   0.0140         0.0588    0.0168              0.650
+ 7 Kaskazini P…       0.175   0.0361         0.0567    0.00515             0.686
+ 8 Kaskazini U…       0.167   0.0444         0.0278    0.0278              0.806
+ 9 Katavi             0.211   0.0404         0.103     0.00448             0.776
+10 Kigoma             0.118   0.0112         0.0848    0.00670             0.569
+# ℹ 21 more rows
+# ℹ 1 more variable: prop_OVERALL_FORMAL &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save csv</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(survey_data, <span class="st">"data/csv/survey_data.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(region_proportions, <span class="st">"data/csv/region_proportions"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>We’ll use the district boundary shapefile (geoBoundaries-TZA-ADM2.shp) to perform spatial analysis. This shapefile represents Tanzania’s districts and will be joined with the survey data.</p>
+<p>Since the district boundaries shapefile has <code>MULTIPOLYGON</code> geometries, we will convert them to <code>POLYGON</code> geometries to ensure compatibility with our analysis. We’ll also add a new column for the area of each polygon, which could be useful for weighting or further spatial analysis.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load and transform the ADM1 shapefile</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>regions <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data/ADM1/geoBoundaries-TZA-ADM1.shp"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">32737</span>)  <span class="co"># Using UTM Zone 37S for Tanzania</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `geoBoundaries-TZA-ADM1' from data source 
+  `/Applications/SMU/S3/ISSS626 - Geo/ISSS-626 ZOUJIAXUN/Take-home_Ex/Take-home_Ex03/data/ADM1/geoBoundaries-TZA-ADM1.shp' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 30 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 29.32698 ymin: -11.76125 xmax: 40.44556 ymax: -0.9854812
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Convert MULTIPOLYGON to individual POLYGON components and calculate area</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>regions_polygons <span class="ot">&lt;-</span> regions <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_cast</span>(<span class="st">"POLYGON"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">area =</span> <span class="fu">st_area</span>(.))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Group by `shapeName` to ensure each region is represented as a single MULTIPOLYGON</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>regions_cleaned <span class="ot">&lt;-</span> regions_polygons <span class="sc">%&gt;%</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(shapeName) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">geometry =</span> <span class="fu">st_union</span>(geometry), <span class="at">.groups =</span> <span class="st">'drop'</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the result by plotting</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(regions_cleaned))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
+<section id="merging-survey-and-geospatial-data" class="level2">
+<h2 class="anchored" data-anchor-id="merging-survey-and-geospatial-data">Merging Survey and Geospatial Data</h2>
+<p>Now, with the POLYGON geometries and area calculated, we can merge this geospatial data with the survey data to create a combined dataset for the GWR analysis.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge the survey data with the cleaned region shapefile using `shapeName` and `reg_name`</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>combined_data <span class="ot">&lt;-</span> regions_cleaned <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(region_proportions, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"shapeName"</span> <span class="ot">=</span> <span class="st">"reg_name"</span>))</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the combined dataset to confirm successful merge</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(combined_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  shapeName                  geometry   prop_BANKED        prop_MFI      
+ Length:30          MULTIPOLYGON : 6   Min.   :0.1092   Min.   :0.01116  
+ Class :character   POLYGON      :24   1st Qu.:0.1321   1st Qu.:0.04930  
+ Mode  :character   epsg:32737   : 0   Median :0.1984   Median :0.06984  
+                    +proj=utm ...: 0   Mean   :0.2015   Mean   :0.06676  
+                                       3rd Qu.:0.2222   3rd Qu.:0.08000  
+                                       Max.   :0.4370   Max.   :0.15854  
+                                       NA's   :5        NA's   :5        
+ prop_INSURANCE      prop_SACCO       prop_OTHER_FORMAL prop_OVERALL_FORMAL
+ Min.   :0.02308   Min.   :0.000000   Min.   :0.5692    Min.   :0.5810     
+ 1st Qu.:0.07500   1st Qu.:0.004184   1st Qu.:0.6692    1st Qu.:0.6769     
+ Median :0.10460   Median :0.006757   Median :0.7619    Median :0.7711     
+ Mean   :0.10691   Mean   :0.012092   Mean   :0.7381    Mean   :0.7448     
+ 3rd Qu.:0.13380   3rd Qu.:0.014228   3rd Qu.:0.7841    3rd Qu.:0.7950     
+ Max.   :0.21545   Max.   :0.059859   Max.   :0.9431    Max.   :0.9451     
+ NA's   :5         NA's   :5          NA's   :5         NA's   :5          </code></pre>
+</div>
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(combined_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>sf [30 × 8] (S3: sf/tbl_df/tbl/data.frame)
+ $ shapeName          : chr [1:30] "Arusha" "Dar es Salaam" "Dodoma" "Geita" ...
+ $ geometry           :sfc_GEOMETRY of length 30; first list element: List of 1
+  ..$ : num [1:208, 1:2] 322668 320915 317794 314638 313041 ...
+  ..- attr(*, "class")= chr [1:3] "XY" "POLYGON" "sfg"
+ $ prop_BANKED        : num [1:30] 0.298 0.437 0.198 0.152 0.222 ...
+ $ prop_MFI           : num [1:30] 0.1048 0.1585 0.0951 0.0365 0.0711 ...
+ $ prop_INSURANCE     : num [1:30] 0.137 0.215 0.18 0.059 0.138 ...
+ $ prop_SACCO         : num [1:30] 0.00317 0.01423 0.01215 0.00281 0.00444 ...
+ $ prop_OTHER_FORMAL  : num [1:30] 0.784 0.943 0.773 0.753 0.724 ...
+ $ prop_OVERALL_FORMAL: num [1:30] 0.784 0.945 0.773 0.753 0.738 ...
+ - attr(*, "sf_column")= chr "geometry"
+ - attr(*, "agr")= Factor w/ 3 levels "constant","aggregate",..: NA NA NA NA NA NA NA
+  ..- attr(*, "names")= chr [1:7] "shapeName" "prop_BANKED" "prop_MFI" "prop_INSURANCE" ...</code></pre>
+</div>
+</div>
+<p>Remove rows with NA values in the relevant columns</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>combined_data <span class="ot">&lt;-</span> combined_data <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(prop_BANKED, prop_MFI, prop_INSURANCE, prop_SACCO)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+<section id="geospatial-analysis-with-gwr" class="level1">
+<h1>3 Geospatial Analysis with GWR</h1>
+<section id="exploratory-spatial-data-analysis-esda" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-spatial-data-analysis-esda">3.1 Exploratory Spatial Data Analysis (ESDA)</h2>
+<p>Create choropleth maps to visualize the distribution of each financial inclusion indicator across regions.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>) </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define each map individually</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>map1 <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(combined_data) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"prop_BANKED"</span>, </span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">title =</span> <span class="st">"Proportion of Banked Population"</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">palette =</span> <span class="st">"Blues"</span>, </span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">style =</span> <span class="st">"quantile"</span>) <span class="sc">+</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Banked Population by Region"</span>, <span class="at">main.title.size =</span> <span class="dv">1</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>map2 <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(combined_data) <span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"prop_MFI"</span>, </span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">title =</span> <span class="st">"Proportion of MFI Users"</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>              <span class="at">palette =</span> <span class="st">"Purples"</span>, </span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>              <span class="at">style =</span> <span class="st">"quantile"</span>) <span class="sc">+</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"MFI Users by Region"</span>, <span class="at">main.title.size =</span> <span class="dv">1</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>map3 <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(combined_data) <span class="sc">+</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"prop_INSURANCE"</span>, </span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>              <span class="at">title =</span> <span class="st">"Proportion of Insurance Users"</span>,</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>              <span class="at">palette =</span> <span class="st">"Greens"</span>, </span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>              <span class="at">style =</span> <span class="st">"quantile"</span>) <span class="sc">+</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Insurance Users by Region"</span>, <span class="at">main.title.size =</span> <span class="dv">1</span>)</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>map4 <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(combined_data) <span class="sc">+</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"prop_SACCO"</span>, </span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>              <span class="at">title =</span> <span class="st">"Proportion of SACCO Users"</span>,</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>              <span class="at">palette =</span> <span class="st">"Oranges"</span>, </span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>              <span class="at">style =</span> <span class="st">"quantile"</span>) <span class="sc">+</span></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"SACCO Users by Region"</span>, <span class="at">main.title.size =</span> <span class="dv">1</span>)</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>map5 <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(combined_data) <span class="sc">+</span></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"prop_OTHER_FORMAL"</span>, </span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>              <span class="at">title =</span> <span class="st">"Proportion of Other Formal Financial Users"</span>,</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>              <span class="at">palette =</span> <span class="st">"Reds"</span>, </span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>              <span class="at">style =</span> <span class="st">"quantile"</span>) <span class="sc">+</span></span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Other Formal Financial Users by Region"</span>, <span class="at">main.title.size =</span> <span class="dv">1</span>)</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>map6 <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(combined_data) <span class="sc">+</span></span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"prop_OVERALL_FORMAL"</span>, </span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>              <span class="at">title =</span> <span class="st">"Proportion of Overall Formal Financial Inclusion"</span>,</span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>              <span class="at">palette =</span> <span class="st">"YlGnBu"</span>, </span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>              <span class="at">style =</span> <span class="st">"quantile"</span>) <span class="sc">+</span></span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Overall Formal Financial Inclusion by Region"</span>, <span class="at">main.title.size =</span> <span class="dv">1</span>)</span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrange maps in a 2x3 grid</span></span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(map1, map2, map3, map4, map5, map6, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="preparing-for-geographically-weighted-regression-gwr" class="level2">
+<h2 class="anchored" data-anchor-id="preparing-for-geographically-weighted-regression-gwr">3.2 Preparing for Geographically Weighted Regression (GWR)</h2>
+<p>Use GWR to explore the spatial variability in financial inclusion, the prop_* columns can be used as dependent or independent variables in model.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up coordinates and calculate bandwidth</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>coords <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(<span class="fu">st_centroid</span>(combined_data))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>gwr_bandwidth <span class="ot">&lt;-</span> <span class="fu">bw.gwr</span>(prop_BANKED <span class="sc">~</span> prop_MFI <span class="sc">+</span> prop_INSURANCE <span class="sc">+</span> prop_SACCO, </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">data =</span> combined_data, </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">approach =</span> <span class="st">"AICc"</span>, </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">kernel =</span> <span class="st">"bisquare"</span>, </span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">adaptive =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Adaptive bandwidth (number of nearest neighbours): 23 AICc value: -51.36172 
+Adaptive bandwidth (number of nearest neighbours): 22 AICc value: -49.6069 
+Adaptive bandwidth (number of nearest neighbours): 24 AICc value: -53.01621 
+Adaptive bandwidth (number of nearest neighbours): 24 AICc value: -53.01621 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run GWR model without specifying `coords`, as they are embedded in `combined_data`</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>gwr_model <span class="ot">&lt;-</span> <span class="fu">gwr.basic</span>(prop_BANKED <span class="sc">~</span> prop_MFI <span class="sc">+</span> prop_INSURANCE <span class="sc">+</span> prop_SACCO, </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data =</span> combined_data, </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">bw =</span> gwr_bandwidth, </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">kernel =</span> <span class="st">"bisquare"</span>, </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">adaptive =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Check the summary of the GWR model to view the results, including coefficients, local R-squared values, and diagnostics.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print summary of GWR model results</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gwr_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>              Length Class  Mode
+GW.arguments  11     -none- list
+GW.diagnostic  8     -none- list
+lm            14     lm     list
+SDF           19     sf     list
+timings        5     -none- list
+this.call      6     -none- call
+Ftests         0     -none- list</code></pre>
+</div>
+</div>
+<p>The coefficients and local R-squared values can help to understand the spatial variation in the relationship between prop_BANKED and your predictors.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract coefficient estimates and local R-squared values</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>gwr_results <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(gwr_model<span class="sc">$</span>SDF)  <span class="co"># Convert Spatial Data Frame to regular Data Frame</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gwr_results)  <span class="co"># View first few rows to check the data structure</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Intercept  prop_MFI prop_INSURANCE prop_SACCO         y      yhat
+1 0.04278466 0.8314447      0.8944337 -0.8296852 0.2984127 0.2493518
+2 0.06504168 0.9134198      0.8593806 -1.1239781 0.4369919 0.3790117
+3 0.02530920 0.8963779      0.9255787 -0.5375104 0.1983806 0.2708177
+4 0.06879238 0.8053858      0.6608077 -0.5112866 0.1516854 0.1357466
+5 0.05688544 0.7905976      0.8113619 -0.3155218 0.2222222 0.2234910
+6 0.06897307 0.8129905      0.6697867 -0.5857415 0.1316527 0.1099143
+      residual CV_Score Stud_residual Intercept_SE prop_MFI_SE
+1  0.049060939        0    1.02617289   0.03613565   0.6639298
+2  0.057980179        0    2.26262510   0.04384599   0.7471723
+3 -0.072437148        0   -1.58603717   0.04089960   0.7261918
+4  0.015938823        0    0.30388209   0.03802964   0.6703635
+5 -0.001268799        0   -0.02606759   0.04228120   0.6839875
+6  0.021738349        0    0.49758427   0.03828892   0.6707030
+  prop_INSURANCE_SE prop_SACCO_SE Intercept_TV prop_MFI_TV prop_INSURANCE_TV
+1         0.4882944      1.125925     1.184001    1.252308          1.831751
+2         0.4937246      1.045385     1.483413    1.222502          1.740607
+3         0.5130715      1.054263     0.618813    1.234354          1.803996
+4         0.4851896      1.045673     1.808915    1.201416          1.361958
+5         0.4702472      1.167463     1.345407    1.155865          1.725394
+6         0.4877893      1.067588     1.801384    1.212147          1.373107
+  prop_SACCO_TV  Local_R2                       geometry
+1    -0.7368919 0.7526119 POLYGON ((322667.9 9679662,...
+2    -1.0751810 0.6471317 MULTIPOLYGON (((601932.5 92...
+3    -0.5098447 0.6782635 POLYGON ((91973.24 9464524,...
+4    -0.4889547 0.8452564 POLYGON ((-372724.1 9626877...
+5    -0.2702628 0.6426588 POLYGON ((18635.87 9041024,...
+6    -0.5486589 0.8742013 POLYGON ((-196727 9888805, ...</code></pre>
+</div>
+</div>
+<p>Use tmap or ggplot2 to visualize the spatial distribution of the coefficients and R-squared values. This will help you identify spatial patterns in the relationships.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure column names in gwr_results match expected names</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>combined_data<span class="sc">$</span>prop_MFI_coef <span class="ot">&lt;-</span> gwr_results<span class="sc">$</span>prop_MFI</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>combined_data<span class="sc">$</span>prop_INSURANCE_coef <span class="ot">&lt;-</span> gwr_results<span class="sc">$</span>prop_INSURANCE</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>combined_data<span class="sc">$</span>prop_SACCO_coef <span class="ot">&lt;-</span> gwr_results<span class="sc">$</span>prop_SACCO</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>combined_data<span class="sc">$</span>Local_R2 <span class="ot">&lt;-</span> gwr_results<span class="sc">$</span>Local_R2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>Map the coefficients for each predictor</strong></p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Map for prop_MFI coefficient</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Map for prop_INSURANCE coefficient</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Map for prop_SACCO coefficient</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false">Map for Local R-squared values</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(combined_data) <span class="sc">+</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"prop_MFI_coef"</span>, </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">title =</span> <span class="st">"GWR Coefficient for MFI Proportion"</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">palette =</span> <span class="st">"RdBu"</span>, </span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">style =</span> <span class="st">"quantile"</span>) <span class="sc">+</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Spatial Variation of GWR Coefficient for MFI Proportion"</span>, <span class="at">main.title.size =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Interpretation</strong>: This map shows the spatial variation in the relationship between the proportion of people using microfinance institutions (MFI) and the proportion of people who are banked.</p>
+<p><strong>Observation</strong>: Regions with higher positive coefficients (blue areas) suggest that, in these areas, higher MFI participation is more strongly associated with banking inclusion. This could indicate that in these regions, microfinance institutions may serve as a stepping stone toward formal banking.</p>
+<p><strong>Implication</strong>: Policymakers in these blue regions might consider strengthening connections between MFIs and traditional banks to further support financial inclusion.</p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(combined_data) <span class="sc">+</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"prop_INSURANCE_coef"</span>, </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">title =</span> <span class="st">"GWR Coefficient for Insurance Proportion"</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">palette =</span> <span class="st">"RdBu"</span>, </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">style =</span> <span class="st">"quantile"</span>) <span class="sc">+</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Spatial Variation of GWR Coefficient for Insurance Proportion"</span>, <span class="at">main.title.size =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Interpretation</strong>: This map visualizes the influence of the proportion of people with insurance on the banking inclusion proportion.</p>
+<p><strong>Observation</strong>: The red regions indicate areas where insurance is less strongly associated with banking inclusion, whereas the blue regions show stronger positive relationships.</p>
+<p><strong>Implication</strong>: In areas where the association is weaker (red areas), it may be beneficial to examine barriers to integrating insurance with banking products. Conversely, regions with stronger associations (blue areas) could focus on promoting joint insurance and banking products to further financial inclusion.</p>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(combined_data) <span class="sc">+</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"prop_SACCO_coef"</span>, </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">title =</span> <span class="st">"GWR Coefficient for SACCO Proportion"</span>,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">palette =</span> <span class="st">"RdBu"</span>, </span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">style =</span> <span class="st">"quantile"</span>) <span class="sc">+</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Spatial Variation of GWR Coefficient for SACCO Proportion"</span>, <span class="at">main.title.size =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Interpretation</strong>: This map indicates the relationship between the proportion of people involved in Savings and Credit Cooperative Organizations (SACCOs) and banking inclusion.</p>
+<p><strong>Observation</strong>: Red regions indicate areas where SACCO participation negatively impacts banking inclusion, while lighter areas show weaker relationships. The negative values could imply that in certain regions, SACCOs might be seen as substitutes for formal banking services rather than complements.</p>
+<p><strong>Implication</strong>: In areas where SACCO participation negatively impacts banking inclusion, there might be opportunities to create pathways or partnerships between SACCOs and formal banks to encourage individuals to access a broader range of financial services.</p>
+</div>
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(combined_data) <span class="sc">+</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"Local_R2"</span>, </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">title =</span> <span class="st">"Local R-squared"</span>,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">palette =</span> <span class="st">"Greens"</span>, </span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">style =</span> <span class="st">"quantile"</span>) <span class="sc">+</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Local R-squared of GWR Model"</span>, <span class="at">main.title.size =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Interpretation</strong>: This map shows the local R-squared values from the GWR model, indicating how well the model explains the variability in banking inclusion in different regions.</p>
+<p><strong>Observation</strong>: Regions with higher R-squared values (darker green areas) have a better model fit, suggesting that the selected independent variables explain the variation in banking inclusion well in these areas. Lower R-squared areas may require additional explanatory factors.</p>
+<p><strong>Implication</strong>: For regions with lower R-squared values, further analysis could explore additional variables or factors influencing banking inclusion, as the current model might be missing local contextual factors in these areas.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="model-validation" class="level2">
+<h2 class="anchored" data-anchor-id="model-validation">3.3 Model Validation</h2>
+<p>We’ve already mapped local R-squared values, which give insight into how well the model fits in each region. Now, we can examine summary statistics or visualize these values to identify areas with stronger or weaker fits.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of Local R-squared values</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gwr_results<span class="sc">$</span>Local_R2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.5498  0.6427  0.7015  0.7121  0.7822  0.8742 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogram of Local R-squared values</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(gwr_results, <span class="fu">aes</span>(<span class="at">x =</span> Local_R2)) <span class="sc">+</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.05</span>, <span class="at">fill =</span> <span class="st">"skyblue"</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Local R-squared Values"</span>, <span class="at">x =</span> <span class="st">"Local R-squared"</span>, <span class="at">y =</span> <span class="st">"Frequency"</span>) <span class="sc">+</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Mean Local R-squared:</strong> 0.712, indicating that on average, the model explains about 71.2% of the variance in financial inclusion factors at the local level.</p>
+<p><strong>Median Local R-squared:</strong> 0.7015, with the first and third quartiles at 0.6427 and 0.7822, respectively. This indicates that half of the regions have a Local R-squared between approximately 0.64 and 0.78.</p>
+</div>
+</div>
+<p>Residuals analysis from the GWR model can help assess where the model may underestimate or overestimate banking inclusion. Mapping residuals provides insight into potential spatial patterns in model misfit.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Residual summary</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gwr_results<span class="sc">$</span>residual)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.072437 -0.012753  0.004912  0.007246  0.021738  0.119104 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding residuals to combined_data for mapping</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>combined_data<span class="sc">$</span>residual <span class="ot">&lt;-</span> gwr_results<span class="sc">$</span>residual</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Map residuals</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(combined_data) <span class="sc">+</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"residual"</span>, <span class="at">title =</span> <span class="st">"GWR Model Residuals"</span>, <span class="at">palette =</span> <span class="st">"RdBu"</span>, <span class="at">style =</span> <span class="st">"quantile"</span>) <span class="sc">+</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Spatial Distribution of GWR Residuals"</span>, <span class="at">main.title.size =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Red-shaded regions</strong>: These are areas where the GWR model’s predictions are higher than observed values, indicating potential overestimation. This may suggest that the model attributes higher financial inclusion here than what exists, possibly due to a lack of local adjustment in these areas.</p>
+<p><strong>Blue-shaded regions</strong>: These areas have positive residuals, meaning the GWR model underestimates financial inclusion here. This underestimation may indicate unobserved local factors that enhance financial inclusion more than expected by the model’s structure.</p>
+</div>
+</div>
+</section>
+<section id="interpretation-of-t-value" class="level2">
+<h2 class="anchored" data-anchor-id="interpretation-of-t-value">3.4 Interpretation of T-value</h2>
+<p>We’ll look at the statistical significance of the coefficients for each predictor variable (prop_MFI, prop_INSURANCE, prop_SACCO) to understand where each factor has the strongest or weakest effect on banking inclusion.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if T-values for each coefficient exist in gwr_results and add them to combined_data</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>t_value_columns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"prop_MFI_TV"</span>, <span class="st">"prop_INSURANCE_TV"</span>, <span class="st">"prop_SACCO_TV"</span>)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop through each T-value column and add to combined_data if it exists in gwr_results</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col_name <span class="cf">in</span> t_value_columns) {</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (col_name <span class="sc">%in%</span> <span class="fu">colnames</span>(gwr_results)) {</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    combined_data[[col_name]] <span class="ot">&lt;-</span> gwr_results[[col_name]]</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">warning</span>(<span class="fu">paste</span>(<span class="st">"The column"</span>, col_name, <span class="st">"does not exist in gwr_results"</span>))</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">T-values for prop_MFI</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">T-values for prop_INSURANCE</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">T-values for prop_SACCO</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(combined_data) <span class="sc">+</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"prop_MFI_TV"</span>, <span class="at">title =</span> <span class="st">"T-value for MFI Proportion"</span>, </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">palette =</span> <span class="st">"RdBu"</span>, <span class="at">style =</span> <span class="st">"fixed"</span>, <span class="at">breaks =</span> t_value_breaks) <span class="sc">+</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Statistical Significance of MFI Coefficient"</span>, <span class="at">main.title.size =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><p>This map shows the significance of the MFI coefficient, with areas where the relationship is statistically significant highlighted in darker colors.</p></li>
+<li><p>Regions in light colors may indicate non-significant relationships, where MFI involvement has a negligible effect on financial inclusion.</p></li>
+</ul>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(combined_data) <span class="sc">+</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"prop_INSURANCE_TV"</span>, <span class="at">title =</span> <span class="st">"T-value for Insurance Proportion"</span>, </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">palette =</span> <span class="st">"RdBu"</span>, <span class="at">style =</span> <span class="st">"fixed"</span>, <span class="at">breaks =</span> t_value_breaks) <span class="sc">+</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Statistical Significance of Insurance Coefficient"</span>, <span class="at">main.title.size =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><p>The T-value map for insurance displays the statistical significance of the relationship between insurance coverage and financial inclusion.</p></li>
+<li><p>Areas in darker shades indicate statistically significant relationships, while lighter shades show regions where the effect of insurance on financial inclusion is not significant.</p></li>
+</ul>
+</div>
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<div class="cell">
+<details class="code-fold">
+<summary>Click to view code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(combined_data) <span class="sc">+</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="st">"prop_SACCO_TV"</span>, <span class="at">title =</span> <span class="st">"T-value for SACCO Proportion"</span>, </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">palette =</span> <span class="st">"RdBu"</span>, <span class="at">style =</span> <span class="st">"fixed"</span>, <span class="at">breaks =</span> t_value_breaks) <span class="sc">+</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Statistical Significance of SACCO Coefficient"</span>, <span class="at">main.title.size =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><p>The SACCO T-value map similarly highlights the significance of the SACCO coefficient across regions.</p></li>
+<li><p>Blue areas indicate statistically significant positive relationships, showing where SACCO membership contributes more strongly to financial inclusion.</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
 </section>
 </section>
 

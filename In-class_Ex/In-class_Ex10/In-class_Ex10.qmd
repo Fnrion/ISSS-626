@@ -22,11 +22,9 @@ format:
 glm for the formualr of log transformation
 
 ## Tanzaniya
-district boundary (TK3: center of the island, check it first )
-sf_polygon <- prov_sf %>%
-  st_cast("POLYGON") %>%
-  mutate(area = st_area(.))
-  
+
+district boundary (TK3: center of the island, check it first ) sf_polygon \<- prov_sf %\>% st_cast("POLYGON") %\>% mutate(area = st_area(.))
+
 And reback it to the same number of mutipolygon
 
 There is no holes after the clean data map
