@@ -504,7 +504,7 @@ This suggests that the GWR model has effectively accounted for spatial dependenc
 In other words, the spatial variation in financial inclusion has been reasonably well captured by the GWR model.
 :::
 
-## 4 Future Work
+# 4 Future Work
 
 While this analysis provides valuable insights into the spatial variability of financial inclusion in Tanzania, several additional steps could enhance the depth and utility of the findings:
 
@@ -521,7 +521,7 @@ While this analysis provides valuable insights into the spatial variability of f
 
 -   **Advanced Visualization Techniques**: Leveraging interactive mapping tools or dashboards could make the findings more accessible to policymakers and stakeholders, facilitating a better understanding of spatial patterns in financial inclusion and aiding in decision-making processes.
 
-## 5 Summary
+# 5 Summary
 
 This study explored the spatial distribution and determinants of financial inclusion across Tanzania using Geographically Weighted Regression (GWR).
 The ESDA maps highlighted significant regional disparities in access to financial services, with higher banking and insurance access in urban areas and greater reliance on MFIs and SACCOs in rural regions.
@@ -533,7 +533,7 @@ Additionally, regional variations in the influence of variables like insurance a
 Further work could enhance this analysis by incorporating more variables, testing spatial lag models, and applying Multi-Scale GWR to capture dynamics at various spatial scales.
 Conducting temporal studies, assessing policy impacts, and exploring finer spatial resolutions would deepen our understanding of financial inclusion patterns, informing targeted interventions to promote inclusive financial access across Tanzania.
 
-## 6 Reference
+# 6 Reference
 
 -   Wikipedia contributors.
     (2023, November 10).
